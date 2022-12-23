@@ -1,8 +1,8 @@
 {
-  "name": "ruoyi",
-  "version": "3.8.4",
+  "name": "tutor",
+  "version": "0.0.0",
   "description": "家教一体化平台",
-  "author": "若依",
+  "author": "zty",
   "license": "MIT",
   "scripts": {
     "dev": "vue-cli-service serve",
