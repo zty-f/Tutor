@@ -245,7 +245,7 @@ public class SysUserController extends BaseController
     }
 
     /**
-     * 获取部门树列表
+     * 获取职级树列表
      */
     @PreAuthorize("@ss.hasPermi('system:user:list')")
     @GetMapping("/deptTree")

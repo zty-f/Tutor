@@ -25,8 +25,8 @@ public class SysUser extends BaseEntity
     @Excel(name = "用户序号", cellType = ColumnType.NUMERIC, prompt = "用户编号")
     private Long userId;
 
-    /** 部门ID */
-    @Excel(name = "部门编号", type = Type.IMPORT)
+    /** 职级ID */
+    @Excel(name = "职级编号", type = Type.IMPORT)
     private Long deptId;
 
     /** 用户账号 */
@@ -70,10 +70,10 @@ public class SysUser extends BaseEntity
     @Excel(name = "最后登录时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss", type = Type.EXPORT)
     private Date loginDate;
 
-    /** 部门对象 */
+    /** 职级对象 */
     @Excels({
-        @Excel(name = "部门名称", targetAttr = "deptName", type = Type.EXPORT),
-        @Excel(name = "部门负责人", targetAttr = "leader", type = Type.EXPORT)
+        @Excel(name = "职级名称", targetAttr = "deptName", type = Type.EXPORT),
+        @Excel(name = "职级负责人", targetAttr = "leader", type = Type.EXPORT)
     })
     private SysDept dept;
 

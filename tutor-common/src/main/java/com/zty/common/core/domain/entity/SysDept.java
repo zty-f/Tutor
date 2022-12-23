@@ -11,7 +11,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.zty.common.core.domain.BaseEntity;
 
 /**
- * 部门表 sys_dept
+ * 职级表 sys_dept
  * 
  * @author zty
  */
@@ -19,16 +19,16 @@ public class SysDept extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** 部门ID */
+    /** 职级ID */
     private Long deptId;
 
-    /** 父部门ID */
+    /** 父职级ID */
     private Long parentId;
 
     /** 祖级列表 */
     private String ancestors;
 
-    /** 部门名称 */
+    /** 职级名称 */
     private String deptName;
 
     /** 显示顺序 */
@@ -43,16 +43,16 @@ public class SysDept extends BaseEntity
     /** 邮箱 */
     private String email;
 
-    /** 部门状态:0正常,1停用 */
+    /** 职级状态:0正常,1停用 */
     private String status;
 
     /** 删除标志（0代表存在 2代表删除） */
     private String delFlag;
 
-    /** 父部门名称 */
+    /** 父职级名称 */
     private String parentName;
     
-    /** 子部门 */
+    /** 子职级 */
     private List<SysDept> children = new ArrayList<SysDept>();
 
     public Long getDeptId()
@@ -85,8 +85,8 @@ public class SysDept extends BaseEntity
         this.ancestors = ancestors;
     }
 
-    @NotBlank(message = "部门名称不能为空")
-    @Size(min = 0, max = 30, message = "部门名称长度不能超过30个字符")
+    @NotBlank(message = "职级名称不能为空")
+    @Size(min = 0, max = 30, message = "职级名称长度不能超过30个字符")
     public String getDeptName()
     {
         return deptName;

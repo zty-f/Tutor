@@ -185,7 +185,7 @@ public class BaseController
     }
 
     /**
-     * 获取登录部门id
+     * 获取登录职级id
      */
     public Long getDeptId()
     {

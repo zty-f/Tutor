@@ -298,11 +298,11 @@ export default {
         },
         {
           value: "3",
-          label: "本部门数据权限"
+          label: "本职级数据权限"
         },
         {
           value: "4",
-          label: "本部门及以下数据权限"
+          label: "本职级及以下数据权限"
         },
         {
           value: "5",
@@ -311,7 +311,7 @@ export default {
       ],
       // 菜单列表
       menuOptions: [],
-      // 部门列表
+      // 职级列表
       deptOptions: [],
       // 查询参数
       queryParams: {
@@ -370,11 +370,11 @@ export default {
       checkedKeys.unshift.apply(checkedKeys, halfCheckedKeys);
       return checkedKeys;
     },
-    // 所有部门节点数据
+    // 所有职级节点数据
     getDeptAllCheckedKeys() {
-      // 目前被选中的部门节点
+      // 目前被选中的职级节点
       let checkedKeys = this.$refs.dept.getCheckedKeys();
-      // 半选中的部门节点
+      // 半选中的职级节点
       let halfCheckedKeys = this.$refs.dept.getHalfCheckedKeys();
       checkedKeys.unshift.apply(checkedKeys, halfCheckedKeys);
       return checkedKeys;
@@ -386,7 +386,7 @@ export default {
         return response;
       });
     },
-    /** 根据角色ID查询部门树结构 */
+    /** 根据角色ID查询职级树结构 */
     getDeptTree(roleId) {
       return deptTreeSelect(roleId).then(response => {
         this.deptOptions = response.depts;

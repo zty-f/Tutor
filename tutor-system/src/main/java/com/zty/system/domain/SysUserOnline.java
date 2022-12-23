@@ -10,7 +10,7 @@ public class SysUserOnline
     /** 会话编号 */
     private String tokenId;
 
-    /** 部门名称 */
+    /** 职级名称 */
     private String deptName;
 
     /** 用户名称 */

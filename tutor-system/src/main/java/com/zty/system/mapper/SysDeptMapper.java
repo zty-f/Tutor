@@ -5,98 +5,98 @@ import org.apache.ibatis.annotations.Param;
 import com.zty.common.core.domain.entity.SysDept;
 
 /**
- * 部门管理 数据层
+ * 职级管理 数据层
  * 
  * @author zty
  */
 public interface SysDeptMapper
 {
     /**
-     * 查询部门管理数据
+     * 查询职级管理数据
      * 
-     * @param dept 部门信息
-     * @return 部门信息集合
+     * @param dept 职级信息
+     * @return 职级信息集合
      */
     public List<SysDept> selectDeptList(SysDept dept);
 
     /**
-     * 根据角色ID查询部门树信息
+     * 根据角色ID查询职级树信息
      * 
      * @param roleId 角色ID
-     * @param deptCheckStrictly 部门树选择项是否关联显示
-     * @return 选中部门列表
+     * @param deptCheckStrictly 职级树选择项是否关联显示
+     * @return 选中职级列表
      */
     public List<Long> selectDeptListByRoleId(@Param("roleId") Long roleId, @Param("deptCheckStrictly") boolean deptCheckStrictly);
 
     /**
-     * 根据部门ID查询信息
+     * 根据职级ID查询信息
      * 
-     * @param deptId 部门ID
-     * @return 部门信息
+     * @param deptId 职级ID
+     * @return 职级信息
      */
     public SysDept selectDeptById(Long deptId);
 
     /**
-     * 根据ID查询所有子部门
+     * 根据ID查询所有子职级
      * 
-     * @param deptId 部门ID
-     * @return 部门列表
+     * @param deptId 职级ID
+     * @return 职级列表
      */
     public List<SysDept> selectChildrenDeptById(Long deptId);
 
     /**
-     * 根据ID查询所有子部门（正常状态）
+     * 根据ID查询所有子职级（正常状态）
      * 
-     * @param deptId 部门ID
-     * @return 子部门数
+     * @param deptId 职级ID
+     * @return 子职级数
      */
     public int selectNormalChildrenDeptById(Long deptId);
 
     /**
      * 是否存在子节点
      * 
-     * @param deptId 部门ID
+     * @param deptId 职级ID
      * @return 结果
      */
     public int hasChildByDeptId(Long deptId);
 
     /**
-     * 查询部门是否存在用户
+     * 查询职级是否存在用户
      * 
-     * @param deptId 部门ID
+     * @param deptId 职级ID
      * @return 结果
      */
     public int checkDeptExistUser(Long deptId);
 
     /**
-     * 校验部门名称是否唯一
+     * 校验职级名称是否唯一
      * 
-     * @param deptName 部门名称
-     * @param parentId 父部门ID
+     * @param deptName 职级名称
+     * @param parentId 父职级ID
      * @return 结果
      */
     public SysDept checkDeptNameUnique(@Param("deptName") String deptName, @Param("parentId") Long parentId);
 
     /**
-     * 新增部门信息
+     * 新增职级信息
      * 
-     * @param dept 部门信息
+     * @param dept 职级信息
      * @return 结果
      */
     public int insertDept(SysDept dept);
 
     /**
-     * 修改部门信息
+     * 修改职级信息
      * 
-     * @param dept 部门信息
+     * @param dept 职级信息
      * @return 结果
      */
     public int updateDept(SysDept dept);
 
     /**
-     * 修改所在部门正常状态
+     * 修改所在职级正常状态
      * 
-     * @param deptIds 部门ID组
+     * @param deptIds 职级ID组
      */
     public void updateDeptStatusNormal(Long[] deptIds);
 
@@ -109,9 +109,9 @@ public interface SysDeptMapper
     public int updateDeptChildren(@Param("depts") List<SysDept> depts);
 
     /**
-     * 删除部门管理信息
+     * 删除职级管理信息
      * 
-     * @param deptId 部门ID
+     * @param deptId 职级ID
      * @return 结果
      */
     public int deleteDeptById(Long deptId);

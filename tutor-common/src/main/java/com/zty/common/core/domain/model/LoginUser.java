@@ -22,7 +22,7 @@ public class LoginUser implements UserDetails
     private Long userId;
 
     /**
-     * 部门ID
+     * 职级ID
      */
     private Long deptId;
 

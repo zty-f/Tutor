@@ -126,7 +126,7 @@ export function updateAuthRole(data) {
   })
 }
 
-// 查询部门下拉树结构
+// 查询职级下拉树结构
 export function deptTreeSelect() {
   return request({
     url: '/system/user/deptTree',
