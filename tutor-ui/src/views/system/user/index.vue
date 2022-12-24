@@ -2,11 +2,11 @@
   <div class="app-container">
     <el-row :gutter="20">
       <!--职级数据-->
-      <el-col :span="4" :xs="24">
+      <el-col :span="2" :xs="24">
         <div class="head-container">
           <el-input
             v-model="deptName"
-            placeholder="请输入职级名称"
+            placeholder="搜索"
             clearable
             size="small"
             prefix-icon="el-icon-search"
@@ -28,7 +28,7 @@
         </div>
       </el-col>
       <!--用户数据-->
-      <el-col :span="20" :xs="24">
+      <el-col :span="22" :xs="24">
         <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
           <el-form-item label="用户名称" prop="userName">
             <el-input
