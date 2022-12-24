@@ -186,6 +186,13 @@
                 <version>${tutor.version}</version>
             </dependency>
 
+            <!-- 自定义模块-->
+            <dependency>
+                <groupId>com.zty</groupId>
+                <artifactId>tutor-core</artifactId>
+                <version>${tutor.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -196,6 +203,7 @@
         <module>tutor-quartz</module>
         <module>tutor-generator</module>
         <module>tutor-common</module>
+        <module>tutor-core</module>
     </modules>
     <packaging>pom</packaging>
 
