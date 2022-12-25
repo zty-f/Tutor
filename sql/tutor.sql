@@ -56,6 +56,57 @@ create table sys_user (
 ) engine=innodb auto_increment=100 comment = '用户信息表';
 
 -- ----------------------------
+-- #、学生家教信息表
+-- ----------------------------
+drop table if exists sys_student;
+create table sys_student (
+                                 id                bigint(20)      not null auto_increment    comment '学生家教信息ID',
+                                 user_id           bigint(20)      not null                   comment '用户ID',
+                                 location         varchar(30)     not null                   comment '学生所在地址',
+                                 university         varchar(30)     not null                   comment '所在高校',
+                                 major            varchar(30)     not null                   comment '专业',
+                                 background       varchar(500)    default null                comment '学生详细背景',
+                                 teach_way           char(1)         default '0'                comment '授课方式（0老师上门 1学生上门 2线上辅导）',
+                                 auth_status          char(1)         default '0'                comment '认证状态（0代表未认证 1表示已认证）',
+                                 del_flag          char(1)         default '0'                comment '删除标志（0代表存在 2代表删除）',
+                                 login_ip          varchar(128)    default ''                 comment '最后登录IP',
+                                 login_date        datetime                                   comment '最后登录时间',
+                                 create_by         varchar(64)     default ''                 comment '创建者',
+                                 create_time       datetime                                   comment '创建时间',
+                                 update_by         varchar(64)     default ''                 comment '更新者',
+                                 update_time       datetime                                   comment '更新时间',
+                                 remark            varchar(500)    default null               comment '备注',
+                                 primary key (id)
+) engine=innodb auto_increment=100 comment = '学生家教信息表';
+-- 创建唯一索引：一个用户对应一个家教信息
+ALTER TABLE sys_student
+    ADD UNIQUE INDEX student_id(id,user_id) USING BTREE;
+
+-- ----------------------------
+-- #、家长家教信息表
+-- ----------------------------
+drop table if exists sys_parent;
+create table sys_parent (
+                             id                bigint(20)      not null auto_increment    comment '家长家教信息ID',
+                             user_id           bigint(20)      not null                   comment '用户ID',
+                             location         varchar(30)     not null                   comment '学员所在地址',
+                             background       varchar(500)    default null                comment '学员详细背景',
+                             auth_status          char(1)         default '0'                comment '认证状态（0代表未认证 1表示已认证）',
+                             del_flag          char(1)         default '0'                comment '删除标志（0代表存在 2代表删除）',
+                             login_ip          varchar(128)    default ''                 comment '最后登录IP',
+                             login_date        datetime                                   comment '最后登录时间',
+                             create_by         varchar(64)     default ''                 comment '创建者',
+                             create_time       datetime                                   comment '创建时间',
+                             update_by         varchar(64)     default ''                 comment '更新者',
+                             update_time       datetime                                   comment '更新时间',
+                             remark            varchar(500)    default null               comment '备注',
+                             primary key (id)
+) engine=innodb auto_increment=100 comment = '家长家教信息表';
+-- 创建唯一索引：一个用户对应一个家教信息
+ALTER TABLE sys_parent
+    ADD UNIQUE INDEX parent_id(id,user_id) USING BTREE;
+
+-- ----------------------------
 -- 初始化-用户信息表数据
 -- ----------------------------
 insert into sys_user values(1,  103, 'admin', '小张', '00', 'ry@163.com', '15888888888', '1', '', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '0', '0', '127.0.0.1', sysdate(), 'admin', sysdate(), '', null, '管理员');
