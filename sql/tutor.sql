@@ -69,8 +69,6 @@ create table sys_student (
                                  teach_way           char(1)         default '0'                comment '授课方式（0老师上门 1学生上门 2线上辅导）',
                                  auth_status          char(1)         default '0'                comment '认证状态（0代表未认证 1表示已认证）',
                                  del_flag          char(1)         default '0'                comment '删除标志（0代表存在 2代表删除）',
-                                 login_ip          varchar(128)    default ''                 comment '最后登录IP',
-                                 login_date        datetime                                   comment '最后登录时间',
                                  create_by         varchar(64)     default ''                 comment '创建者',
                                  create_time       datetime                                   comment '创建时间',
                                  update_by         varchar(64)     default ''                 comment '更新者',
@@ -80,7 +78,7 @@ create table sys_student (
 ) engine=innodb auto_increment=100 comment = '学生家教信息表';
 -- 创建唯一索引：一个用户对应一个家教信息
 ALTER TABLE sys_student
-    ADD UNIQUE INDEX student_id(id,user_id) USING BTREE;
+    ADD UNIQUE INDEX student_id(user_id) USING BTREE;
 
 -- ----------------------------
 -- #、家长家教信息表
@@ -93,8 +91,6 @@ create table sys_parent (
                              background       varchar(500)    default null                comment '学员详细背景',
                              auth_status          char(1)         default '0'                comment '认证状态（0代表未认证 1表示已认证）',
                              del_flag          char(1)         default '0'                comment '删除标志（0代表存在 2代表删除）',
-                             login_ip          varchar(128)    default ''                 comment '最后登录IP',
-                             login_date        datetime                                   comment '最后登录时间',
                              create_by         varchar(64)     default ''                 comment '创建者',
                              create_time       datetime                                   comment '创建时间',
                              update_by         varchar(64)     default ''                 comment '更新者',
@@ -104,7 +100,7 @@ create table sys_parent (
 ) engine=innodb auto_increment=100 comment = '家长家教信息表';
 -- 创建唯一索引：一个用户对应一个家教信息
 ALTER TABLE sys_parent
-    ADD UNIQUE INDEX parent_id(id,user_id) USING BTREE;
+    ADD UNIQUE INDEX parent_id(user_id) USING BTREE;
 
 -- ----------------------------
 -- 初始化-用户信息表数据
