@@ -72,7 +72,7 @@ public class Parent extends BaseEntity
     private Date loginDate;
 
     /** 家长家教信息信息 */
-    private List<SysParent> sysParentList;
+    private SysParent sysParent;
 
     public void setUserId(Long userId) 
     {
@@ -201,14 +201,14 @@ public class Parent extends BaseEntity
         return loginDate;
     }
 
-    public List<SysParent> getSysParentList()
+    public SysParent getSysParent()
     {
-        return sysParentList;
+        return sysParent;
     }
 
-    public void setSysParentList(List<SysParent> sysParentList)
+    public void setSysParent(SysParent sysParent)
     {
-        this.sysParentList = sysParentList;
+        this.sysParent = sysParent;
     }
 
     @Override
@@ -233,7 +233,7 @@ public class Parent extends BaseEntity
             .append("updateBy", getUpdateBy())
             .append("updateTime", getUpdateTime())
             .append("remark", getRemark())
-            .append("sysParentList", getSysParentList())
+            .append("sysParent", getSysParent())
             .toString();
     }
 }

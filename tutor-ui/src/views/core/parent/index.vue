@@ -178,7 +178,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -250,36 +250,22 @@
         <el-form-item label="备注">
           <editor v-model="form.remark" :min-height="192"/>
         </el-form-item>
-        <el-divider content-position="center">家长家教信息信息</el-divider>
-        <el-row :gutter="10" class="mb8">
-          <el-col :span="1.5">
-            <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAddSysParent">添加</el-button>
-          </el-col>
-          <el-col :span="1.5">
-            <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDeleteSysParent">删除</el-button>
-          </el-col>
-        </el-row>
-        <el-table :data="sysParentList" :row-class-name="rowSysParentIndex" @selection-change="handleSysParentSelectionChange" ref="sysParent">
-          <el-table-column type="selection" width="50" align="center" />
-          <el-table-column label="序号" align="center" prop="index" width="50"/>
-          <el-table-column label="学员所在地址" prop="location" width="150">
-            <template slot-scope="scope">
-              <el-input v-model="scope.row.location" placeholder="请输入学员所在地址" />
-            </template>
-          </el-table-column>
-          <el-table-column label="认证状态" prop="authStatus" width="150">
-            <template slot-scope="scope">
-              <el-select v-model="scope.row.authStatus" placeholder="请选择认证状态">
-                <el-option
-                  v-for="dict in dict.type.sys_auth_status"
-                  :key="dict.value"
-                  :label="dict.label"
-                  :value="dict.value"
-                ></el-option>
-              </el-select>
-            </template>
-          </el-table-column>
-        </el-table>
+        <el-divider content-position="center">家长家教信息</el-divider>
+        <el-form-item label="所在地点" prop="location">
+          <el-input v-model="sysParent.location" placeholder="请输入所在地" />
+        </el-form-item>
+        <el-form-item label="学员详细背景">
+          <editor v-model="sysParent.background" :min-height="192"/>
+        </el-form-item>
+        <el-form-item label="认证状态">
+          <el-radio-group v-model="sysParent.authStatus">
+            <el-radio
+              v-for="dict in dict.type.sys_auth_status"
+              :key="dict.value"
+              :label="dict.value"
+            >{{dict.label}}</el-radio>
+          </el-radio-group>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -301,8 +287,6 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
-      // 子表选中数据
-      checkedSysParent: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -314,7 +298,7 @@ export default {
       // 家长信息表格数据
       parentList: [],
       // 家长家教信息表格数据
-      sysParentList: [],
+      sysParent: {},
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -388,7 +372,7 @@ export default {
         updateTime: null,
         remark: null
       };
-      this.sysParentList = [];
+      this.sysParent = {};
       this.resetForm("form");
     },
     /** 搜索按钮操作 */
@@ -419,7 +403,7 @@ export default {
       const userId = row.userId || this.ids
       getParent(userId).then(response => {
         this.form = response.data;
-        this.sysParentList = response.data.sysParentList;
+        this.sysParent = response.data.sysParent==null?{}:response.data.sysParent;
         this.open = true;
         this.title = "修改家长信息";
       });
@@ -428,7 +412,7 @@ export default {
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          this.form.sysParentList = this.sysParentList;
+          this.form.sysParent = this.sysParent;
           if (this.form.userId != null) {
             updateParent(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
@@ -454,35 +438,6 @@ export default {
         this.getList();
         this.$modal.msgSuccess("删除成功");
       }).catch(() => {});
-    },
-	/** 家长家教信息序号 */
-    rowSysParentIndex({ row, rowIndex }) {
-      row.index = rowIndex + 1;
-    },
-    /** 家长家教信息添加按钮操作 */
-    handleAddSysParent() {
-      let obj = {};
-      obj.location = "";
-      obj.background = "";
-      obj.authStatus = "";
-      obj.remark = "";
-      this.sysParentList.push(obj);
-    },
-    /** 家长家教信息删除按钮操作 */
-    handleDeleteSysParent() {
-      if (this.checkedSysParent.length == 0) {
-        this.$modal.msgError("请先选择要删除的家长家教信息数据");
-      } else {
-        const sysParentList = this.sysParentList;
-        const checkedSysParent = this.checkedSysParent;
-        this.sysParentList = sysParentList.filter(function(item) {
-          return checkedSysParent.indexOf(item.index) == -1
-        });
-      }
-    },
-    /** 复选框选中数据 */
-    handleSysParentSelectionChange(selection) {
-      this.checkedSysParent = selection.map(item => item.index)
     },
     /** 导出按钮操作 */
     handleExport() {

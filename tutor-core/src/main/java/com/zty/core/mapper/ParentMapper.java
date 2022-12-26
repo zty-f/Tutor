@@ -71,10 +71,10 @@ public interface ParentMapper
     /**
      * 批量新增家长家教信息
      * 
-     * @param sysParentList 家长家教信息列表
+     * @param sysParent 家长家教信息列表
      * @return 结果
      */
-    public int batchSysParent(List<SysParent> sysParentList);
+    public int batchSysParent(SysParent sysParent);
     
 
     /**

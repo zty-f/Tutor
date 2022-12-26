@@ -27,7 +27,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <resultMap id="ParentSysParentResult" type="Parent" extends="ParentResult">
-        <collection property="sysParentList" notNullColumn="sub_id" javaType="java.util.List" resultMap="SysParentResult" />
+        <collection property="sysParent" notNullColumn="sub_id" javaType="com.zty.core.domain.SysParent" resultMap="SysParentResult" />
     </resultMap>
 
     <resultMap type="SysParent" id="SysParentResult">
@@ -165,8 +165,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <insert id="batchSysParent">
         insert into sys_parent( id, user_id, location, background, auth_status, del_flag, create_by, create_time, update_by, update_time, remark) values
-		<foreach item="item" index="index" collection="list" separator=",">
-            ( #{item.id}, #{item.userId}, #{item.location}, #{item.background}, #{item.authStatus}, #{item.delFlag}, #{item.createBy}, #{item.createTime}, #{item.updateBy}, #{item.updateTime}, #{item.remark})
-        </foreach>
+            ( #{id}, #{userId}, #{location}, #{background}, #{authStatus}, #{delFlag}, #{createBy}, #{createTime}, #{updateBy}, #{updateTime}, #{remark})
     </insert>
 </mapper>

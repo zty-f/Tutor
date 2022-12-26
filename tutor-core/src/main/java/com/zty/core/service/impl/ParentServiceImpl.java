@@ -115,20 +115,11 @@ public class ParentServiceImpl implements IParentService
      */
     public void insertSysParent(Parent parent)
     {
-        List<SysParent> sysParentList = parent.getSysParentList();
+        SysParent sysParent = parent.getSysParent();
         Long userId = parent.getUserId();
-        if (StringUtils.isNotNull(sysParentList))
-        {
-            List<SysParent> list = new ArrayList<SysParent>();
-            for (SysParent sysParent : sysParentList)
-            {
-                sysParent.setUserId(userId);
-                list.add(sysParent);
-            }
-            if (list.size() > 0)
-            {
-                parentMapper.batchSysParent(list);
-            }
+        if (StringUtils.isNotNull(sysParent)){
+            sysParent.setUserId(userId);
+            parentMapper.batchSysParent(sysParent);
         }
     }
 }
