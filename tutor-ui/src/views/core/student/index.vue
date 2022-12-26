@@ -178,7 +178,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -250,58 +250,39 @@
         <el-form-item label="备注">
           <editor v-model="form.remark" :min-height="192"/>
         </el-form-item>
-        <el-divider content-position="center">学生家教信息信息</el-divider>
-        <el-row :gutter="10" class="mb8">
-          <el-col :span="1.5">
-            <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAddSysStudent">添加</el-button>
-          </el-col>
-          <el-col :span="1.5">
-            <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDeleteSysStudent">删除</el-button>
-          </el-col>
-        </el-row>
-        <el-table :data="sysStudentList" :row-class-name="rowSysStudentIndex" @selection-change="handleSysStudentSelectionChange" ref="sysStudent">
-          <el-table-column type="selection" width="50" align="center" />
-          <el-table-column label="序号" align="center" prop="index" width="50"/>
-          <el-table-column label="学生所在地址" prop="location" width="150">
-            <template slot-scope="scope">
-              <el-input v-model="scope.row.location" placeholder="请输入学生所在地址" />
-            </template>
-          </el-table-column>
-          <el-table-column label="所在高校" prop="university" width="150">
-            <template slot-scope="scope">
-              <el-input v-model="scope.row.university" placeholder="请输入所在高校" />
-            </template>
-          </el-table-column>
-          <el-table-column label="专业" prop="major" width="150">
-            <template slot-scope="scope">
-              <el-input v-model="scope.row.major" placeholder="请输入专业" />
-            </template>
-          </el-table-column>
-          <el-table-column label="授课方式" prop="teachWay" width="150">
-            <template slot-scope="scope">
-              <el-select v-model="scope.row.teachWay" placeholder="请选择授课方式">
-                <el-option
-                  v-for="dict in dict.type.sys_teach_way"
-                  :key="dict.value"
-                  :label="dict.label"
-                  :value="dict.value"
-                ></el-option>
-              </el-select>
-            </template>
-          </el-table-column>
-          <el-table-column label="认证状态" prop="authStatus" width="150">
-            <template slot-scope="scope">
-              <el-select v-model="scope.row.authStatus" placeholder="请选择认证状态">
-                <el-option
-                  v-for="dict in dict.type.sys_auth_status"
-                  :key="dict.value"
-                  :label="dict.label"
-                  :value="dict.value"
-                ></el-option>
-              </el-select>
-            </template>
-          </el-table-column>
-        </el-table>
+        <el-divider content-position="center">学生家教信息</el-divider>
+
+        <el-form-item label="所在地点" prop="location">
+          <el-input v-model="sysStudent.location" placeholder="请输入所在地" />
+        </el-form-item>
+        <el-form-item label="就读学校" prop="university">
+          <el-input v-model="sysStudent.university" placeholder="请输入就读学校" />
+        </el-form-item>
+        <el-form-item label="专业" prop="major">
+          <el-input v-model="sysStudent.major" placeholder="请输入所学专业" />
+        </el-form-item>
+        <el-form-item label="学生详细背景">
+          <editor v-model="sysStudent.background" :min-height="192"/>
+        </el-form-item>
+        <el-form-item label="授课方式">
+          <el-radio-group v-model="sysStudent.teachWay">
+            <el-radio
+              v-for="dict in dict.type.sys_teach_way"
+              :key="dict.value"
+              :label="dict.value"
+            >{{dict.label}}</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="认证状态">
+          <el-radio-group v-model="sysStudent.authStatus">
+            <el-radio
+              v-for="dict in dict.type.sys_auth_status"
+              :key="dict.value"
+              :label="dict.value"
+            >{{dict.label}}</el-radio>
+          </el-radio-group>
+        </el-form-item>
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -323,8 +304,6 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
-      // 子表选中数据
-      checkedSysStudent: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -336,7 +315,7 @@ export default {
       // 学生信息表格数据
       studentList: [],
       // 学生家教信息表格数据
-      sysStudentList: [],
+      sysStudent: {},
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -410,7 +389,7 @@ export default {
         updateTime: null,
         remark: null
       };
-      this.sysStudentList = [];
+      this.sysStudent = {};
       this.resetForm("form");
     },
     /** 搜索按钮操作 */
@@ -441,7 +420,7 @@ export default {
       const userId = row.userId || this.ids
       getStudent(userId).then(response => {
         this.form = response.data;
-        this.sysStudentList = response.data.sysStudentList;
+        this.sysStudent = response.data.sysStudent==null?{}:response.data.sysStudent;
         this.open = true;
         this.title = "修改学生信息";
       });
@@ -450,7 +429,7 @@ export default {
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          this.form.sysStudentList = this.sysStudentList;
+          this.form.sysStudent = this.sysStudent;
           if (this.form.userId != null) {
             updateStudent(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
@@ -476,38 +455,6 @@ export default {
         this.getList();
         this.$modal.msgSuccess("删除成功");
       }).catch(() => {});
-    },
-	/** 学生家教信息序号 */
-    rowSysStudentIndex({ row, rowIndex }) {
-      row.index = rowIndex + 1;
-    },
-    /** 学生家教信息添加按钮操作 */
-    handleAddSysStudent() {
-      let obj = {};
-      obj.location = "";
-      obj.university = "";
-      obj.major = "";
-      obj.background = "";
-      obj.teachWay = "";
-      obj.authStatus = "";
-      obj.remark = "";
-      this.sysStudentList.push(obj);
-    },
-    /** 学生家教信息删除按钮操作 */
-    handleDeleteSysStudent() {
-      if (this.checkedSysStudent.length == 0) {
-        this.$modal.msgError("请先选择要删除的学生家教信息数据");
-      } else {
-        const sysStudentList = this.sysStudentList;
-        const checkedSysStudent = this.checkedSysStudent;
-        this.sysStudentList = sysStudentList.filter(function(item) {
-          return checkedSysStudent.indexOf(item.index) == -1
-        });
-      }
-    },
-    /** 复选框选中数据 */
-    handleSysStudentSelectionChange(selection) {
-      this.checkedSysStudent = selection.map(item => item.index)
     },
     /** 导出按钮操作 */
     handleExport() {

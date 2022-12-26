@@ -27,7 +27,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <resultMap id="StudentSysStudentResult" type="Student" extends="StudentResult">
-        <collection property="sysStudentList" notNullColumn="sub_id" javaType="java.util.List" resultMap="SysStudentResult" />
+        <collection property="sysStudent" notNullColumn="sub_id" javaType="com.zty.core.domain.SysStudent" resultMap="SysStudentResult" />
     </resultMap>
 
     <resultMap type="SysStudent" id="SysStudentResult">
@@ -168,8 +168,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <insert id="batchSysStudent">
         insert into sys_student( id, user_id, location, university, major, background, teach_way, auth_status, del_flag, create_by, create_time, update_by, update_time, remark) values
-		<foreach item="item" index="index" collection="list" separator=",">
-            ( #{item.id}, #{item.userId}, #{item.location}, #{item.university}, #{item.major}, #{item.background}, #{item.teachWay}, #{item.authStatus}, #{item.delFlag}, #{item.createBy}, #{item.createTime}, #{item.updateBy}, #{item.updateTime}, #{item.remark})
-        </foreach>
+            ( #{id}, #{userId}, #{location}, #{university}, #{major}, #{background}, #{teachWay}, #{authStatus}, #{delFlag}, #{createBy}, #{createTime}, #{updateBy}, #{updateTime}, #{remark})
     </insert>
 </mapper>

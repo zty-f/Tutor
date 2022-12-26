@@ -72,7 +72,7 @@ public class Student extends BaseEntity
     private Date loginDate;
 
     /** 学生家教信息信息 */
-    private List<SysStudent> sysStudentList;
+    private SysStudent sysStudent;
 
     public void setUserId(Long userId) 
     {
@@ -201,14 +201,14 @@ public class Student extends BaseEntity
         return loginDate;
     }
 
-    public List<SysStudent> getSysStudentList()
+    public SysStudent getSysStudent()
     {
-        return sysStudentList;
+        return sysStudent;
     }
 
-    public void setSysStudentList(List<SysStudent> sysStudentList)
+    public void setSysStudent(SysStudent sysStudent)
     {
-        this.sysStudentList = sysStudentList;
+        this.sysStudent = sysStudent;
     }
 
     @Override
@@ -233,7 +233,7 @@ public class Student extends BaseEntity
             .append("updateBy", getUpdateBy())
             .append("updateTime", getUpdateTime())
             .append("remark", getRemark())
-            .append("sysStudentList", getSysStudentList())
+            .append("sysStudent", getSysStudent())
             .toString();
     }
 }

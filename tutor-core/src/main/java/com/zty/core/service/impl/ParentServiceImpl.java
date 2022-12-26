@@ -119,6 +119,7 @@ public class ParentServiceImpl implements IParentService
         Long userId = parent.getUserId();
         if (StringUtils.isNotNull(sysParent)){
             sysParent.setUserId(userId);
+            sysParent.setCreateTime(DateUtils.getNowDate());
             parentMapper.batchSysParent(sysParent);
         }
     }

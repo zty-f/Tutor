@@ -71,10 +71,10 @@ public interface StudentMapper
     /**
      * 批量新增学生家教信息
      * 
-     * @param sysStudentList 学生家教信息列表
+     * @param sysStudent 学生家教信息列表
      * @return 结果
      */
-    public int batchSysStudent(List<SysStudent> sysStudentList);
+    public int batchSysStudent(SysStudent sysStudent);
     
 
     /**
