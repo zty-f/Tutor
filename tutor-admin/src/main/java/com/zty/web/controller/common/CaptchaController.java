@@ -6,6 +6,8 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
+
+import com.zty.common.core.text.Convert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.FastByteArrayOutputStream;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,7 +49,9 @@ public class CaptchaController
     {
         AjaxResult ajax = AjaxResult.success();
         boolean captchaEnabled = configService.selectCaptchaEnabled();
+        boolean registerEnabled = Convert.toBool(configService.selectConfigByKey("sys.account.registerUser"));
         ajax.put("captchaEnabled", captchaEnabled);
+        ajax.put("registerEnabled", registerEnabled);
         if (!captchaEnabled)
         {
             return ajax;
