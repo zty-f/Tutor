@@ -164,6 +164,12 @@
           <el-button
             size="mini"
             type="text"
+            icon="el-icon-more"
+            @click="handleDetail(scope.row)"
+          >详情</el-button>
+          <el-button
+            size="mini"
+            type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['core:parent:edit']"
@@ -186,6 +192,91 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
+
+    <!-- 查看每个家长详细信息描述列表 -->
+    <el-dialog :title="title" :visible.sync="openDetail" width="800px" append-to-body>
+    <el-descriptions class="margin-top" :column="2" border>
+      <template slot="title">
+        <image-preview :src="form.avatar" :width="50" :height="50"/>
+      </template>
+      <el-descriptions-item>
+        <template slot="label">
+          <i class="el-icon-s-flag"></i>
+          家长编号
+        </template>
+        {{ form.userId }}
+      </el-descriptions-item>
+      <el-descriptions-item>
+        <template slot="label">
+          <i class="el-icon-star-on"></i>
+          家长账号
+        </template>
+        {{ form.userName }}
+      </el-descriptions-item>
+      <el-descriptions-item>
+        <template slot="label">
+          <i class="el-icon-user"></i>
+          家长昵称
+        </template>
+        {{ form.nickName }}
+      </el-descriptions-item>
+      <el-descriptions-item>
+        <template slot="label">
+          <i class="el-icon-guide"></i>
+          学员性别
+        </template>
+        <dict-tag :options="dict.type.sys_user_sex" :value="form.sex"/>
+      </el-descriptions-item>
+      <el-descriptions-item>
+        <template slot="label">
+          <i class="el-icon-mobile-phone"></i>
+          手机号
+        </template>
+        {{ form.phonenumber }}
+      </el-descriptions-item>
+      <el-descriptions-item>
+        <template slot="label">
+          <i class="el-icon-message"></i>
+          邮箱
+        </template>
+        {{ form.email }}
+      </el-descriptions-item>
+      <el-descriptions-item>
+        <template slot="label">
+          <i class="el-icon-location-information"></i>
+          所在地
+        </template>
+        {{ sysParent.location }}
+      </el-descriptions-item>
+      <el-descriptions-item>
+        <template slot="label">
+          <i class="el-icon-time"></i>
+          最近上线
+        </template>
+        {{ form.loginDate }}
+      </el-descriptions-item>
+      <el-descriptions-item>
+        <template slot="label">
+          <i class="el-icon-s-check"></i>
+          认证状态
+        </template>
+        <dict-tag :options="dict.type.sys_auth_status" :value="sysParent.authStatus"/>
+      </el-descriptions-item>
+    </el-descriptions>
+      <el-divider></el-divider>
+    <el-descriptions border direction="vertical">
+      <template slot="title">
+        <i class="el-icon-info"></i>
+        学员详细背景
+      </template>
+      <el-descriptions-item>
+        {{  sysParent.background }}
+      </el-descriptions-item>
+    </el-descriptions>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="cancel">关 闭</el-button>
+      </div>
+    </el-dialog>
 
     <!-- 添加或修改家长信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
@@ -248,14 +339,14 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="备注">
-          <editor v-model="form.remark" :min-height="192"/>
+          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"></el-input>
         </el-form-item>
         <el-divider content-position="center">家长家教信息</el-divider>
         <el-form-item label="所在地点" prop="location">
           <el-input v-model="sysParent.location" placeholder="请输入所在地" />
         </el-form-item>
         <el-form-item label="学员详细背景">
-          <editor v-model="sysParent.background" :min-height="192"/>
+          <el-input v-model="sysParent.background" type="textarea" placeholder="请输入学员详细情况"></el-input>
         </el-form-item>
         <el-form-item label="认证状态">
           <el-radio-group v-model="sysParent.authStatus">
@@ -303,6 +394,7 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      openDetail: false,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -347,6 +439,7 @@ export default {
     // 取消按钮
     cancel() {
       this.open = false;
+      this.openDetail = false;
       this.reset();
     },
     // 表单重置
@@ -396,6 +489,17 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加家长信息";
+    },
+    /** 详情按钮操作 */
+    handleDetail(row) {
+      this.reset();
+      const userId = row.userId || this.ids
+      getParent(userId).then(response => {
+        this.form = response.data;
+        this.sysParent = response.data.sysParent==null?{}:response.data.sysParent;
+        this.openDetail = true;
+        this.title = "查询家长信息";
+      });
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
