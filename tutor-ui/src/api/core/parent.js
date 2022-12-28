@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-// 查询家长信息列表
+// 查询学员信息列表
 export function listParent(query) {
   return request({
     url: '/core/parent/list',
@@ -9,7 +9,7 @@ export function listParent(query) {
   })
 }
 
-// 查询家长信息详细
+// 查询学员信息详细
 export function getParent(userId) {
   return request({
     url: '/core/parent/' + userId,
@@ -17,7 +17,7 @@ export function getParent(userId) {
   })
 }
 
-// 新增家长信息
+// 新增学员信息
 export function addParent(data) {
   return request({
     url: '/core/parent',
@@ -26,7 +26,7 @@ export function addParent(data) {
   })
 }
 
-// 修改家长信息
+// 修改学员信息
 export function updateParent(data) {
   return request({
     url: '/core/parent',
@@ -35,7 +35,7 @@ export function updateParent(data) {
   })
 }
 
-// 删除家长信息
+// 删除学员信息
 export function delParent(userId) {
   return request({
     url: '/core/parent/' + userId,

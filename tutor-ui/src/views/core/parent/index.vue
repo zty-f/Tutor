@@ -193,7 +193,7 @@
       @pagination="getList"
     />
 
-    <!-- 查看每个家长详细信息描述列表 -->
+    <!-- 查看每个学员详细信息描述列表 -->
     <el-dialog :title="title" :visible.sync="openDetail" width="800px" append-to-body>
     <el-descriptions class="margin-top" :column="2" border>
       <template slot="title">
@@ -202,21 +202,21 @@
       <el-descriptions-item>
         <template slot="label">
           <i class="el-icon-s-flag"></i>
-          家长编号
+          学员编号
         </template>
         {{ form.userId }}
       </el-descriptions-item>
       <el-descriptions-item>
         <template slot="label">
           <i class="el-icon-star-on"></i>
-          家长账号
+          学员账号
         </template>
         {{ form.userName }}
       </el-descriptions-item>
       <el-descriptions-item>
         <template slot="label">
           <i class="el-icon-user"></i>
-          家长昵称
+          学员昵称
         </template>
         {{ form.nickName }}
       </el-descriptions-item>
@@ -278,7 +278,7 @@
       </div>
     </el-dialog>
 
-    <!-- 添加或修改家长信息对话框 -->
+    <!-- 添加或修改学员信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="职级ID" prop="deptId">
@@ -341,7 +341,7 @@
         <el-form-item label="备注">
           <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"></el-input>
         </el-form-item>
-        <el-divider content-position="center">家长家教信息</el-divider>
+        <el-divider content-position="center">学员家教信息</el-divider>
         <el-form-item label="所在地点" prop="location">
           <el-input v-model="sysParent.location" placeholder="请输入所在地" />
         </el-form-item>
@@ -386,9 +386,9 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 家长信息表格数据
+      // 学员信息表格数据
       parentList: [],
-      // 家长家教信息表格数据
+      // 学员家教信息表格数据
       sysParent: {},
       // 弹出层标题
       title: "",
@@ -427,7 +427,7 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询家长信息列表 */
+    /** 查询学员信息列表 */
     getList() {
       this.loading = true;
       listParent(this.queryParams).then(response => {
@@ -488,7 +488,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加家长信息";
+      this.title = "添加学员信息";
     },
     /** 详情按钮操作 */
     handleDetail(row) {
@@ -509,7 +509,7 @@ export default {
         this.form = response.data;
         this.sysParent = response.data.sysParent==null?{}:response.data.sysParent;
         this.open = true;
-        this.title = "修改家长信息";
+        this.title = "修改学员信息";
       });
     },
     /** 提交按钮 */
@@ -536,7 +536,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const userIds = row.userId || this.ids;
-      this.$modal.confirm('是否确认删除家长信息编号为"' + userIds + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除学员信息编号为"' + userIds + '"的数据项？').then(function() {
         return delParent(userIds);
       }).then(() => {
         this.getList();

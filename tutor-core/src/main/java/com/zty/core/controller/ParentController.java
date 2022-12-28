@@ -22,7 +22,7 @@ import com.zty.common.utils.poi.ExcelUtil;
 import com.zty.common.core.page.TableDataInfo;
 
 /**
- * 家长信息Controller
+ * 学员信息Controller
  * 
  * @author zty
  * @date 2022-12-25
@@ -35,7 +35,7 @@ public class ParentController extends BaseController
     private IParentService parentService;
 
     /**
-     * 查询家长信息列表
+     * 查询学员信息列表
      */
     @PreAuthorize("@ss.hasPermi('core:parent:list')")
     @GetMapping("/list")
@@ -47,20 +47,20 @@ public class ParentController extends BaseController
     }
 
     /**
-     * 导出家长信息列表
+     * 导出学员信息列表
      */
     @PreAuthorize("@ss.hasPermi('core:parent:export')")
-    @Log(title = "家长信息", businessType = BusinessType.EXPORT)
+    @Log(title = "学员信息", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, Parent parent)
     {
         List<Parent> list = parentService.selectParentList(parent);
         ExcelUtil<Parent> util = new ExcelUtil<Parent>(Parent.class);
-        util.exportExcel(response, list, "家长信息数据");
+        util.exportExcel(response, list, "学员信息数据");
     }
 
     /**
-     * 获取家长信息详细信息
+     * 获取学员信息详细信息
      */
     @PreAuthorize("@ss.hasPermi('core:parent:query')")
     @GetMapping(value = "/{userId}")
@@ -70,10 +70,10 @@ public class ParentController extends BaseController
     }
 
     /**
-     * 新增家长信息
+     * 新增学员信息
      */
     @PreAuthorize("@ss.hasPermi('core:parent:add')")
-    @Log(title = "家长信息", businessType = BusinessType.INSERT)
+    @Log(title = "学员信息", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody Parent parent)
     {
@@ -81,10 +81,10 @@ public class ParentController extends BaseController
     }
 
     /**
-     * 修改家长信息
+     * 修改学员信息
      */
     @PreAuthorize("@ss.hasPermi('core:parent:edit')")
-    @Log(title = "家长信息", businessType = BusinessType.UPDATE)
+    @Log(title = "学员信息", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody Parent parent)
     {
@@ -92,10 +92,10 @@ public class ParentController extends BaseController
     }
 
     /**
-     * 删除家长信息
+     * 删除学员信息
      */
     @PreAuthorize("@ss.hasPermi('core:parent:remove')")
-    @Log(title = "家长信息", businessType = BusinessType.DELETE)
+    @Log(title = "学员信息", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{userIds}")
     public AjaxResult remove(@PathVariable Long[] userIds)
     {

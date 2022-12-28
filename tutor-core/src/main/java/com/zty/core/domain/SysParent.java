@@ -6,7 +6,7 @@ import com.zty.common.annotation.Excel;
 import com.zty.common.core.domain.BaseEntity;
 
 /**
- * 家长家教信息对象 sys_parent
+ * 学员家教信息对象 sys_parent
  * 
  * @author zty
  * @date 2022-12-25
@@ -15,7 +15,7 @@ public class SysParent extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** 家长家教信息ID */
+    /** 学员家教信息ID */
     private Long id;
 
     /** 用户ID */

@@ -13,7 +13,7 @@ import com.zty.core.domain.Parent;
 import com.zty.core.service.IParentService;
 
 /**
- * 家长信息Service业务层处理
+ * 学员信息Service业务层处理
  * 
  * @author zty
  * @date 2022-12-25
@@ -25,10 +25,10 @@ public class ParentServiceImpl implements IParentService
     private ParentMapper parentMapper;
 
     /**
-     * 查询家长信息
+     * 查询学员信息
      * 
-     * @param userId 家长信息主键
-     * @return 家长信息
+     * @param userId 学员信息主键
+     * @return 学员信息
      */
     @Override
     public Parent selectParentByUserId(Long userId)
@@ -37,10 +37,10 @@ public class ParentServiceImpl implements IParentService
     }
 
     /**
-     * 查询家长信息列表
+     * 查询学员信息列表
      * 
-     * @param parent 家长信息
-     * @return 家长信息
+     * @param parent 学员信息
+     * @return 学员信息
      */
     @Override
     public List<Parent> selectParentList(Parent parent)
@@ -49,9 +49,9 @@ public class ParentServiceImpl implements IParentService
     }
 
     /**
-     * 新增家长信息
+     * 新增学员信息
      * 
-     * @param parent 家长信息
+     * @param parent 学员信息
      * @return 结果
      */
     @Transactional
@@ -65,9 +65,9 @@ public class ParentServiceImpl implements IParentService
     }
 
     /**
-     * 修改家长信息
+     * 修改学员信息
      * 
-     * @param parent 家长信息
+     * @param parent 学员信息
      * @return 结果
      */
     @Transactional
@@ -81,9 +81,9 @@ public class ParentServiceImpl implements IParentService
     }
 
     /**
-     * 批量删除家长信息
+     * 批量删除学员信息
      * 
-     * @param userIds 需要删除的家长信息主键
+     * @param userIds 需要删除的学员信息主键
      * @return 结果
      */
     @Transactional
@@ -95,9 +95,9 @@ public class ParentServiceImpl implements IParentService
     }
 
     /**
-     * 删除家长信息信息
+     * 删除学员信息信息
      * 
-     * @param userId 家长信息主键
+     * @param userId 学员信息主键
      * @return 结果
      */
     @Transactional
@@ -109,9 +109,9 @@ public class ParentServiceImpl implements IParentService
     }
 
     /**
-     * 新增家长家教信息信息
+     * 新增学员家教信息信息
      * 
-     * @param parent 家长信息对象
+     * @param parent 学员信息对象
      */
     public void insertSysParent(Parent parent)
     {

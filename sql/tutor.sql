@@ -81,11 +81,11 @@ ALTER TABLE sys_student
     ADD UNIQUE INDEX student_id(user_id) USING BTREE;
 
 -- ----------------------------
--- #、家长家教信息表
+-- #、学员家教信息表
 -- ----------------------------
 drop table if exists sys_parent;
 create table sys_parent (
-                             id                bigint(20)      not null auto_increment    comment '家长家教信息ID',
+                             id                bigint(20)      not null auto_increment    comment '学员家教信息ID',
                              user_id           bigint(20)      not null                   comment '用户ID',
                              location         varchar(30)     not null                   comment '学员所在地址',
                              background       varchar(500)    default null                comment '学员详细背景',
@@ -97,7 +97,7 @@ create table sys_parent (
                              update_time       datetime                                   comment '更新时间',
                              remark            varchar(500)    default null               comment '备注',
                              primary key (id)
-) engine=innodb auto_increment=100 comment = '家长家教信息表';
+) engine=innodb auto_increment=100 comment = '学员家教信息表';
 -- 创建唯一索引：一个用户对应一个家教信息
 ALTER TABLE sys_parent
     ADD UNIQUE INDEX parent_id(user_id) USING BTREE;
@@ -164,7 +164,7 @@ create table sys_role (
 insert into sys_role values('1', '超级管理员',  'admin',  1, 1, 1, 1, '0', '0', 'admin', sysdate(), '', null, '超级管理员');
 insert into sys_role values('2', '管理员',    'manager', 2, 1, 1, 1, '0', '0', 'admin', sysdate(), '', null, '管理员');
 insert into sys_role values('3', '学生',    'student', 3, 1, 1, 1, '0', '0', 'admin', sysdate(), '', null, '学生');
-insert into sys_role values('4', '家长',    'parent', 4, 1, 1, 1, '0', '0', 'admin', sysdate(), '', null, '家长');
+insert into sys_role values('4', '学员',    'parent', 4, 1, 1, 1, '0', '0', 'admin', sysdate(), '', null, '学员');
 
 
 -- ----------------------------
