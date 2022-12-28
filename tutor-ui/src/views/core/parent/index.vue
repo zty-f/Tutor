@@ -197,7 +197,7 @@
     <el-dialog :title="title" :visible.sync="openDetail" width="800px" append-to-body>
     <el-descriptions class="margin-top" :column="2" border>
       <template slot="title">
-        <image-preview :src="form.avatar" :width="50" :height="50"/>
+        <image-preview :src="form.avatar" :width="100" :height="100"/>
       </template>
       <el-descriptions-item>
         <template slot="label">
@@ -498,7 +498,7 @@ export default {
         this.form = response.data;
         this.sysParent = response.data.sysParent==null?{}:response.data.sysParent;
         this.openDetail = true;
-        this.title = "查询家长信息";
+        this.title = "学员详细信息";
       });
     },
     /** 修改按钮操作 */

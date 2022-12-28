@@ -164,6 +164,12 @@
           <el-button
             size="mini"
             type="text"
+            icon="el-icon-more"
+            @click="handleDetail(scope.row)"
+          >详情</el-button>
+          <el-button
+            size="mini"
+            type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['core:student:edit']"
@@ -186,6 +192,112 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
+
+    <!-- 查看每个学生详细信息描述列表 -->
+    <el-dialog :title="title" :visible.sync="openDetail" width="800px" append-to-body>
+      <el-descriptions class="margin-top" :column="2" border>
+        <template slot="title">
+          <image-preview :src="form.avatar" :width="100" :height="100"/>
+        </template>
+        <el-descriptions-item>
+          <template slot="label">
+            <i class="el-icon-s-flag"></i>
+            学生编号
+          </template>
+          {{ form.userId }}
+        </el-descriptions-item>
+        <el-descriptions-item>
+          <template slot="label">
+            <i class="el-icon-star-on"></i>
+            学生账号
+          </template>
+          {{ form.userName }}
+        </el-descriptions-item>
+        <el-descriptions-item>
+          <template slot="label">
+            <i class="el-icon-user"></i>
+            学生昵称
+          </template>
+          {{ form.nickName }}
+        </el-descriptions-item>
+        <el-descriptions-item>
+          <template slot="label">
+            <i class="el-icon-guide"></i>
+            学生性别
+          </template>
+          <dict-tag :options="dict.type.sys_user_sex" :value="form.sex"/>
+        </el-descriptions-item>
+        <el-descriptions-item>
+          <template slot="label">
+            <i class="el-icon-mobile-phone"></i>
+            手机号
+          </template>
+          {{ form.phonenumber }}
+        </el-descriptions-item>
+        <el-descriptions-item>
+          <template slot="label">
+            <i class="el-icon-message"></i>
+            邮箱
+          </template>
+          {{ form.email }}
+        </el-descriptions-item>
+        <el-descriptions-item>
+          <template slot="label">
+            <i class="el-icon-school"></i>
+            就读学校
+          </template>
+          {{ sysStudent.university }}
+        </el-descriptions-item>
+        <el-descriptions-item>
+          <template slot="label">
+            <i class="el-icon-reading"></i>
+            所学专业
+          </template>
+          {{ sysStudent.major }}
+        </el-descriptions-item>
+        <el-descriptions-item>
+          <template slot="label">
+            <i class="el-icon-location-information"></i>
+            所在地
+          </template>
+          {{ sysStudent.location }}
+        </el-descriptions-item>
+        <el-descriptions-item>
+          <template slot="label">
+            <i class="el-icon-magic-stick"></i>
+            授课方式
+          </template>
+          <dict-tag :options="dict.type.sys_teach_way" :value="sysStudent.teachWay"/>
+        </el-descriptions-item>
+        <el-descriptions-item>
+          <template slot="label">
+            <i class="el-icon-time"></i>
+            最近上线
+          </template>
+          {{ form.loginDate }}
+        </el-descriptions-item>
+        <el-descriptions-item>
+          <template slot="label">
+            <i class="el-icon-s-check"></i>
+            认证状态
+          </template>
+          <dict-tag :options="dict.type.sys_auth_status" :value="sysStudent.authStatus"/>
+        </el-descriptions-item>
+      </el-descriptions>
+      <el-divider></el-divider>
+      <el-descriptions border direction="vertical">
+        <template slot="title">
+          <i class="el-icon-info"></i>
+          学生详细背景
+        </template>
+        <el-descriptions-item>
+          {{  sysStudent.background }}
+        </el-descriptions-item>
+      </el-descriptions>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="cancel">关 闭</el-button>
+      </div>
+    </el-dialog>
 
     <!-- 添加或修改学生信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
@@ -248,7 +360,7 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="备注">
-          <editor v-model="form.remark" :min-height="192"/>
+          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"></el-input>
         </el-form-item>
         <el-divider content-position="center">学生家教信息</el-divider>
 
@@ -262,7 +374,7 @@
           <el-input v-model="sysStudent.major" placeholder="请输入所学专业" />
         </el-form-item>
         <el-form-item label="学生详细背景">
-          <editor v-model="sysStudent.background" :min-height="192"/>
+          <el-input v-model="sysStudent.background" type="textarea" placeholder="请输入个人详细情况"></el-input>
         </el-form-item>
         <el-form-item label="授课方式">
           <el-radio-group v-model="sysStudent.teachWay">
@@ -294,6 +406,7 @@
 
 <script>
 import { listStudent, getStudent, delStudent, addStudent, updateStudent } from "@/api/core/student";
+import {getParent} from "@/api/core/parent";
 
 export default {
   name: "Student",
@@ -320,6 +433,7 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      openDetail: false,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -364,6 +478,7 @@ export default {
     // 取消按钮
     cancel() {
       this.open = false;
+      this.openDetail = false;
       this.reset();
     },
     // 表单重置
@@ -413,6 +528,17 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加学生信息";
+    },
+    /** 详情按钮操作 */
+    handleDetail(row) {
+      this.reset();
+      const userId = row.userId || this.ids
+      getStudent(userId).then(response => {
+        this.form = response.data;
+        this.sysStudent = response.data.sysStudent==null?{}:response.data.sysStudent;
+        this.openDetail = true;
+        this.title = "学生详细信息";
+      });
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
