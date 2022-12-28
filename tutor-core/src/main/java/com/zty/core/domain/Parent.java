@@ -67,8 +67,8 @@ public class Parent extends BaseEntity
     private String loginIp;
 
     /** 最后登录时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "最后登录时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "最后登录时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss", type = Excel.Type.EXPORT)
     private Date loginDate;
 
     /** 家长家教信息信息 */
