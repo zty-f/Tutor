@@ -444,6 +444,12 @@ public class SysUserServiceImpl implements ISysUserService
     @Transactional
     public int deleteUserById(Long userId)
     {
+        int roleId = userRoleMapper.selectUserRoleIdByUserId(userId);
+        if (roleId==3){//学生
+            studentMapper.deleteSysStudentByUserId(userId);
+        } else  if (roleId==4) { //学员
+            parentMapper.deleteSysParentByUserId(userId);
+        }
         // 删除用户与角色关联
         userRoleMapper.deleteUserRoleByUserId(userId);
         // 删除用户与岗位表
