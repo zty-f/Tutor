@@ -53,6 +53,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectStudentList" parameterType="Student" resultMap="StudentResult">
         <include refid="selectStudentVo"/>
+        where del_flag = '0'
         <where>  
             <if test="deptId != null "> and dept_id = #{deptId}</if>
             <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
@@ -163,7 +164,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteSysStudentByUserId" parameterType="Long">
-        delete from sys_student where user_id = #{userId}
+        update sys_student set del_flag = '2' where user_id = #{userId}
     </delete>
 
     <insert id="batchSysStudent">

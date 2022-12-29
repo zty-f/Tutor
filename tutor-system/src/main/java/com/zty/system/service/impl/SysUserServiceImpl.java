@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Validator;
+
+import com.zty.core.mapper.ParentMapper;
+import com.zty.core.mapper.StudentMapper;
+import com.zty.core.service.IParentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +64,12 @@ public class SysUserServiceImpl implements ISysUserService
 
     @Autowired
     protected Validator validator;
+
+    @Autowired
+    private ParentMapper parentMapper;
+
+    @Autowired
+    private StudentMapper studentMapper;
 
     /**
      * 根据条件分页查询用户列表
@@ -462,6 +472,12 @@ public class SysUserServiceImpl implements ISysUserService
         {
             checkUserAllowed(new SysUser(userId));
             checkUserDataScope(userId);
+            int roleId = userRoleMapper.selectUserRoleIdByUserId(userId);
+            if (roleId==3){//学生
+                studentMapper.deleteSysStudentByUserId(userId);
+            } else  if (roleId==4) { //学员
+                parentMapper.deleteSysParentByUserId(userId);
+            }
         }
         // 删除用户与角色关联
         userRoleMapper.deleteUserRole(userIds);
