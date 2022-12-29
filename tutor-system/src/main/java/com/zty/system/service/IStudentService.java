@@ -2,6 +2,7 @@ package com.zty.system.service;
 
 
 import com.zty.system.domain.Student;
+import com.zty.system.domain.vo.StudentVo;
 
 import java.util.List;
 
@@ -23,11 +24,11 @@ public interface IStudentService
 
     /**
      * 查询学生信息列表
-     * 
+     *
      * @param student 学生信息
      * @return 学生信息集合
      */
-    public List<Student> selectStudentList(Student student);
+    public List<StudentVo> selectStudentList(Student student);
 
     /**
      * 新增学生信息

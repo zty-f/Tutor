@@ -2,14 +2,18 @@ package com.zty.system.service.impl;
 
 import com.zty.common.utils.DateUtils;
 import com.zty.common.utils.StringUtils;
+import com.zty.system.domain.Parent;
 import com.zty.system.domain.Student;
 import com.zty.system.domain.SysStudent;
-import com.zty.system.mapper.StudentMapper;
+import com.zty.system.domain.vo.ParentVo;
+import com.zty.system.domain.vo.StudentVo;
+import com.zty.system.mapper.*;
 import com.zty.system.service.IStudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,6 +26,21 @@ import java.util.List;
 public class StudentServiceImpl implements IStudentService {
     @Autowired
     private StudentMapper studentMapper;
+
+    @Autowired
+    private SysDeptMapper deptMapper;
+
+    @Autowired
+    private SysRoleMapper roleMapper;
+
+    @Autowired
+    private SysPostMapper postMapper;
+
+    @Autowired
+    private SysUserRoleMapper userRoleMapper;
+
+    @Autowired
+    private SysUserPostMapper userPostMapper;
 
     /**
      * 查询学生信息
@@ -41,8 +60,17 @@ public class StudentServiceImpl implements IStudentService {
      * @return 学生信息
      */
     @Override
-    public List<Student> selectStudentList(Student student) {
-        return studentMapper.selectStudentList(student);
+    public List<StudentVo> selectStudentList(Student student) {
+        List<Student> students = studentMapper.selectStudentList(student);
+        List<StudentVo> res = new ArrayList<>();
+        for (Student s : students) {
+            StudentVo studentVo = new StudentVo(s);
+            studentVo.setDeptName(deptMapper.selectDeptById(s.getDeptId()).getDeptName());
+            studentVo.setRoleName(roleMapper.selectRolePermissionByUserId(s.getUserId()).get(0).getRoleName());
+            studentVo.setPosts(postMapper.selectPostsByUserId(s.getUserId()));
+            res.add(studentVo);
+        }
+        return res;
     }
 
     /**
@@ -84,6 +112,10 @@ public class StudentServiceImpl implements IStudentService {
     @Transactional
     @Override
     public int deleteStudentByUserIds(Long[] userIds) {
+        // 删除用户与角色关联
+        userRoleMapper.deleteUserRole(userIds);
+        // 删除用户与岗位关联
+        userPostMapper.deleteUserPost(userIds);
         studentMapper.deleteSysStudentByUserIds(userIds);
         return studentMapper.deleteStudentByUserIds(userIds);
     }
@@ -97,6 +129,10 @@ public class StudentServiceImpl implements IStudentService {
     @Transactional
     @Override
     public int deleteStudentByUserId(Long userId) {
+        // 删除用户与角色关联
+        userRoleMapper.deleteUserRoleByUserId(userId);
+        // 删除用户与岗位表
+        userPostMapper.deleteUserPostByUserId(userId);
         studentMapper.deleteSysStudentByUserId(userId);
         return studentMapper.deleteStudentByUserId(userId);
     }

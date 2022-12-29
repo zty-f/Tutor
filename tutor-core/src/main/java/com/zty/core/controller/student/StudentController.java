@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.zty.common.utils.poi.ExcelUtil;
 import com.zty.system.domain.Student;
+import com.zty.system.domain.vo.StudentVo;
 import com.zty.system.service.IStudentService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,7 @@ public class StudentController extends BaseController
     public TableDataInfo list(Student student)
     {
         startPage();
-        List<Student> list = studentService.selectStudentList(student);
+        List<StudentVo> list = studentService.selectStudentList(student);
         return getDataTable(list);
     }
 
@@ -56,8 +57,8 @@ public class StudentController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, Student student)
     {
-        List<Student> list = studentService.selectStudentList(student);
-        ExcelUtil<Student> util = new ExcelUtil<Student>(Student.class);
+        List<StudentVo> list = studentService.selectStudentList(student);
+        ExcelUtil<StudentVo> util = new ExcelUtil<StudentVo>(StudentVo.class);
         util.exportExcel(response, list, "学生信息数据");
     }
 
