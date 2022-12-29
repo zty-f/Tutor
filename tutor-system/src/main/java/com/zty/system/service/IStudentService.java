@@ -1,7 +1,9 @@
-package com.zty.core.service;
+package com.zty.system.service;
+
+
+import com.zty.system.domain.Student;
 
 import java.util.List;
-import com.zty.core.domain.Student;
 
 /**
  * 学生信息Service接口

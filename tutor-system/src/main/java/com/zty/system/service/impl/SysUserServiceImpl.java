@@ -5,9 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Validator;
 
-import com.zty.core.mapper.ParentMapper;
-import com.zty.core.mapper.StudentMapper;
-import com.zty.core.service.IParentService;
+import com.zty.system.mapper.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +24,6 @@ import com.zty.common.utils.spring.SpringUtils;
 import com.zty.system.domain.SysPost;
 import com.zty.system.domain.SysUserPost;
 import com.zty.system.domain.SysUserRole;
-import com.zty.system.mapper.SysPostMapper;
-import com.zty.system.mapper.SysRoleMapper;
-import com.zty.system.mapper.SysUserMapper;
-import com.zty.system.mapper.SysUserPostMapper;
-import com.zty.system.mapper.SysUserRoleMapper;
 import com.zty.system.service.ISysConfigService;
 import com.zty.system.service.ISysUserService;
 

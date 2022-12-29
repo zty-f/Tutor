@@ -1,8 +1,9 @@
-package com.zty.core.mapper;
+package com.zty.system.mapper;
+
+import com.zty.system.domain.Student;
+import com.zty.system.domain.SysStudent;
 
 import java.util.List;
-import com.zty.core.domain.Student;
-import com.zty.core.domain.SysStudent;
 
 /**
  * 学生信息Mapper接口

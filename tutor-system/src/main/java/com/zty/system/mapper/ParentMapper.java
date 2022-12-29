@@ -1,8 +1,10 @@
-package com.zty.core.mapper;
+package com.zty.system.mapper;
+
+
+import com.zty.system.domain.Parent;
+import com.zty.system.domain.SysParent;
 
 import java.util.List;
-import com.zty.core.domain.Parent;
-import com.zty.core.domain.SysParent;
 
 /**
  * 学员信息Mapper接口

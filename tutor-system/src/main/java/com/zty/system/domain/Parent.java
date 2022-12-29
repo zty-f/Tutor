@@ -1,20 +1,20 @@
-package com.zty.core.domain;
+package com.zty.system.domain;
 
-import java.util.List;
-import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import com.zty.common.annotation.Excel;
 import com.zty.common.core.domain.BaseEntity;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import java.util.Date;
 
 /**
- * 学生信息对象 sys_user
+ * 学员信息对象 sys_user
  * 
  * @author zty
  * @date 2022-12-25
  */
-public class Student extends BaseEntity
+public class Parent extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
@@ -71,8 +71,8 @@ public class Student extends BaseEntity
     @Excel(name = "最后登录时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss", type = Excel.Type.EXPORT)
     private Date loginDate;
 
-    /** 学生家教信息信息 */
-    private SysStudent sysStudent;
+    /** 学员家教信息信息 */
+    private SysParent sysParent;
 
     public void setUserId(Long userId) 
     {
@@ -201,14 +201,14 @@ public class Student extends BaseEntity
         return loginDate;
     }
 
-    public SysStudent getSysStudent()
+    public SysParent getSysParent()
     {
-        return sysStudent;
+        return sysParent;
     }
 
-    public void setSysStudent(SysStudent sysStudent)
+    public void setSysParent(SysParent sysParent)
     {
-        this.sysStudent = sysStudent;
+        this.sysParent = sysParent;
     }
 
     @Override
@@ -233,7 +233,7 @@ public class Student extends BaseEntity
             .append("updateBy", getUpdateBy())
             .append("updateTime", getUpdateTime())
             .append("remark", getRemark())
-            .append("sysStudent", getSysStudent())
+            .append("sysParent", getSysParent())
             .toString();
     }
 }

@@ -20,7 +20,7 @@
 
         <dependency>
             <groupId>com.zty</groupId>
-            <artifactId>tutor-common</artifactId>
+            <artifactId>tutor-framework</artifactId>
         </dependency>
 
         <dependency>

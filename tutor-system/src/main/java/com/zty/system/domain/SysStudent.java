@@ -1,9 +1,9 @@
-package com.zty.core.domain;
+package com.zty.system.domain;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import com.zty.common.annotation.Excel;
 import com.zty.common.core.domain.BaseEntity;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * 学生家教信息对象 sys_student

@@ -23,11 +23,6 @@
             <artifactId>tutor-common</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.zty</groupId>
-            <artifactId>tutor-core</artifactId>
-        </dependency>
-
     </dependencies>
 
 </project>
