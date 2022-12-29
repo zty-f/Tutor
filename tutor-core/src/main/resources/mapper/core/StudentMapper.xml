@@ -52,19 +52,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </sql>
 
     <select id="selectStudentList" parameterType="Student" resultMap="StudentResult">
-        <include refid="selectStudentVo"/>
-        where del_flag = '0'
+        select a.user_id, a.dept_id, a.user_name, a.nick_name, a.user_type, a.email, a.phonenumber, a.sex, a.avatar, a.status, a.del_flag, a.login_ip, a.login_date, a.create_by, a.create_time, a.update_by, a.update_time, a.remark
+        from sys_user a
+        left join sys_user_role b on b.user_id = a.user_id
+        where a.del_flag = '0' and b.role_id = '3'
         <where>  
-            <if test="deptId != null "> and dept_id = #{deptId}</if>
-            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
-            <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
-            <if test="email != null  and email != ''"> and email = #{email}</if>
-            <if test="phonenumber != null  and phonenumber != ''"> and phonenumber = #{phonenumber}</if>
-            <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
-            <if test="avatar != null  and avatar != ''"> and avatar = #{avatar}</if>
-            <if test="status != null  and status != ''"> and status = #{status}</if>
-            <if test="loginIp != null  and loginIp != ''"> and login_ip = #{loginIp}</if>
-            <if test="loginDate != null "> and login_date = #{loginDate}</if>
+            <if test="deptId != null "> and a.dept_id = #{deptId}</if>
+            <if test="userName != null  and userName != ''"> and a.user_name like concat('%', #{userName}, '%')</if>
+            <if test="nickName != null  and nickName != ''"> and a.nick_name like concat('%', #{nickName}, '%')</if>
+            <if test="email != null  and email != ''"> and a.email = #{email}</if>
+            <if test="phonenumber != null  and phonenumber != ''"> and a.phonenumber = #{phonenumber}</if>
+            <if test="sex != null  and sex != ''"> and a.sex = #{sex}</if>
+            <if test="avatar != null  and avatar != ''"> and a.avatar = #{avatar}</if>
+            <if test="status != null  and status != ''"> and a.status = #{status}</if>
+            <if test="loginIp != null  and loginIp != ''"> and a.login_ip = #{loginIp}</if>
+            <if test="loginDate != null "> and a.login_date = #{loginDate}</if>
         </where>
     </select>
     
@@ -146,11 +148,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteStudentByUserId" parameterType="Long">
-        delete from sys_user where user_id = #{userId}
+        update sys_user set del_flag = '2' where user_id = #{userId}
     </delete>
 
     <delete id="deleteStudentByUserIds" parameterType="String">
-        delete from sys_user where user_id in 
+        update sys_user set del_flag = '2' where user_id in
         <foreach item="userId" collection="array" open="(" separator="," close=")">
             #{userId}
         </foreach>
@@ -164,7 +166,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteSysStudentByUserId" parameterType="Long">
-        update sys_student set del_flag = '2' where user_id = #{userId}
+        delete from sys_student where user_id = #{userId}
     </delete>
 
     <insert id="batchSysStudent">
