@@ -131,28 +131,37 @@
 
     <el-table v-loading="loading" :data="studentList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="用户ID" align="center" prop="student.userId" />
-      <el-table-column label="职级ID" align="center" prop="student.deptId" />
-      <el-table-column label="用户账号" align="center" prop="student.userName" />
-      <el-table-column label="用户昵称" align="center" prop="student.nickName" />
-      <el-table-column label="用户邮箱" align="center" prop="student.email" />
-      <el-table-column label="手机号码" align="center" prop="student.phonenumber" />
-      <el-table-column label="用户性别" align="center" prop="student.sex">
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.sys_user_sex" :value="scope.row.student.sex"/>
-        </template>
-      </el-table-column>
-      <el-table-column label="头像地址" align="center" prop="student.avatar" width="100">
+      <el-table-column label="学生ID" align="center" prop="student.userId" />
+      <el-table-column label="头像" align="center" prop="student.avatar" width="100">
         <template slot-scope="scope">
           <image-preview :src="scope.row.student.avatar" :width="50" :height="50"/>
         </template>
       </el-table-column>
+      <el-table-column label="昵称" align="center" prop="student.nickName" />
+      <el-table-column label="性别" align="center" prop="student.sex">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.sys_user_sex" :value="scope.row.student.sex"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="角色" align="center" prop="roleName" />
+      <el-table-column label="职级" align="center" prop="deptName" />
+      <el-table-column label="岗位" align="center" width="100px">
+        <template slot-scope="scope">
+          <el-card class="box-card" shadow="hover">
+            <div v-for="post in scope.row.posts" :key="post" class="text item">
+              {{post}}
+            </div>
+          </el-card>
+        </template>
+      </el-table-column>
+      <el-table-column label="邮箱" align="center" prop="student.email" width="120px"/>
+      <el-table-column label="手机号码" align="center" prop="student.phonenumber" width="120px"/>
+
       <el-table-column label="帐号状态" align="center" prop="student.status">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.student.status"/>
         </template>
       </el-table-column>
-      <el-table-column label="最后登录IP" align="center" prop="student.loginIp" />
       <el-table-column label="最后登录时间" align="center" prop="student.loginDate" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.student.loginDate, '{y}-{m}-{d}') }}</span>
