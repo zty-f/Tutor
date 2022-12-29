@@ -52,7 +52,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select a.user_id, a.dept_id, a.user_name, a.nick_name, a.user_type, a.email, a.phonenumber, a.sex, a.avatar, a.status, a.del_flag, a.login_ip, a.login_date, a.create_by, a.create_time, a.update_by, a.update_time, a.remark
         from sys_user a
         left join sys_user_role b on b.user_id = a.user_id
-        where a.del_flag = '0' and b.role_id = '4'
         <where>  
             <if test="deptId != null "> and a.dept_id = #{deptId}</if>
             <if test="userName != null  and userName != ''"> and a.user_name like concat('%', #{userName}, '%')</if>
@@ -64,6 +63,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null  and status != ''"> and a.status = #{status}</if>
             <if test="loginIp != null  and loginIp != ''"> and a.login_ip = #{loginIp}</if>
             <if test="loginDate != null "> and a.login_date = #{loginDate}</if>
+            and a.del_flag = '0' and b.role_id = '4'
         </where>
     </select>
     
