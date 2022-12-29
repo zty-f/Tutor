@@ -131,54 +131,54 @@
 
     <el-table v-loading="loading" :data="parentList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="用户ID" align="center" prop="userId" />
-      <el-table-column label="职级ID" align="center" prop="deptId" />
-      <el-table-column label="用户账号" align="center" prop="userName" />
-      <el-table-column label="用户昵称" align="center" prop="nickName" />
-      <el-table-column label="用户邮箱" align="center" prop="email" />
-      <el-table-column label="手机号码" align="center" prop="phonenumber" />
-      <el-table-column label="用户性别" align="center" prop="sex">
+      <el-table-column label="用户ID" align="center" prop="parent.userId" />
+      <el-table-column label="职级ID" align="center" prop="parent.deptId" />
+      <el-table-column label="用户账号" align="center" prop="parent.userName" />
+      <el-table-column label="用户昵称" align="center" prop="parent.nickName" />
+      <el-table-column label="用户邮箱" align="center" prop="parent.email" />
+      <el-table-column label="手机号码" align="center" prop="parent.phonenumber" />
+      <el-table-column label="用户性别" align="center" prop="parent.sex">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.sys_user_sex" :value="scope.row.sex"/>
+          <dict-tag :options="dict.type.sys_user_sex" :value="scope.row.parent.sex"/>
         </template>
       </el-table-column>
-      <el-table-column label="头像地址" align="center" prop="avatar" width="100">
+      <el-table-column label="头像地址" align="center" prop="parent.avatar" width="100">
         <template slot-scope="scope">
-          <image-preview :src="scope.row.avatar" :width="50" :height="50"/>
+          <image-preview :src="scope.row.parent.avatar" :width="50" :height="50"/>
         </template>
       </el-table-column>
-      <el-table-column label="帐号状态" align="center" prop="status">
+      <el-table-column label="帐号状态" align="center" prop="parent.status">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.status"/>
+          <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.parent.status"/>
         </template>
       </el-table-column>
-      <el-table-column label="最后登录IP" align="center" prop="loginIp" />
-      <el-table-column label="最后登录时间" align="center" prop="loginDate" width="180">
+      <el-table-column label="最后登录IP" align="center" prop="parent.loginIp" />
+      <el-table-column label="最后登录时间" align="center" prop="parent.loginDate" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.loginDate, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.parent.loginDate, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="备注" align="center" prop="remark" />
+      <el-table-column label="备注" align="center" prop="parent.remark" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             size="mini"
             type="text"
             icon="el-icon-more"
-            @click="handleDetail(scope.row)"
+            @click="handleDetail(scope.row.parent)"
           >详情</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
+            @click="handleUpdate(scope.row.parent)"
             v-hasPermi="['core:parent:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
+            @click="handleDelete(scope.row.parent)"
             v-hasPermi="['core:parent:remove']"
           >删除</el-button>
         </template>

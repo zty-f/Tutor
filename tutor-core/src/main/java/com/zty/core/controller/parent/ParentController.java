@@ -1,7 +1,12 @@
-package com.zty.core.controller;
+package com.zty.core.controller.parent;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.zty.common.utils.poi.ExcelUtil;
+import com.zty.system.domain.Parent;
+import com.zty.system.domain.vo.ParentVo;
+import com.zty.system.service.IParentService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,9 +21,6 @@ import com.zty.common.annotation.Log;
 import com.zty.common.core.controller.BaseController;
 import com.zty.common.core.domain.AjaxResult;
 import com.zty.common.enums.BusinessType;
-import com.zty.core.domain.Parent;
-import com.zty.core.service.IParentService;
-import com.zty.common.utils.poi.ExcelUtil;
 import com.zty.common.core.page.TableDataInfo;
 
 /**
@@ -39,10 +41,10 @@ public class ParentController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('core:parent:list')")
     @GetMapping("/list")
-    public TableDataInfo list(Parent parent)
+    public TableDataInfo list(Parent Parent)
     {
         startPage();
-        List<Parent> list = parentService.selectParentList(parent);
+        List<ParentVo> list = parentService.selectParentList(Parent);
         return getDataTable(list);
     }
 
@@ -54,8 +56,8 @@ public class ParentController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, Parent parent)
     {
-        List<Parent> list = parentService.selectParentList(parent);
-        ExcelUtil<Parent> util = new ExcelUtil<Parent>(Parent.class);
+        List<ParentVo> list = parentService.selectParentList(parent);
+        ExcelUtil<ParentVo> util = new ExcelUtil<ParentVo>(ParentVo.class);
         util.exportExcel(response, list, "学员信息数据");
     }
 

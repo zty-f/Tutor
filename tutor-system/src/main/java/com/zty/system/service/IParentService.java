@@ -1,7 +1,9 @@
-package com.zty.core.service;
+package com.zty.system.service;
+
+import com.zty.system.domain.Parent;
+import com.zty.system.domain.vo.ParentVo;
 
 import java.util.List;
-import com.zty.core.domain.Parent;
 
 /**
  * 学员信息Service接口
@@ -25,7 +27,7 @@ public interface IParentService
      * @param parent 学员信息
      * @return 学员信息集合
      */
-    public List<Parent> selectParentList(Parent parent);
+    public List<ParentVo> selectParentList(Parent parent);
 
     /**
      * 新增学员信息
