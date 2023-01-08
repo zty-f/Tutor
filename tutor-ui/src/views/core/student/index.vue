@@ -1,48 +1,24 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="职级ID" prop="deptId">
+      <el-form-item label="学生ID" prop="userId">
         <el-input
-          v-model="queryParams.deptId"
-          placeholder="请输入职级ID"
+          v-model="queryParams.userId"
+          placeholder="请输入学生ID"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="用户账号" prop="userName">
-        <el-input
-          v-model="queryParams.userName"
-          placeholder="请输入用户账号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="用户昵称" prop="nickName">
+      <el-form-item label="学生昵称" prop="nickName">
         <el-input
           v-model="queryParams.nickName"
-          placeholder="请输入用户昵称"
+          placeholder="请输入学生昵称"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="用户邮箱" prop="email">
-        <el-input
-          v-model="queryParams.email"
-          placeholder="请输入用户邮箱"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="手机号码" prop="phonenumber">
-        <el-input
-          v-model="queryParams.phonenumber"
-          placeholder="请输入手机号码"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="用户性别" prop="sex">
-        <el-select v-model="queryParams.sex" placeholder="请选择用户性别" clearable>
+      <el-form-item label="学生性别" prop="sex">
+        <el-select v-model="queryParams.sex" placeholder="请选择学生性别" clearable>
           <el-option
             v-for="dict in dict.type.sys_user_sex"
             :key="dict.value"
@@ -51,30 +27,22 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="帐号状态" prop="status">
-        <el-select v-model="queryParams.status" placeholder="请选择帐号状态" clearable>
+      <el-form-item label="学生职级" prop="deptId">
+        <el-select v-model="queryParams.deptId" placeholder="请选择学生职级" clearable>
           <el-option
-            v-for="dict in dict.type.sys_normal_disable"
+            v-for="dict in dict.type.sys_dept_name"
             :key="dict.value"
             :label="dict.label"
             :value="dict.value"
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="最后登录IP" prop="loginIp">
-        <el-input
-          v-model="queryParams.loginIp"
-          placeholder="请输入最后登录IP"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="最后登录时间" prop="loginDate">
+      <el-form-item label="登录时间" prop="loginDate">
         <el-date-picker clearable
-          v-model="queryParams.loginDate"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择最后登录时间">
+                        v-model="queryParams.loginDate"
+                        type="date"
+                        value-format="yyyy-MM-dd"
+                        placeholder="请选择最后登录时间">
         </el-date-picker>
       </el-form-item>
       <el-form-item>
@@ -419,7 +387,7 @@ import {getParent} from "@/api/core/parent";
 
 export default {
   name: "Student",
-  dicts: ['sys_auth_status', 'sys_delete_status', 'sys_user_sex', 'sys_normal_disable', 'sys_teach_way'],
+  dicts: ['sys_auth_status', 'sys_delete_status', 'sys_user_sex', 'sys_normal_disable', 'sys_teach_way','sys_dept_name'],
   data() {
     return {
       // 遮罩层
@@ -447,16 +415,11 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        deptId: null,
-        userName: null,
+        userId: null,
         nickName: null,
-        email: null,
-        phonenumber: null,
-        sex: null,
-        avatar: null,
-        status: null,
-        loginIp: null,
         loginDate: null,
+        sex: null,
+        deptId: null,
       },
       // 表单参数
       form: {},
