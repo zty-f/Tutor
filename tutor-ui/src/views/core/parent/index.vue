@@ -1,48 +1,24 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="职级ID" prop="deptId">
+      <el-form-item label="学员ID" prop="userId">
         <el-input
-          v-model="queryParams.deptId"
-          placeholder="请输入职级ID"
+          v-model="queryParams.userId"
+          placeholder="请输入学员ID"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="用户账号" prop="userName">
-        <el-input
-          v-model="queryParams.userName"
-          placeholder="请输入用户账号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="用户昵称" prop="nickName">
+      <el-form-item label="学员昵称" prop="nickName">
         <el-input
           v-model="queryParams.nickName"
-          placeholder="请输入用户昵称"
+          placeholder="请输入学员昵称"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="用户邮箱" prop="email">
-        <el-input
-          v-model="queryParams.email"
-          placeholder="请输入用户邮箱"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="手机号码" prop="phonenumber">
-        <el-input
-          v-model="queryParams.phonenumber"
-          placeholder="请输入手机号码"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="用户性别" prop="sex">
-        <el-select v-model="queryParams.sex" placeholder="请选择用户性别" clearable>
+      <el-form-item label="学员性别" prop="sex">
+        <el-select v-model="queryParams.sex" placeholder="请选择学员性别" clearable>
           <el-option
             v-for="dict in dict.type.sys_user_sex"
             :key="dict.value"
@@ -51,30 +27,22 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="帐号状态" prop="status">
-        <el-select v-model="queryParams.status" placeholder="请选择帐号状态" clearable>
+      <el-form-item label="学员现级" prop="deptId">
+        <el-select v-model="queryParams.deptId" placeholder="请选择学员现级" clearable>
           <el-option
-            v-for="dict in dict.type.sys_normal_disable"
+            v-for="dict in dict.type.sys_dept_name"
             :key="dict.value"
             :label="dict.label"
             :value="dict.value"
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="最后登录IP" prop="loginIp">
-        <el-input
-          v-model="queryParams.loginIp"
-          placeholder="请输入最后登录IP"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="最后登录时间" prop="loginDate">
+      <el-form-item label="登录时间" prop="loginDate">
         <el-date-picker clearable
-          v-model="queryParams.loginDate"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择最后登录时间">
+                        v-model="queryParams.loginDate"
+                        type="date"
+                        value-format="yyyy-MM-dd"
+                        placeholder="请选择最后登录时间">
         </el-date-picker>
       </el-form-item>
       <el-form-item>
@@ -290,23 +258,30 @@
     <!-- 添加或修改学员信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="职级ID" prop="deptId">
-          <el-input v-model="form.deptId" placeholder="请输入职级ID" />
+        <el-form-item label="学员现级" prop="deptId">
+          <el-select v-model="form.deptId" placeholder="请选择学员职级">
+            <el-option
+              v-for="dict in dict.type.sys_dept_name"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="用户账号" prop="userName">
-          <el-input v-model="form.userName" placeholder="请输入用户账号" />
+        <el-form-item label="学员账号" prop="userName">
+          <el-input v-model="form.userName" placeholder="请输入学员账号" />
         </el-form-item>
-        <el-form-item label="用户昵称" prop="nickName">
-          <el-input v-model="form.nickName" placeholder="请输入用户昵称" />
+        <el-form-item label="学员昵称" prop="nickName">
+          <el-input v-model="form.nickName" placeholder="请输入学员昵称" />
         </el-form-item>
-        <el-form-item label="用户邮箱" prop="email">
-          <el-input v-model="form.email" placeholder="请输入用户邮箱" />
+        <el-form-item label="学员邮箱" prop="email">
+          <el-input v-model="form.email" placeholder="请输入学员邮箱" />
         </el-form-item>
         <el-form-item label="手机号码" prop="phonenumber">
           <el-input v-model="form.phonenumber" placeholder="请输入手机号码" />
         </el-form-item>
-        <el-form-item label="用户性别" prop="sex">
-          <el-select v-model="form.sex" placeholder="请选择用户性别">
+        <el-form-item label="学员性别" prop="sex">
+          <el-select v-model="form.sex" placeholder="请选择学员性别">
             <el-option
               v-for="dict in dict.type.sys_user_sex"
               :key="dict.value"
@@ -380,7 +355,7 @@ import { listParent, getParent, delParent, addParent, updateParent } from "@/api
 
 export default {
   name: "Parent",
-  dicts: ['sys_auth_status', 'sys_delete_status', 'sys_user_sex', 'sys_normal_disable'],
+  dicts: ['sys_auth_status', 'sys_delete_status', 'sys_user_sex', 'sys_normal_disable','sys_dept_name'],
   data() {
     return {
       // 遮罩层
@@ -408,26 +383,24 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
+        userId: null,
         deptId: null,
-        userName: null,
         nickName: null,
-        email: null,
-        phonenumber: null,
         sex: null,
-        avatar: null,
-        status: null,
-        loginIp: null,
         loginDate: null,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
+        deptId: [
+          { required: true, message: "所属职级不能为空", trigger: "blur" }
+        ],
         userName: [
-          { required: true, message: "用户账号不能为空", trigger: "blur" }
+          { required: true, message: "学员账号不能为空", trigger: "blur" }
         ],
         nickName: [
-          { required: true, message: "用户昵称不能为空", trigger: "blur" }
+          { required: true, message: "学员昵称不能为空", trigger: "blur" }
         ],
       }
     };
