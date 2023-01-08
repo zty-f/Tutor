@@ -279,8 +279,15 @@
     <!-- 添加或修改学生信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="职级ID" prop="deptId">
-          <el-input v-model="form.deptId" placeholder="请输入职级ID" />
+        <el-form-item label="所属职级" prop="deptId">
+          <el-select v-model="form.deptId" placeholder="请选择用户职级">
+            <el-option
+              v-for="dict in dict.type.sys_dept_name"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="用户账号" prop="userName">
           <el-input v-model="form.userName" placeholder="请输入用户账号" />
@@ -425,6 +432,9 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        deptId: [
+          { required: true, message: "所属职级不能为空", trigger: "blur" }
+        ],
         userName: [
           { required: true, message: "用户账号不能为空", trigger: "blur" }
         ],
