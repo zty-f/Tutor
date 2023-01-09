@@ -332,17 +332,6 @@
             >{{dict.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="最后登录IP" prop="loginIp">
-          <el-input v-model="form.loginIp" placeholder="请输入最后登录IP" />
-        </el-form-item>
-        <el-form-item label="最后登录时间" prop="loginDate">
-          <el-date-picker clearable
-            v-model="form.loginDate"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择最后登录时间">
-          </el-date-picker>
-        </el-form-item>
         <el-form-item label="备注">
           <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"></el-input>
         </el-form-item>
