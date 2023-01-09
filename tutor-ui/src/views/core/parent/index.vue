@@ -259,7 +259,7 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="学员现级" prop="deptId">
-          <el-select v-model="form.deptId" placeholder="请选择学员职级">
+          <el-select v-model="form.deptId" placeholder="请选择学员现级">
             <el-option
               v-for="dict in dict.type.sys_dept_name"
               :key="dict.value"
@@ -382,8 +382,24 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        email: [
+          { required: true, message: "邮箱地址不能为空", trigger: "blur" },
+          {
+            type: "email",
+            message: "请输入正确的邮箱地址",
+            trigger: ["blur", "change"]
+          }
+        ],
+        phonenumber: [
+          { required: true, message: "手机号码不能为空", trigger: "blur" },
+          {
+            pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
+            message: "请输入正确的手机号码",
+            trigger: "blur"
+          }
+        ],
         deptId: [
-          { required: true, message: "所属职级不能为空", trigger: "blur" }
+          { required: true, message: "所属现级不能为空", trigger: "blur" }
         ],
         userName: [
           { required: true, message: "学员账号不能为空", trigger: "blur" }
