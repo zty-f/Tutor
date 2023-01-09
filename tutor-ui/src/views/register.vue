@@ -1,7 +1,21 @@
 <template>
   <div class="register">
-    <el-form ref="registerForm" :model="registerForm" :rules="registerRules" class="register-form">
-      <h3 class="title">家教一体化平台</h3>
+    <!--头部-->
+    <div class="el-register-header">
+      <el-switch
+        v-model="isParentRegister"
+        active-color="blue"
+        inactive-color="green"
+        active-text="学员注册"
+        inactive-text="学生注册">
+      </el-switch>
+    </div>
+    <!--学生注册表单-->
+    <el-form ref="registerForm" :model="registerForm" :rules="registerRules" class="register-form" v-if="!isParentRegister">
+      <h3 class="title">家教一体化平台[学生注册]</h3>
+      <el-form-item label="头像">
+        <image-upload v-model="registerForm.avatar"/>
+      </el-form-item>
       <el-form-item prop="username">
         <el-input v-model="registerForm.username" type="text" auto-complete="off" placeholder="账号">
           <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon" />
@@ -27,6 +41,171 @@
           @keyup.enter.native="handleRegister"
         >
           <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon" />
+        </el-input>
+      </el-form-item>
+      <el-form-item prop="deptId">
+        <el-select v-model="registerForm.deptId" placeholder="请选择教学职级">
+          <el-option
+            v-for="dict in dict.type.sys_dept_name"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          ></el-option>
+          <svg-icon slot="prefix" icon-class="dept" class="el-input__icon input-icon" />
+        </el-select>
+      </el-form-item>
+      <el-form-item  prop="email">
+        <el-input v-model="registerForm.email" placeholder="请输入个人邮箱" >
+          <svg-icon slot="prefix" icon-class="email" class="el-input__icon input-icon" />
+        </el-input>
+      </el-form-item>
+      <el-form-item  prop="phonenumber">
+        <el-input v-model="registerForm.phonenumber" placeholder="请输入个人手机号码" >
+          <svg-icon slot="prefix" icon-class="phone" class="el-input__icon input-icon" />
+        </el-input>
+      </el-form-item>
+      <el-form-item  prop="sex">
+        <el-select v-model="registerForm.sex" placeholder="请选择性别">
+          <el-option
+            v-for="dict in dict.type.sys_user_sex"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          ></el-option>
+          <svg-icon slot="prefix" icon-class="sex" class="el-input__icon input-icon" />
+        </el-select>
+      </el-form-item>
+      <el-form-item  prop="university">
+        <el-input v-model="registerForm.university" placeholder="请输入就读学校">
+          <svg-icon slot="prefix" icon-class="school" class="el-input__icon input-icon" />
+        </el-input>
+      </el-form-item>
+      <el-form-item  prop="major">
+        <el-input v-model="registerForm.major" placeholder="请输入所学专业">
+          <svg-icon slot="prefix" icon-class="major" class="el-input__icon input-icon" />
+        </el-input>
+      </el-form-item>
+      <el-form-item  prop="location">
+        <el-input v-model="registerForm.location" placeholder="请输入个人所在地">
+          <svg-icon slot="prefix" icon-class="location" class="el-input__icon input-icon" />
+        </el-input>
+      </el-form-item>
+      <el-form-item prop="teachWay" label="">
+        <el-select v-model="registerForm.teachWay" placeholder="请选择授课方式">
+          <el-option
+            v-for="dict in dict.type.sys_teach_way"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          ></el-option>
+          <svg-icon slot="prefix" icon-class="teachway" class="el-input__icon input-icon" />
+        </el-select>
+      </el-form-item>
+      <el-form-item prop="background">
+        <el-input v-model="registerForm.background" type="textarea" placeholder="请输入个人详细情况"></el-input>
+      </el-form-item>
+      <el-form-item prop="code" v-if="captchaEnabled">
+        <el-input
+          v-model="registerForm.code"
+          auto-complete="off"
+          placeholder="验证码"
+          style="width: 63%"
+          @keyup.enter.native="handleRegister"
+        >
+          <svg-icon slot="prefix" icon-class="validCode" class="el-input__icon input-icon" />
+        </el-input>
+        <div class="register-code">
+          <img :src="codeUrl" @click="getCode" class="register-code-img"/>
+        </div>
+      </el-form-item>
+      <el-form-item style="width:100%;">
+        <el-button
+          :loading="loading"
+          size="medium"
+          type="primary"
+          style="width:100%;"
+          @click.native.prevent="handleRegister"
+        >
+          <span v-if="!loading">注 册</span>
+          <span v-else>注 册 中...</span>
+        </el-button>
+        <div style="float: right;">
+          <router-link class="link-type" :to="'/login'">使用已有账户登录</router-link>
+        </div>
+      </el-form-item>
+    </el-form>
+    <!--学员注册表单-->
+    <el-form ref="registerForm" :model="registerForm" :rules="registerRules" class="register-form" v-if="isParentRegister">
+      <h3 class="title">家教一体化平台[学员注册]</h3>
+      <el-form-item label="头像">
+        <image-upload v-model="registerForm.avatar"/>
+      </el-form-item>
+      <el-form-item prop="username">
+        <el-input v-model="registerForm.username" type="text" auto-complete="off" placeholder="账号">
+          <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon" />
+        </el-input>
+      </el-form-item>
+      <el-form-item prop="password">
+        <el-input
+          v-model="registerForm.password"
+          type="password"
+          auto-complete="off"
+          placeholder="密码"
+          @keyup.enter.native="handleRegister"
+        >
+          <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon" />
+        </el-input>
+      </el-form-item>
+      <el-form-item prop="confirmPassword">
+        <el-input
+          v-model="registerForm.confirmPassword"
+          type="password"
+          auto-complete="off"
+          placeholder="确认密码"
+          @keyup.enter.native="handleRegister"
+        >
+          <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon" />
+        </el-input>
+      </el-form-item>
+      <el-form-item prop="deptId">
+        <el-select v-model="registerForm.deptId" placeholder="请选择求教职级">
+          <el-option
+            v-for="dict in dict.type.sys_dept_name"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          ></el-option>
+          <svg-icon slot="prefix" icon-class="dept" class="el-input__icon input-icon" />
+        </el-select>
+      </el-form-item>
+      <el-form-item  prop="email">
+        <el-input v-model="registerForm.email" placeholder="请输入个人邮箱" >
+          <svg-icon slot="prefix" icon-class="email" class="el-input__icon input-icon" />
+        </el-input>
+      </el-form-item>
+      <el-form-item  prop="phonenumber">
+        <el-input v-model="registerForm.phonenumber" placeholder="请输入个人手机号码" >
+          <svg-icon slot="prefix" icon-class="phone" class="el-input__icon input-icon" />
+        </el-input>
+      </el-form-item>
+      <el-form-item  prop="sex">
+        <el-select v-model="registerForm.sex" placeholder="请选择性别">
+          <el-option
+            v-for="dict in dict.type.sys_user_sex"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          ></el-option>
+          <svg-icon slot="prefix" icon-class="sex" class="el-input__icon input-icon" />
+        </el-select>
+      </el-form-item>
+      <el-form-item  prop="location">
+        <el-input v-model="registerForm.location" placeholder="请输入所在地">
+          <svg-icon slot="prefix" icon-class="location" class="el-input__icon input-icon" />
+        </el-input>
+      </el-form-item>
+      <el-form-item >
+        <el-input v-model="registerForm.background" type="textarea" placeholder="请输入个人详细情况">
         </el-input>
       </el-form-item>
       <el-form-item prop="code" v-if="captchaEnabled">
@@ -61,7 +240,7 @@
     </el-form>
     <!--  底部  -->
     <div class="el-register-footer">
-      <span>Copyright © 2018-2022 ruoyi.vip All Rights Reserved.</span>
+      <span>Copyright ©2022-2023 tutor - zty</span>
     </div>
   </div>
 </template>
@@ -71,6 +250,7 @@ import { getCodeImg, register } from "@/api/login";
 
 export default {
   name: "Register",
+  dicts: [ 'sys_user_sex','sys_dept_name','sys_teach_way'],
   data() {
     const equalToPassword = (rule, value, callback) => {
       if (this.registerForm.password !== value) {
@@ -80,15 +260,53 @@ export default {
       }
     };
     return {
+      isParentRegister: false,
       codeUrl: "",
       registerForm: {
         username: "",
         password: "",
         confirmPassword: "",
         code: "",
-        uuid: ""
+        uuid: "",
+        email: "",
+        phonenumber: "",
+        deptId: "",
       },
       registerRules: {
+        email: [
+          { required: false, message: "邮箱地址不能为空", trigger: "blur" },
+          {
+            type: "email",
+            message: "请输入正确的邮箱地址",
+            trigger: ["blur", "change"]
+          }
+        ],
+        phonenumber: [
+          { required: false, message: "手机号码不能为空", trigger: "blur" },
+          {
+            pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
+            message: "请输入正确的手机号码",
+            trigger: "blur"
+          }
+        ],
+        deptId: [
+          { required: true, message: "所属职级不能为空", trigger: "blur" }
+        ],
+        university: [
+          { required: true, message: "就读学校不能为空", trigger: "blur" }
+        ],
+        major: [
+          { required: true, message: "所学专业不能为空", trigger: "blur" }
+        ],
+        location: [
+          { required: true, message: "所在地不能为空", trigger: "blur" }
+        ],
+        teachWay: [
+          { required: true, message: "授课方式不能为空", trigger: "blur" }
+        ],
+        sex: [
+          { required: true, message: "性别不能为空", trigger: "blur" }
+        ],
         username: [
           { required: true, trigger: "blur", message: "请输入您的账号" },
           { min: 2, max: 20, message: '用户账号长度必须介于 2 和 20 之间', trigger: 'blur' }
@@ -150,9 +368,9 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  height: 1300px;
   background-image: url("../assets/images/login-background.jpg");
-  background-size: cover;
+  background-size: auto 1500px;
 }
 .title {
   margin: 0px auto 30px auto;
@@ -161,10 +379,10 @@ export default {
 }
 
 .register-form {
-  border-radius: 6px;
+  border-radius: 4px;
   background: #ffffff;
   width: 400px;
-  padding: 25px 25px 5px 25px;
+  padding: 20px 20px 5px 20px;
   .el-input {
     height: 38px;
     input {
@@ -202,6 +420,18 @@ export default {
   font-family: Arial;
   font-size: 12px;
   letter-spacing: 1px;
+}
+.el-register-header {
+  height: 40px;
+  line-height: 40px;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  text-align: center;
+  font-family: '微软雅黑';
+  font-size: 20px;
+  letter-spacing: 1px;
+  background: #ffffff;
 }
 .register-code-img {
   height: 38px;
