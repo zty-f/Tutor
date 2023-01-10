@@ -16,7 +16,7 @@ public class RegisterBody extends LoginBody
     private Long deptId;
 
     /** 岗位 */
-    private List<String> postIds;
+    private List<Long> postIds;
 
     /*判断注册角色为学生还是学员*/
     private boolean parentRegister;
@@ -57,11 +57,11 @@ public class RegisterBody extends LoginBody
     @Excel(name = "授课方式", readConverterExp = "0=老师上门,1=学生上门,2=线上辅导")
     private String teachWay;
 
-    public List<String> getPostIds() {
+    public List<Long> getPostIds() {
         return postIds;
     }
 
-    public void setPostIds(List<String> postIds) {
+    public void setPostIds(List<Long> postIds) {
         this.postIds = postIds;
     }
 

@@ -16,6 +16,14 @@ public class SysUserRole
     /** 角色ID */
     private Long roleId;
 
+    public SysUserRole() {
+    }
+
+    public SysUserRole(Long userId, Long roleId) {
+        this.userId = userId;
+        this.roleId = roleId;
+    }
+
     public Long getUserId()
     {
         return userId;

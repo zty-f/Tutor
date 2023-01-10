@@ -1,5 +1,11 @@
 package com.zty.framework.web.service;
 
+import com.zty.common.utils.DateUtils;
+import com.zty.system.domain.*;
+import com.zty.system.mapper.ParentMapper;
+import com.zty.system.mapper.StudentMapper;
+import com.zty.system.mapper.SysUserPostMapper;
+import com.zty.system.mapper.SysUserRoleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.zty.common.constant.CacheConstants;
@@ -18,6 +24,11 @@ import com.zty.framework.manager.factory.AsyncFactory;
 import com.zty.system.service.ISysConfigService;
 import com.zty.system.service.ISysUserService;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * 注册校验方法
  * 
@@ -34,6 +45,18 @@ public class SysRegisterService
 
     @Autowired
     private RedisCache redisCache;
+
+    @Autowired
+    private StudentMapper studentMapper;
+
+    @Autowired
+    private ParentMapper parentMapper;
+
+    @Autowired
+    private SysUserRoleMapper userRoleMapper;
+
+    @Autowired
+    private SysUserPostMapper userPostMapper;
 
     /**
      * 注册
@@ -77,17 +100,73 @@ public class SysRegisterService
         {
             sysUser.setNickName(username);
             sysUser.setPassword(SecurityUtils.encryptPassword(password));
+            sysUser.setDeptId(registerBody.getDeptId());
+            sysUser.setSex(registerBody.getSex());
+            sysUser.setAvatar(registerBody.getAvatar());
+            if (StringUtils.isNotNull(registerBody.getEmail())){
+                sysUser.setEmail(registerBody.getEmail());
+            }
+            if (StringUtils.isNotNull(registerBody.getPhonenumber())){
+                sysUser.setPhonenumber(registerBody.getPhonenumber());
+            }
             boolean regFlag = userService.registerUser(sysUser);
+            Long userId = userService.selectUserByUserName(username).getUserId();
+            insertUserPost(userId,registerBody.getPostIds());
+            boolean isParentRegister = registerBody.getParentRegister();
             if (!regFlag)
             {
                 msg = "注册失败,请联系系统管理人员";
             }
             else
             {
+                if (!isParentRegister){ //学生
+                    SysStudent sysStudent = new SysStudent();
+                    sysStudent.setUserId(userId);
+                    sysStudent.setLocation(registerBody.getLocation());
+                    sysStudent.setMajor(registerBody.getMajor());
+                    sysStudent.setUniversity(registerBody.getUniversity());
+                    sysStudent.setTeachWay(registerBody.getTeachWay());
+                    sysStudent.setBackground(registerBody.getBackground());
+                    sysStudent.setCreateBy(username);
+                    sysStudent.setCreateTime(DateUtils.getNowDate());
+                    sysStudent.setAuthStatus("0");
+                    studentMapper.batchSysStudent(sysStudent);
+                    userRoleMapper.batchUserRole(Collections.singletonList(new SysUserRole(userId,3L)));
+                }else { //学员
+                    SysParent sysParent = new SysParent();
+                    sysParent.setUserId(userId);
+                    sysParent.setLocation(registerBody.getLocation());
+                    sysParent.setBackground(registerBody.getBackground());
+                    sysParent.setCreateBy(username);
+                    sysParent.setCreateTime(DateUtils.getNowDate());
+                    sysParent.setAuthStatus("0");
+                    parentMapper.batchSysParent(sysParent);
+                    userRoleMapper.batchUserRole(Collections.singletonList(new SysUserRole(userId,4L)));
+                }
                 AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.REGISTER, MessageUtils.message("user.register.success")));
             }
         }
         return msg;
+    }
+
+    /**
+     * 新增用户岗位信息
+     */
+    public void insertUserPost(Long userId,List<Long> postIds)
+    {
+        if (StringUtils.isNotEmpty(postIds))
+        {
+            // 新增用户与岗位管理
+            List<SysUserPost> list = new ArrayList<SysUserPost>(postIds.size());
+            for (Long postId : postIds)
+            {
+                SysUserPost up = new SysUserPost();
+                up.setUserId(userId);
+                up.setPostId(postId);
+                list.add(up);
+            }
+            userPostMapper.batchUserPost(list);
+        }
     }
 
     /**
