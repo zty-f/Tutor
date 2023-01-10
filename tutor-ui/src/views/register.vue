@@ -3,16 +3,16 @@
     <!--头部-->
     <div class="el-register-header">
       <el-switch
-        v-model="isParentRegister"
+        v-model="registerForm.parentRegister"
         active-color="blue"
         inactive-color="green"
         active-text="学员注册"
-        @change="clearForm"
+        @change="clearForm()"
         inactive-text="学生注册">
       </el-switch>
     </div>
     <!--学生注册表单-->
-    <el-form ref="registerForm" :model="registerForm" :rules="registerRules" class="register-form" v-if="!isParentRegister">
+    <el-form ref="registerForm" :model="registerForm" :rules="registerRules" class="register-form" v-if="!registerForm.parentRegister">
       <h3 class="title">家教一体化平台[学生注册]</h3>
       <el-form-item label="头像">
         <image-upload v-model="registerForm.avatar"/>
@@ -148,7 +148,7 @@
       </el-form-item>
     </el-form>
     <!--学员注册表单-->
-    <el-form ref="registerForm" :model="registerForm" :rules="registerRules" class="register-form" v-if="isParentRegister">
+    <el-form ref="registerForm" :model="registerForm" :rules="registerRules" class="register-form" v-if="registerForm.parentRegister">
       <h3 class="title">家教一体化平台[学员注册]</h3>
       <el-form-item label="头像">
         <image-upload v-model="registerForm.avatar"/>
@@ -288,9 +288,9 @@ export default {
     return {
       // 岗位选项
       postOptions: [],
-      isParentRegister: false,
       codeUrl: "",
       registerForm: {
+        parentRegister: false,
         username: "",
         password: "",
         confirmPassword: "",
@@ -320,6 +320,9 @@ export default {
         ],
         deptId: [
           { required: true, message: "所属职级不能为空", trigger: "blur" }
+        ],
+        postIds: [
+          { required: true, message: "选择不能为空", trigger: "blur" }
         ],
         university: [
           { required: true, message: "就读学校不能为空", trigger: "blur" }
@@ -374,7 +377,6 @@ export default {
       this.$refs.registerForm.validate(valid => {
         if (valid) {
           this.loading = true;
-          this.registerForm.isParentRegister = this.isParentRegister;
           register(this.registerForm).then(res => {
             const username = this.registerForm.username;
             this.$alert("<font color='red'>恭喜你，您的账号 " + username + " 注册成功！</font>", '系统提示', {

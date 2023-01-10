@@ -2,6 +2,8 @@ package com.zty.common.core.domain.model;
 
 import com.zty.common.annotation.Excel;
 
+import java.util.List;
+
 /**
  * 用户注册对象
  * 
@@ -12,6 +14,12 @@ public class RegisterBody extends LoginBody
     /** 职级ID */
     @Excel(name = "职级ID")
     private Long deptId;
+
+    /** 岗位 */
+    private List<String> postIds;
+
+    /*判断注册角色为学生还是学员*/
+    private boolean parentRegister;
 
     /** 用户邮箱 */
     @Excel(name = "用户邮箱")
@@ -48,6 +56,22 @@ public class RegisterBody extends LoginBody
     /** 授课方式（0老师上门 1学生上门 2线上辅导） */
     @Excel(name = "授课方式", readConverterExp = "0=老师上门,1=学生上门,2=线上辅导")
     private String teachWay;
+
+    public List<String> getPostIds() {
+        return postIds;
+    }
+
+    public void setPostIds(List<String> postIds) {
+        this.postIds = postIds;
+    }
+
+    public boolean getParentRegister() {
+        return parentRegister;
+    }
+
+    public void setParentRegister(boolean parentRegister) {
+        this.parentRegister = parentRegister;
+    }
 
     public Long getDeptId() {
         return deptId;
@@ -133,6 +157,8 @@ public class RegisterBody extends LoginBody
     public String toString() {
         return "RegisterBody{" +
                 "deptId=" + deptId +
+                ", postIds=" + postIds +
+                ", parentRegister=" + parentRegister +
                 ", email='" + email + '\'' +
                 ", phonenumber='" + phonenumber + '\'' +
                 ", sex='" + sex + '\'' +
