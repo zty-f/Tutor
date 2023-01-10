@@ -55,6 +55,18 @@
           <svg-icon slot="prefix" icon-class="dept" class="el-input__icon input-icon" />
         </el-select>
       </el-form-item>
+      <el-form-item prop="postIds">
+        <el-select v-model="registerForm.postIds" multiple placeholder="请选择岗位" style="width: 360px">
+          <el-option
+            v-for="item in dict.type.sys_post_list"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+            :disabled="item.status == 1"
+          ></el-option>
+          <svg-icon slot="prefix" icon-class="post" class="el-input__icon input-icon" />
+        </el-select>
+      </el-form-item>
       <el-form-item  prop="email">
         <el-input v-model="registerForm.email" placeholder="请输入个人邮箱" >
           <svg-icon slot="prefix" icon-class="email" class="el-input__icon input-icon" />
@@ -179,6 +191,18 @@
           <svg-icon slot="prefix" icon-class="dept" class="el-input__icon input-icon" />
         </el-select>
       </el-form-item>
+      <el-form-item prop="postIds">
+        <el-select v-model="registerForm.postIds" multiple placeholder="请选择学科" style="width: 360px">
+          <el-option
+            v-for="item in dict.type.sys_post_list"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+            :disabled="item.status == 1"
+          ></el-option>
+          <svg-icon slot="prefix" icon-class="post" class="el-input__icon input-icon" />
+        </el-select>
+      </el-form-item>
       <el-form-item  prop="email">
         <el-input v-model="registerForm.email" placeholder="请输入个人邮箱" >
           <svg-icon slot="prefix" icon-class="email" class="el-input__icon input-icon" />
@@ -248,10 +272,11 @@
 
 <script>
 import { getCodeImg, register } from "@/api/login";
+import {deptTreeSelect} from "@/api/system/user";
 
 export default {
   name: "Register",
-  dicts: [ 'sys_user_sex','sys_dept_name','sys_teach_way'],
+  dicts: [ 'sys_user_sex','sys_dept_name','sys_teach_way','sys_post_list'],
   data() {
     const equalToPassword = (rule, value, callback) => {
       if (this.registerForm.password !== value) {
@@ -261,6 +286,8 @@ export default {
       }
     };
     return {
+      // 岗位选项
+      postOptions: [],
       isParentRegister: false,
       codeUrl: "",
       registerForm: {
@@ -272,6 +299,7 @@ export default {
         email: "",
         phonenumber: "",
         deptId: "",
+        postIds: [],
       },
       registerRules: {
         email: [
@@ -346,6 +374,7 @@ export default {
       this.$refs.registerForm.validate(valid => {
         if (valid) {
           this.loading = true;
+          this.registerForm.isParentRegister = this.isParentRegister;
           register(this.registerForm).then(res => {
             const username = this.registerForm.username;
             this.$alert("<font color='red'>恭喜你，您的账号 " + username + " 注册成功！</font>", '系统提示', {
