@@ -142,7 +142,7 @@
             size="mini"
             type="text"
             icon="el-icon-more"
-            @click="handleDetail(scope.row.parent)"
+            @click="handleDetail(scope.row)"
           >详情</el-button>
           <el-button
             size="mini"
@@ -172,7 +172,7 @@
 
     <!-- 查看每个学员详细信息描述列表 -->
     <el-dialog :title="title" :visible.sync="openDetail" width="800px" append-to-body>
-    <el-descriptions class="margin-top" :column="2" border>
+    <el-descriptions class="margin-top" :column="2" border :labelStyle="rowCenter">
       <template slot="title">
         <image-preview :src="form.avatar" :width="100" :height="100"/>
       </template>
@@ -203,6 +203,24 @@
           学员性别
         </template>
         <dict-tag :options="dict.type.sys_user_sex" :value="form.sex"/>
+      </el-descriptions-item>
+      <el-descriptions-item>
+        <template slot="label">
+          <svg-icon slot="prefix" icon-class="dept" class="el-input__icon input-icon" />
+          学员现级
+        </template>
+        <dict-tag :options="dict.type.sys_dept_name" :value="form.deptId"/>
+      </el-descriptions-item>
+      <el-descriptions-item>
+        <template slot="label">
+          <svg-icon slot="prefix" icon-class="post" class="el-input__icon input-icon" />
+          待补学科
+        </template>
+        <el-tag
+          v-for="post in tPosts"
+          effect="plain">
+          {{ post }}
+        </el-tag>
       </el-descriptions-item>
       <el-descriptions-item>
         <template slot="label">
@@ -347,6 +365,11 @@ export default {
   dicts: ['sys_auth_status', 'sys_delete_status', 'sys_user_sex', 'sys_normal_disable','sys_dept_name'],
   data() {
     return {
+      rowCenter:{
+        "text-align":"center",
+        "width": "130px"
+      },
+      tPosts: "",
       // 遮罩层
       loading: true,
       // 选中数组
@@ -480,9 +503,10 @@ export default {
     /** 详情按钮操作 */
     handleDetail(row) {
       this.reset();
-      const userId = row.userId || this.ids
+      const userId = row.parent.userId || this.ids
       getParent(userId).then(response => {
         this.form = response.data;
+        this.tPosts = row.posts;
         this.sysParent = response.data.sysParent==null?{}:response.data.sysParent;
         this.openDetail = true;
         this.title = "学员详细信息";
