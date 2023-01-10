@@ -7,6 +7,7 @@
         active-color="blue"
         inactive-color="green"
         active-text="学员注册"
+        @change="clearForm"
         inactive-text="学生注册">
       </el-switch>
     </div>
@@ -329,6 +330,9 @@ export default {
     this.getCode();
   },
   methods: {
+    clearForm(){
+      this.$refs.registerForm.clearValidate();
+    },
     getCode() {
       getCodeImg().then(res => {
         this.captchaEnabled = res.captchaEnabled === undefined ? true : res.captchaEnabled;
