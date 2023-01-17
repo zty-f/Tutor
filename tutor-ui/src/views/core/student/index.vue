@@ -266,6 +266,13 @@
         </el-descriptions-item>
         <el-descriptions-item>
           <template slot="label">
+            <i class="el-icon-s-finance"></i>
+            期望报酬
+          </template>
+          <dict-tag :options="dict.type.sys_salary_dict" :value="sysStudent.salaryExpect"/>
+        </el-descriptions-item>
+        <el-descriptions-item>
+          <template slot="label">
             <i class="el-icon-time"></i>
             最近上线
           </template>
@@ -325,7 +332,7 @@
               v-for="dict in dict.type.sys_user_sex"
               :key="dict.value"
               :label="dict.label"
-:value="dict.value"
+              :value="dict.value"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -337,7 +344,7 @@
             <el-radio
               v-for="dict in dict.type.sys_normal_disable"
               :key="dict.value"
-:label="dict.value"
+              :label="dict.value"
             >{{dict.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
@@ -346,7 +353,7 @@
             <el-radio
               v-for="dict in dict.type.sys_delete_status"
               :key="dict.value"
-:label="dict.value"
+              :label="dict.value"
             >{{dict.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
@@ -376,6 +383,16 @@
             >{{dict.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
+        <el-form-item label="期望报酬">
+          <el-select v-model="sysStudent.salaryExpect" placeholder="请选择期望报酬">
+            <el-option
+              v-for="dict in dict.type.sys_salary_dict"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="认证状态">
           <el-radio-group v-model="sysStudent.authStatus">
             <el-radio
@@ -400,7 +417,7 @@ import { listStudent, getStudent, delStudent, addStudent, updateStudent } from "
 
 export default {
   name: "Student",
-  dicts: ['sys_auth_status', 'sys_delete_status', 'sys_user_sex', 'sys_normal_disable', 'sys_teach_way','sys_dept_name'],
+  dicts: ['sys_auth_status', 'sys_delete_status', 'sys_user_sex', 'sys_normal_disable', 'sys_teach_way','sys_dept_name','sys_salary_dict'],
   data() {
     return {
       rowCenter:{
@@ -540,6 +557,7 @@ export default {
       const userId = row.userId || this.ids
       getStudent(userId).then(response => {
         this.form = response.data;
+        this.form.deptId = this.form.deptId.toString(); //解决不能显示字段问题，后端传值为Long类型
         this.sysStudent = response.data.sysStudent==null?{}:response.data.sysStudent;
         this.open = true;
         this.title = "修改学生信息";

@@ -245,6 +245,13 @@
       </el-descriptions-item>
       <el-descriptions-item>
         <template slot="label">
+          <i class="el-icon-s-finance"></i>
+          期望报酬
+        </template>
+        <dict-tag :options="dict.type.sys_salary_dict" :value="sysParent.salaryReward"/>
+      </el-descriptions-item>
+      <el-descriptions-item>
+        <template slot="label">
           <i class="el-icon-time"></i>
           最近上线
         </template>
@@ -304,7 +311,7 @@
               v-for="dict in dict.type.sys_user_sex"
               :key="dict.value"
               :label="dict.label"
-:value="dict.value"
+              :value="dict.value"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -316,7 +323,7 @@
             <el-radio
               v-for="dict in dict.type.sys_normal_disable"
               :key="dict.value"
-:label="dict.value"
+              :label="dict.value"
             >{{dict.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
@@ -325,7 +332,7 @@
             <el-radio
               v-for="dict in dict.type.sys_delete_status"
               :key="dict.value"
-:label="dict.value"
+              :label="dict.value"
             >{{dict.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
@@ -335,6 +342,16 @@
         <el-divider content-position="center">学员家教信息</el-divider>
         <el-form-item label="所在地点" prop="location">
           <el-input v-model="sysParent.location" placeholder="请输入所在地" />
+        </el-form-item>
+        <el-form-item label="教学报酬">
+          <el-select v-model="sysParent.salaryReward" placeholder="请选择教学报酬">
+            <el-option
+              v-for="dict in dict.type.sys_salary_dict"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="学员详细背景">
           <el-input v-model="sysParent.background" type="textarea" placeholder="请输入学员详细情况"></el-input>
@@ -362,7 +379,7 @@ import { listParent, getParent, delParent, addParent, updateParent } from "@/api
 
 export default {
   name: "Parent",
-  dicts: ['sys_auth_status', 'sys_delete_status', 'sys_user_sex', 'sys_normal_disable','sys_dept_name'],
+  dicts: ['sys_auth_status','sys_salary_dict', 'sys_delete_status', 'sys_user_sex', 'sys_normal_disable','sys_dept_name'],
   data() {
     return {
       rowCenter:{
@@ -518,6 +535,7 @@ export default {
       const userId = row.userId || this.ids
       getParent(userId).then(response => {
         this.form = response.data;
+        this.form.deptId = this.form.deptId.toString(); //解决不能显示字段问题，后端传值为Long类型
         this.sysParent = response.data.sysParent==null?{}:response.data.sysParent;
         this.open = true;
         this.title = "修改学员信息";
