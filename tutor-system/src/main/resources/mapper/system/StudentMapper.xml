@@ -38,6 +38,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="major"    column="sub_major"    />
         <result property="background"    column="sub_background"    />
         <result property="teachWay"    column="sub_teach_way"    />
+        <result property="salaryExpect"    column="sub_salary_expect"    />
         <result property="authStatus"    column="sub_auth_status"    />
         <result property="delFlag"    column="sub_del_flag"    />
         <result property="createBy"    column="sub_create_by"    />
@@ -66,7 +67,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <select id="selectStudentByUserId" parameterType="Long" resultMap="StudentSysStudentResult">
         select a.user_id, a.dept_id, a.user_name, a.nick_name, a.user_type, a.email, a.phonenumber, a.sex, a.avatar, a.password, a.status, a.del_flag, a.login_ip, a.login_date, a.create_by, a.create_time, a.update_by, a.update_time, a.remark,
- b.id as sub_id, b.user_id as sub_user_id, b.location as sub_location, b.university as sub_university, b.major as sub_major, b.background as sub_background, b.teach_way as sub_teach_way, b.auth_status as sub_auth_status, b.del_flag as sub_del_flag, b.create_by as sub_create_by, b.create_time as sub_create_time, b.update_by as sub_update_by, b.update_time as sub_update_time, b.remark as sub_remark
+ b.id as sub_id, b.user_id as sub_user_id, b.location as sub_location, b.university as sub_university, b.major as sub_major, b.background as sub_background, b.teach_way as sub_teach_way, b.salary_expect as sub_salary_expect, b.auth_status as sub_auth_status, b.del_flag as sub_del_flag, b.create_by as sub_create_by, b.create_time as sub_create_time, b.update_by as sub_update_by, b.update_time as sub_update_time, b.remark as sub_remark
         from sys_user a
         left join sys_student b on b.user_id = a.user_id
         where a.user_id = #{userId}
@@ -164,7 +165,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <insert id="batchSysStudent">
-        insert into sys_student( id, user_id, location, university, major, background, teach_way, auth_status, del_flag, create_by, create_time, update_by, update_time, remark) values
-            ( #{id}, #{userId}, #{location}, #{university}, #{major}, #{background}, #{teachWay}, #{authStatus}, #{delFlag}, #{createBy}, #{createTime}, #{updateBy}, #{updateTime}, #{remark})
+        insert into sys_student( id, user_id, location, university, major, background, teach_way,salary_expect, auth_status, del_flag, create_by, create_time, update_by, update_time, remark) values
+            ( #{id}, #{userId}, #{location}, #{university}, #{major}, #{background}, #{teachWay},#{salaryExpect}, #{authStatus}, #{delFlag}, #{createBy}, #{createTime}, #{updateBy}, #{updateTime}, #{remark})
     </insert>
 </mapper>

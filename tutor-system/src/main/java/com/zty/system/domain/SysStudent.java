@@ -42,6 +42,10 @@ public class SysStudent extends BaseEntity
     @Excel(name = "授课方式", readConverterExp = "0=老师上门,1=学生上门,2=线上辅导")
     private String teachWay;
 
+    /** 薪资期望 */
+    @Excel(name = "工资期望")
+    private String salaryExpect;
+
     /** 认证状态（0代表未认证 1表示已认证） */
     @Excel(name = "认证状态", readConverterExp = "0=代表未认证,1=表示已认证")
     private String authStatus;
@@ -131,23 +135,27 @@ public class SysStudent extends BaseEntity
         return delFlag;
     }
 
+    public String getSalaryExpect() {
+        return salaryExpect;
+    }
+
+    public void setSalaryExpect(String salaryExpect) {
+        this.salaryExpect = salaryExpect;
+    }
+
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("userId", getUserId())
-            .append("location", getLocation())
-            .append("university", getUniversity())
-            .append("major", getMajor())
-            .append("background", getBackground())
-            .append("teachWay", getTeachWay())
-            .append("authStatus", getAuthStatus())
-            .append("delFlag", getDelFlag())
-            .append("createBy", getCreateBy())
-            .append("createTime", getCreateTime())
-            .append("updateBy", getUpdateBy())
-            .append("updateTime", getUpdateTime())
-            .append("remark", getRemark())
-            .toString();
+        return "SysStudent{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", location='" + location + '\'' +
+                ", university='" + university + '\'' +
+                ", major='" + major + '\'' +
+                ", background='" + background + '\'' +
+                ", teachWay='" + teachWay + '\'' +
+                ", salaryExpect='" + salaryExpect + '\'' +
+                ", authStatus='" + authStatus + '\'' +
+                ", delFlag='" + delFlag + '\'' +
+                '}';
     }
 }

@@ -30,6 +30,10 @@ public class SysParent extends BaseEntity
     @Excel(name = "学员详细背景")
     private String background;
 
+    /** 薪资报酬 */
+    @Excel(name = "薪资报酬")
+    private String salaryReward;
+
     /** 认证状态（0代表未认证 1表示已认证） */
     @Excel(name = "认证状态", readConverterExp = "0=代表未认证,1=表示已认证")
     private String authStatus;
@@ -92,20 +96,24 @@ public class SysParent extends BaseEntity
         return delFlag;
     }
 
+    public String getSalaryReward() {
+        return salaryReward;
+    }
+
+    public void setSalaryReward(String salaryReward) {
+        this.salaryReward = salaryReward;
+    }
+
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("userId", getUserId())
-            .append("location", getLocation())
-            .append("background", getBackground())
-            .append("authStatus", getAuthStatus())
-            .append("delFlag", getDelFlag())
-            .append("createBy", getCreateBy())
-            .append("createTime", getCreateTime())
-            .append("updateBy", getUpdateBy())
-            .append("updateTime", getUpdateTime())
-            .append("remark", getRemark())
-            .toString();
+        return "SysParent{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", location='" + location + '\'' +
+                ", background='" + background + '\'' +
+                ", salaryReward='" + salaryReward + '\'' +
+                ", authStatus='" + authStatus + '\'' +
+                ", delFlag='" + delFlag + '\'' +
+                '}';
     }
 }
