@@ -49,9 +49,13 @@ public class RegisterBody extends LoginBody
     @Excel(name = "专业")
     private String major;
 
-    /** 学生详细背景 */
+    /** 详细背景 */
     @Excel(name = "学生详细背景")
     private String background;
+
+    /** 薪资 */
+    @Excel(name = "薪资待遇")
+    private String salaryExpect;
 
     /** 授课方式（0老师上门 1学生上门 2线上辅导） */
     @Excel(name = "授课方式", readConverterExp = "0=老师上门,1=学生上门,2=线上辅导")
@@ -153,6 +157,14 @@ public class RegisterBody extends LoginBody
         this.teachWay = teachWay;
     }
 
+    public String getSalaryExpect() {
+        return salaryExpect;
+    }
+
+    public void setSalaryExpect(String salaryExpect) {
+        this.salaryExpect = salaryExpect;
+    }
+
     @Override
     public String toString() {
         return "RegisterBody{" +
@@ -167,6 +179,7 @@ public class RegisterBody extends LoginBody
                 ", university='" + university + '\'' +
                 ", major='" + major + '\'' +
                 ", background='" + background + '\'' +
+                ", salaryExpect='" + salaryExpect + '\'' +
                 ", teachWay='" + teachWay + '\'' +
                 '}';
     }

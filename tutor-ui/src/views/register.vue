@@ -114,6 +114,17 @@
           <svg-icon slot="prefix" icon-class="teachway" class="el-input__icon input-icon" />
         </el-select>
       </el-form-item>
+      <el-form-item prop="salaryExpect" label="">
+        <el-select v-model="registerForm.salaryExpect" placeholder="请选择期望报酬">
+          <el-option
+            v-for="dict in dict.type.sys_salary_dict"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          ></el-option>
+          <svg-icon slot="prefix" icon-class="salary" class="el-input__icon input-icon" />
+        </el-select>
+      </el-form-item>
       <el-form-item prop="background">
         <el-input v-model="registerForm.background" type="textarea" placeholder="请输入个人详细情况"></el-input>
       </el-form-item>
@@ -229,6 +240,17 @@
           <svg-icon slot="prefix" icon-class="location" class="el-input__icon input-icon" />
         </el-input>
       </el-form-item>
+      <el-form-item prop="salaryExpect" label="">
+        <el-select v-model="registerForm.salaryExpect" placeholder="请选择教学报酬">
+          <el-option
+            v-for="dict in dict.type.sys_salary_dict"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          ></el-option>
+          <svg-icon slot="prefix" icon-class="salary" class="el-input__icon input-icon" />
+        </el-select>
+      </el-form-item>
       <el-form-item >
         <el-input v-model="registerForm.background" type="textarea" placeholder="请输入个人详细情况">
         </el-input>
@@ -276,7 +298,7 @@ import {deptTreeSelect} from "@/api/system/user";
 
 export default {
   name: "Register",
-  dicts: [ 'sys_user_sex','sys_dept_name','sys_teach_way','sys_post_list'],
+  dicts: [ 'sys_salary_dict','sys_user_sex','sys_dept_name','sys_teach_way','sys_post_list'],
   data() {
     const equalToPassword = (rule, value, callback) => {
       if (this.registerForm.password !== value) {
@@ -335,6 +357,9 @@ export default {
         ],
         teachWay: [
           { required: true, message: "授课方式不能为空", trigger: "blur" }
+        ],
+        salaryExpect: [
+          { required: true, message: "报酬选择不能为空", trigger: "blur" }
         ],
         sex: [
           { required: true, message: "性别不能为空", trigger: "blur" }

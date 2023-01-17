@@ -130,6 +130,7 @@ public class SysRegisterService
                     sysStudent.setCreateBy(username);
                     sysStudent.setCreateTime(DateUtils.getNowDate());
                     sysStudent.setAuthStatus("0");
+                    sysStudent.setSalaryExpect(registerBody.getSalaryExpect());
                     studentMapper.batchSysStudent(sysStudent);
                     userRoleMapper.batchUserRole(Collections.singletonList(new SysUserRole(userId,3L)));
                 }else { //学员
@@ -137,6 +138,7 @@ public class SysRegisterService
                     sysParent.setUserId(userId);
                     sysParent.setLocation(registerBody.getLocation());
                     sysParent.setBackground(registerBody.getBackground());
+                    sysParent.setSalaryReward(registerBody.getSalaryExpect());
                     sysParent.setCreateBy(username);
                     sysParent.setCreateTime(DateUtils.getNowDate());
                     sysParent.setAuthStatus("0");
