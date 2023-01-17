@@ -314,9 +314,6 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="用户账号" prop="userName">
-          <el-input v-model="form.userName" placeholder="请输入用户账号" />
-        </el-form-item>
         <el-form-item label="用户昵称" prop="nickName">
           <el-input v-model="form.nickName" placeholder="请输入用户昵称" />
         </el-form-item>
