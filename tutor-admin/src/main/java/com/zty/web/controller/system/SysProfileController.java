@@ -1,5 +1,6 @@
 package com.zty.web.controller.system;
 
+import com.zty.system.service.ISysPostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,6 +40,9 @@ public class SysProfileController extends BaseController
     @Autowired
     private TokenService tokenService;
 
+    @Autowired
+    private ISysPostService postService;
+
     /**
      * 个人信息
      */
@@ -46,10 +50,12 @@ public class SysProfileController extends BaseController
     public AjaxResult profile()
     {
         LoginUser loginUser = getLoginUser();
-        SysUser user = loginUser.getUser();
+        SysUser user = userService.selectUserById(loginUser.getUserId());
         AjaxResult ajax = AjaxResult.success(user);
         ajax.put("roleGroup", userService.selectUserRoleGroup(loginUser.getUsername()));
         ajax.put("postGroup", userService.selectUserPostGroup(loginUser.getUsername()));
+        ajax.put("posts", postService.selectPostAll());
+        ajax.put("postIds", postService.selectPostListByUserId(loginUser.getUserId()));
         return ajax;
     }
 

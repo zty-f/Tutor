@@ -1,10 +1,12 @@
 package com.zty.system.service.impl;
 
+import com.zty.common.core.domain.entity.SysUser;
 import com.zty.common.utils.DateUtils;
 import com.zty.common.utils.StringUtils;
 import com.zty.system.domain.Parent;
 import com.zty.system.domain.Student;
 import com.zty.system.domain.SysStudent;
+import com.zty.system.domain.SysUserPost;
 import com.zty.system.domain.vo.ParentVo;
 import com.zty.system.domain.vo.StudentVo;
 import com.zty.system.mapper.*;
@@ -100,9 +102,32 @@ public class StudentServiceImpl implements IStudentService {
     @Override
     public int updateStudent(Student student) {
         student.setUpdateTime(DateUtils.getNowDate());
-        studentMapper.deleteSysStudentByUserId(student.getUserId());
-        insertSysStudent(student);
+        if (student.getSysStudent().getId()!=null){
+            studentMapper.deleteSysStudentByUserId(student.getUserId());
+            insertSysStudent(student);
+        }
+        // 删除用户与岗位关联
+        userPostMapper.deleteUserPostByUserId(student.getUserId());
+        // 新增用户与岗位管理
+        insertUserPost(student.getUserId(),student.getPostIds());
         return studentMapper.updateStudent(student);
+    }
+
+    public void insertUserPost(Long userId,Long[] posts)
+    {
+        if (StringUtils.isNotEmpty(posts))
+        {
+            // 新增用户与岗位管理
+            List<SysUserPost> list = new ArrayList<SysUserPost>(posts.length);
+            for (Long postId : posts)
+            {
+                SysUserPost up = new SysUserPost();
+                up.setUserId(userId);
+                up.setPostId(postId);
+                list.add(up);
+            }
+            userPostMapper.batchUserPost(list);
+        }
     }
 
     /**
