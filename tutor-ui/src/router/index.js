@@ -87,6 +87,34 @@ export const constantRoutes = [
         meta: { title: '个人中心', icon: 'user' }
       }
     ]
+  },
+  {
+    path: '/student',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'profile',
+        component: () => import('@/views/system/student/profile/index'),
+        name: 'Profile1',
+        meta: { title: '个人中心', icon: 'user' }
+      }
+    ]
+  },
+  {
+    path: '/parent',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'profile',
+        component: () => import('@/views/system/parent/profile/index'),
+        name: 'Profile2',
+        meta: { title: '个人中心', icon: 'user' }
+      }
+    ]
   }
 ]
 

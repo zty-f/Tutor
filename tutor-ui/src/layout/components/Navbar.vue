@@ -8,7 +8,7 @@
     <div class="right-menu">
       <template v-if="device!=='mobile'">
         <search id="header-search" class="right-menu-item" />
-        
+
         <el-tooltip content="源码地址" effect="dark" placement="bottom">
           <ruo-yi-git id="ruoyi-git" class="right-menu-item hover-effect" />
         </el-tooltip>
@@ -31,9 +31,7 @@
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
-          <router-link to="/user/profile">
-            <el-dropdown-item>个人中心</el-dropdown-item>
-          </router-link>
+          <el-dropdown-item @click.native="toProfile">个人中心</el-dropdown-item>
           <el-dropdown-item @click.native="setting = true">
             <span>布局设置</span>
           </el-dropdown-item>
@@ -56,6 +54,7 @@ import SizeSelect from '@/components/SizeSelect'
 import Search from '@/components/HeaderSearch'
 import RuoYiGit from '@/components/RuoYi/Git'
 import RuoYiDoc from '@/components/RuoYi/Doc'
+import store from "@/store";
 
 export default {
   components: {
@@ -105,6 +104,16 @@ export default {
           location.href = '/index';
         })
       }).catch(() => {});
+    },
+    toProfile(){
+      var role = store.getters.roles[0];
+      if (role==="student"){
+        this.$router.push({ path: "/student/profile" });
+      }else if (role==="parent"){
+        this.$router.push({ path: "/parent/profile" });
+      }else {
+        this.$router.push({ path: "/user/profile" });
+      }
     }
   }
 }
