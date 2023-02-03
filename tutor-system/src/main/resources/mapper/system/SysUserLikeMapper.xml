@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zty.system.mapper.SysUserLikeMapper">
+
+    <resultMap type="SysUserLike" id="SysUserLikeResult">
+        <result property="userId"    column="user_id"    />
+        <result property="likeId"    column="like_id"    />
+    </resultMap>
+
+    <sql id="selectSysUserLikeVo">
+        select user_id, like_id from sys_user_like
+    </sql>
+
+    <insert id="insertSysUserLike" parameterType="SysUserLike">
+        insert into sys_user_like
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="likeId != null">like_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="likeId != null">#{likeId},</if>
+        </trim>
+    </insert>
+
+
+    <delete id="deleteSysUserLikeByUserId" parameterType="Long">
+        delete from sys_user_like where user_id = #{userId}
+    </delete>
+</mapper>

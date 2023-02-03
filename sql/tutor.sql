@@ -56,6 +56,26 @@ create table sys_user (
 ) engine=innodb auto_increment=100 comment = '用户信息表';
 
 -- ----------------------------
+-- #、用户点赞关联表
+-- ----------------------------
+drop table if exists sys_user_like;
+create table sys_user_like (
+                               user_id   bigint(20) not null comment '用户ID',
+                               like_id   bigint(20) not null comment '点赞用户id', -- 大学生点赞为parent表id，家长点赞为student表id
+                               primary key(user_id, like_id)
+) engine=innodb comment = '用户点赞关联表';
+
+-- ----------------------------
+-- #、用户收藏关联表
+-- ----------------------------
+drop table if exists sys_user_collect;
+create table sys_user_collect (
+                               user_id   bigint(20) not null comment '用户ID',
+                               collect_id   bigint(20) not null comment '点赞用户id', -- 大学生点赞为parent表id，家长点赞为student表id
+                               primary key(user_id, collect_id)
+) engine=innodb comment = '用户收藏关联表';
+
+-- ----------------------------
 -- #、学生家教信息表
 -- ----------------------------
 drop table if exists sys_student;
