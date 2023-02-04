@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zty.system.mapper.SysUserCollectMapper">
+
+    <resultMap type="SysUserCollect" id="SysUserCollectResult">
+        <result property="userId"    column="user_id"    />
+        <result property="collectId"    column="collect_id"    />
+    </resultMap>
+
+    <sql id="selectSysUserCollectVo">
+        select user_id, collect_id from sys_user_collect
+    </sql>
+
+    <select id="selectSysUserCollectByUserIdAndCollectId" parameterType="SysUserCollect" resultType="Integer">
+        select count(1) from sys_user_collect
+        where user_id = #{userId} and collect_id = #{collectId}
+    </select>
+
+    <select id="selectSysUserCollectNum" parameterType="Long" resultType="Integer">
+        select count(1) from sys_user_collect
+        where collect_id = #{collectId}
+    </select>
+
+    <insert id="insertSysUserCollect" parameterType="SysUserCollect">
+        insert into sys_user_collect
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="collectId != null">collect_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="collectId != null">#{collectId},</if>
+        </trim>
+    </insert>
+
+    <delete id="deleteSysUserCollect" parameterType="SysUserCollect">
+        delete from sys_user_collect where user_id = #{userId} and collect_id = #{collectId}
+    </delete>
+</mapper>

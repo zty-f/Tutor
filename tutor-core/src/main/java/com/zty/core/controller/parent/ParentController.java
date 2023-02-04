@@ -8,6 +8,7 @@ import com.zty.common.utils.poi.ExcelUtil;
 import com.zty.system.domain.Parent;
 import com.zty.system.domain.vo.ParentVo;
 import com.zty.system.service.IParentService;
+import com.zty.system.service.ISysUserCollectService;
 import com.zty.system.service.ISysUserLikeService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,9 @@ public class ParentController extends BaseController
 
     @Autowired
     private ISysUserLikeService userLikeService;
+
+    @Autowired
+    private ISysUserCollectService userCollectService;
 
     /**
      * 查询学员信息列表
@@ -75,10 +79,10 @@ public class ParentController extends BaseController
     {
         AjaxResult ajax = AjaxResult.success(parentService.selectParentByUserId(userId));
         Long loginUserId = SecurityUtils.getUserId();
-        boolean isLike = userLikeService.selectSysUserLikeByUserIdAndLikeId(loginUserId,userId);
-        int likeNum = userLikeService.selectSysUserLikeNum(userId);
-        ajax.put("isLike",isLike);
-        ajax.put("likeNum", likeNum);
+        ajax.put("isLike",userLikeService.selectSysUserLikeByUserIdAndLikeId(loginUserId,userId));
+        ajax.put("likeNum", userLikeService.selectSysUserLikeNum(userId));
+        ajax.put("isCollect",userCollectService.selectSysUserCollectByUserIdAndCollectId(loginUserId,userId));
+        ajax.put("collectNum", userCollectService.selectSysUserCollectNum(userId));
         return ajax;
     }
 

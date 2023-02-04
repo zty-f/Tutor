@@ -296,10 +296,17 @@
           {{  sysStudent.background }}
         </el-descriptions-item>
       </el-descriptions>
-      <div @click="like(form.userId)" slot="footer" :style="{width: '50px',height: '80px',textAlign: 'center'}">
-        <img src="@/assets/images/love-white.svg" v-if="!isLike" slot="footer">
-        <img src="@/assets/images/love-red.svg" v-if="isLike" slot="footer">
-        <span>{{likeNum}}</span>
+      <div :style="{height:'90px',marginTop:'20px',display:'flex',justifyContent: 'flex-start'}">
+        <div @click="like(form.userId)"  :style="{width: '50px',height: '80px',textAlign: 'center',margin:'10px'}">
+          <img src="@/assets/images/love-white.svg" v-if="!isLike" slot="footer">
+          <img src="@/assets/images/love-red.svg" v-if="isLike" slot="footer">
+          <span>{{likeNum}}</span>
+        </div>
+        <div @click="collect(form.userId)" :style="{width: '50px',height: '80px',textAlign: 'center',margin:'10px'}">
+          <img src="@/assets/images/collect-white.svg" v-if="!isCollect" slot="footer">
+          <img src="@/assets/images/collect-black.svg" v-if="isCollect" slot="footer">
+          <span>{{collectNum}}</span>
+        </div>
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="cancel" >关 闭</el-button>
@@ -416,7 +423,7 @@
 
 <script>
 import { listStudent, getStudent, delStudent, addStudent, updateStudent } from "@/api/core/student";
-import {addLike, delLike} from "@/api/core/common";
+import {addCollect, addLike, delCollect, delLike} from "@/api/core/common";
 import store from "@/store";
 
 export default {
@@ -430,6 +437,8 @@ export default {
       },
       isLike: false,
       likeNum: '',
+      isCollect: false,
+      collectNum: '',
       tPosts: "",
       // 遮罩层
       loading: true,
@@ -516,6 +525,25 @@ export default {
       }
       this.isLike = !this.isLike;
     },
+    // 收藏
+    collect(id) {
+      var sysUserCollect={
+        userId: store.getters.userId,
+        collectId: id,
+      }
+      if (!this.isCollect){
+        addCollect(sysUserCollect).then(response => {
+          this.$modal.msgSuccess("收藏成功");
+        });
+        this.collectNum = this.collectNum + 1;
+      }else {
+        delCollect(sysUserCollect).then(response => {
+          this.$modal.msgSuccess("取消收藏成功");
+        });
+        this.collectNum = this.collectNum===0?0:this.collectNum - 1;
+      }
+      this.isCollect = !this.isCollect;
+    },
     // 表单重置
     reset() {
       this.form = {
@@ -576,6 +604,8 @@ export default {
         this.title = "学生详细信息";
         this.isLike = response.isLike;
         this.likeNum = response.likeNum;
+        this.isCollect = response.isCollect;
+        this.collectNum = response.collectNum;
       });
     },
     /** 修改按钮操作 */
