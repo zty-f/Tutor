@@ -255,6 +255,9 @@ export default {
             });
           }
         }
+        setTimeout(() => {
+          this.getUser();
+        }, 1000);
       });
     },
   }
