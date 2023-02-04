@@ -326,6 +326,17 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="胜任岗位" prop="postIds">
+          <el-select v-model="form.postIds" multiple placeholder="请选择岗位">
+            <el-option
+              v-for="item in postOptions"
+              :key="item.postId"
+              :label="item.postName"
+              :value="item.postId"
+              :disabled="item.status === 1"
+            ></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="用户昵称" prop="nickName">
           <el-input v-model="form.nickName" placeholder="请输入用户昵称" />
         </el-form-item>
@@ -425,6 +436,7 @@
 import { listStudent, getStudent, delStudent, addStudent, updateStudent } from "@/api/core/student";
 import {addCollect, addLike, delCollect, delLike} from "@/api/core/common";
 import store from "@/store";
+import {listPost} from "@/api/system/post";
 
 export default {
   name: "Student",
@@ -444,6 +456,7 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
+      postOptions: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -484,11 +497,16 @@ export default {
         nickName: [
           { required: true, message: "用户昵称不能为空", trigger: "blur" }
         ],
-      }
+        postIds: [
+          { required: true, message: "岗位不能为空", trigger: "blur" }
+        ],
+      },
+      query:{}
     };
   },
   created() {
     this.getList();
+    this.getPosts();
   },
   methods: {
     /** 查询学生信息列表 */
@@ -498,6 +516,11 @@ export default {
         this.studentList = response.rows;
         this.total = response.total;
         this.loading = false;
+      });
+    },
+    getPosts(){
+      listPost(this.query).then(response => {
+        this.postOptions = response.rows;
       });
     },
     // 取消按钮
@@ -616,6 +639,7 @@ export default {
         this.form = response.data;
         this.form.deptId = this.form.deptId.toString(); //解决不能显示字段问题，后端传值为Long类型
         this.sysStudent = response.data.sysStudent==null?{}:response.data.sysStudent;
+        this.$set(this.form, "postIds", row.postIds);
         this.open = true;
         this.title = "修改学生信息";
       });

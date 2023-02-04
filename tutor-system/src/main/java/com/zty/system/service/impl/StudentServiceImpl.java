@@ -68,6 +68,8 @@ public class StudentServiceImpl implements IStudentService {
         Long selectDeptId = student.getDeptId();
         for (Student s : students) {
             if (selectDeptId!=null&&s.getDeptId()<selectDeptId)continue;
+            List<Long> longs = postMapper.selectPostListByUserId(s.getUserId());
+            s.setPostIds(longs.toArray(new Long[longs.size()]));
             StudentVo studentVo = new StudentVo(s);
             studentVo.setDeptName(deptMapper.selectDeptById(s.getDeptId()).getDeptName());
             studentVo.setRoleName(roleMapper.selectRolePermissionByUserId(s.getUserId()).get(0).getRoleName());

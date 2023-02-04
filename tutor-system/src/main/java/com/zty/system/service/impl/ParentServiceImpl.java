@@ -69,6 +69,8 @@ public class ParentServiceImpl implements IParentService
         Long selectDeptId = parent.getDeptId();
         for (Parent p : parents) {
             if (selectDeptId!=null&&p.getDeptId()>selectDeptId)continue;
+            List<Long> longs = postMapper.selectPostListByUserId(p.getUserId());
+            p.setPostIds(longs.toArray(new Long[longs.size()]));
             ParentVo parentVo = new ParentVo(p);
             parentVo.setDeptName(deptMapper.selectDeptById(p.getDeptId()).getDeptName());
             parentVo.setRoleName(roleMapper.selectRolePermissionByUserId(p.getUserId()).get(0).getRoleName());

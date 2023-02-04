@@ -74,7 +74,7 @@
               :key="item.postId"
               :label="item.postName"
               :value="item.postId"
-              :disabled="item.status == 1"
+              :disabled="item.status === 1"
             ></el-option>
           </el-select>
         </el-form-item>
