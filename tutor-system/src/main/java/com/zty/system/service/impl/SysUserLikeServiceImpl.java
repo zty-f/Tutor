@@ -20,6 +20,25 @@ public class SysUserLikeServiceImpl implements ISysUserLikeService
     private SysUserLikeMapper sysUserLikeMapper;
 
     /**
+     * 查询用户点赞关联
+     */
+    @Override
+    public boolean selectSysUserLikeByUserIdAndLikeId(Long userId, Long likeId)
+    {
+        SysUserLike sysUserLike = new SysUserLike(userId, likeId);
+        return sysUserLikeMapper.selectSysUserLikeByUserIdAndLikeId(sysUserLike) > 0;
+    }
+
+    /**
+     * 查询用户点赞数量
+     */
+    @Override
+    public int selectSysUserLikeNum(Long userId)
+    {
+        return sysUserLikeMapper.selectSysUserLikeNum(userId);
+    }
+
+    /**
      * 新增用户点赞关联
      * 
      * @param sysUserLike 用户点赞关联
@@ -34,13 +53,10 @@ public class SysUserLikeServiceImpl implements ISysUserLikeService
 
     /**
      * 删除用户点赞关联信息
-     * 
-     * @param userId 用户点赞关联主键
-     * @return 结果
      */
     @Override
-    public int deleteSysUserLikeByUserId(Long userId)
+    public int deleteSysUserLike(SysUserLike sysUserLike)
     {
-        return sysUserLikeMapper.deleteSysUserLikeByUserId(userId);
+        return sysUserLikeMapper.deleteSysUserLike(sysUserLike);
     }
 }

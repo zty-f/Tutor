@@ -11,6 +11,15 @@ import com.zty.system.domain.SysUserLike;
  */
 public interface ISysUserLikeService 
 {
+    /**
+     * 查询用户点赞关联
+     */
+    public boolean selectSysUserLikeByUserIdAndLikeId(Long userId, Long likeId);
+
+    /**
+     * 查询用户获赞数量
+     */
+    public int selectSysUserLikeNum(Long userId);
 
     /**
      * 新增用户点赞关联
@@ -22,9 +31,6 @@ public interface ISysUserLikeService
 
     /**
      * 删除用户点赞关联信息
-     * 
-     * @param userId 用户点赞关联主键
-     * @return 结果
      */
-    public int deleteSysUserLikeByUserId(Long userId);
+    public int deleteSysUserLike(SysUserLike sysUserLike);
 }

@@ -2,10 +2,12 @@ package com.zty.core.controller.student;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.zty.common.utils.SecurityUtils;
 import com.zty.common.utils.poi.ExcelUtil;
 import com.zty.system.domain.Student;
 import com.zty.system.domain.vo.StudentVo;
 import com.zty.system.service.IStudentService;
+import com.zty.system.service.ISysUserLikeService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,6 +38,9 @@ public class StudentController extends BaseController
 {
     @Autowired
     private IStudentService studentService;
+
+    @Autowired
+    private ISysUserLikeService userLikeService;
 
     /**
      * 查询学生信息列表
@@ -69,7 +74,13 @@ public class StudentController extends BaseController
     @GetMapping(value = "/{userId}")
     public AjaxResult getInfo(@PathVariable("userId") Long userId)
     {
-        return success(studentService.selectStudentByUserId(userId));
+        AjaxResult ajax = AjaxResult.success(studentService.selectStudentByUserId(userId));
+        Long loginUserId = SecurityUtils.getUserId();
+        boolean isLike = userLikeService.selectSysUserLikeByUserIdAndLikeId(loginUserId,userId);
+        int likeNum = userLikeService.selectSysUserLikeNum(userId);
+        ajax.put("isLike",isLike);
+        ajax.put("likeNum", likeNum);
+        return ajax;
     }
 
     /**

@@ -61,7 +61,7 @@ create table sys_user (
 drop table if exists sys_user_like;
 create table sys_user_like (
                                user_id   bigint(20) not null comment '用户ID',
-                               like_id   bigint(20) not null comment '点赞用户id', -- 大学生点赞为parent表id，家长点赞为student表id
+                               like_id   bigint(20) not null comment '点赞用户id',
                                primary key(user_id, like_id)
 ) engine=innodb comment = '用户点赞关联表';
 
@@ -71,7 +71,7 @@ create table sys_user_like (
 drop table if exists sys_user_collect;
 create table sys_user_collect (
                                user_id   bigint(20) not null comment '用户ID',
-                               collect_id   bigint(20) not null comment '点赞用户id', -- 大学生点赞为parent表id，家长点赞为student表id
+                               collect_id   bigint(20) not null comment '收藏用户id',
                                primary key(user_id, collect_id)
 ) engine=innodb comment = '用户收藏关联表';
 

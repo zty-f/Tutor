@@ -13,6 +13,16 @@
         select user_id, like_id from sys_user_like
     </sql>
 
+    <select id="selectSysUserLikeNum" parameterType="Long" resultType="Integer">
+        select count(1) from sys_user_like
+        where like_id = #{userId}
+    </select>
+
+    <select id="selectSysUserLikeByUserIdAndLikeId" parameterType="SysUserLike" resultType="Integer">
+        select count(1) from sys_user_like
+        where user_id = #{userId} and like_id = #{likeId}
+    </select>
+
     <insert id="insertSysUserLike" parameterType="SysUserLike">
         insert into sys_user_like
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -26,7 +36,7 @@
     </insert>
 
 
-    <delete id="deleteSysUserLikeByUserId" parameterType="Long">
-        delete from sys_user_like where user_id = #{userId}
+    <delete id="deleteSysUserLike" parameterType="SysUserLike">
+        delete from sys_user_like where user_id = #{userId} and like_id=#{likeId}
     </delete>
 </mapper>

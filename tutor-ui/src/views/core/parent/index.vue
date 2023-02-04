@@ -275,6 +275,11 @@
         {{  sysParent.background }}
       </el-descriptions-item>
     </el-descriptions>
+      <div @click="like(form.userId)" slot="footer" :style="{width: '50px',height: '80px',textAlign: 'center'}">
+        <img src="@/assets/images/love-white.svg" v-if="!isLike" slot="footer">
+        <img src="@/assets/images/love-red.svg" v-if="isLike" slot="footer">
+        <span :style="{margin:'auto'}">{{ likeNum }}</span>
+      </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="cancel">关 闭</el-button>
       </div>
@@ -373,6 +378,8 @@
 
 <script>
 import { listParent, getParent, delParent, addParent, updateParent } from "@/api/core/parent";
+import {addLike, delLike} from "@/api/core/common";
+import store from "@/store";
 
 export default {
   name: "Parent",
@@ -383,6 +390,8 @@ export default {
         "text-align":"center",
         "width": "130px"
       },
+      isLike: false,
+      likeNum: '',
       tPosts: "",
       // 遮罩层
       loading: true,
@@ -460,6 +469,25 @@ export default {
         this.loading = false;
       });
     },
+    // 点赞
+    like(id) {
+      var sysUserLike={
+        userId: store.getters.userId,
+        likeId: id,
+      }
+      if (!this.isLike){
+        addLike(sysUserLike).then(response => {
+          this.$modal.msgSuccess("点赞成功");
+        });
+        this.likeNum = this.likeNum + 1;
+      }else {
+        delLike(sysUserLike).then(response => {
+          this.$modal.msgSuccess("取消点赞成功");
+        });
+        this.likeNum = this.likeNum===0?0:this.likeNum - 1;
+      }
+      this.isLike = !this.isLike;
+    },
     // 取消按钮
     cancel() {
       this.open = false;
@@ -524,6 +552,8 @@ export default {
         this.sysParent = response.data.sysParent==null?{}:response.data.sysParent;
         this.openDetail = true;
         this.title = "学员详细信息";
+        this.isLike = response.isLike;
+        this.likeNum = response.likeNum;
       });
     },
     /** 修改按钮操作 */

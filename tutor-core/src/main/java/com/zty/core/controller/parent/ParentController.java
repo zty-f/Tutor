@@ -3,10 +3,12 @@ package com.zty.core.controller.parent;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.zty.common.utils.SecurityUtils;
 import com.zty.common.utils.poi.ExcelUtil;
 import com.zty.system.domain.Parent;
 import com.zty.system.domain.vo.ParentVo;
 import com.zty.system.service.IParentService;
+import com.zty.system.service.ISysUserLikeService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,6 +37,9 @@ public class ParentController extends BaseController
 {
     @Autowired
     private IParentService parentService;
+
+    @Autowired
+    private ISysUserLikeService userLikeService;
 
     /**
      * 查询学员信息列表
@@ -68,7 +73,13 @@ public class ParentController extends BaseController
     @GetMapping(value = "/{userId}")
     public AjaxResult getInfo(@PathVariable("userId") Long userId)
     {
-        return success(parentService.selectParentByUserId(userId));
+        AjaxResult ajax = AjaxResult.success(parentService.selectParentByUserId(userId));
+        Long loginUserId = SecurityUtils.getUserId();
+        boolean isLike = userLikeService.selectSysUserLikeByUserIdAndLikeId(loginUserId,userId);
+        int likeNum = userLikeService.selectSysUserLikeNum(userId);
+        ajax.put("isLike",isLike);
+        ajax.put("likeNum", likeNum);
+        return ajax;
     }
 
     /**

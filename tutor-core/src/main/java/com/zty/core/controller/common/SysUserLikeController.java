@@ -2,6 +2,8 @@ package com.zty.core.controller.common;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.zty.common.utils.SecurityUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,9 +50,21 @@ public class SysUserLikeController extends BaseController
      * 删除用户点赞关联
      */
     @Log(title = "用户点赞关联", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{userId}")
-    public AjaxResult remove(@PathVariable Long userId)
+	@DeleteMapping
+    public AjaxResult remove(@RequestBody SysUserLike sysUserLike)
     {
-        return toAjax(sysUserLikeService.deleteSysUserLikeByUserId(userId));
+        return toAjax(sysUserLikeService.deleteSysUserLike(sysUserLike));
+    }
+
+    /**
+     * 获取用户点赞信息
+     */
+    @GetMapping(value = "/{userId}")
+    public AjaxResult getLikeNum(@PathVariable("userId") Long userId)
+    {
+        AjaxResult ajax = AjaxResult.success();
+        int likeNum = sysUserLikeService.selectSysUserLikeNum(userId);
+        ajax.put("likeNum", likeNum);
+        return ajax;
     }
 }
