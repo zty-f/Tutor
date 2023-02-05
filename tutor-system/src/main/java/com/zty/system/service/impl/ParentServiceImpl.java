@@ -2,6 +2,7 @@ package com.zty.system.service.impl;
 
 import com.zty.common.core.domain.entity.SysDept;
 import com.zty.common.utils.DateUtils;
+import com.zty.common.utils.SecurityUtils;
 import com.zty.common.utils.StringUtils;
 import com.zty.system.domain.Parent;
 import com.zty.system.domain.SysParent;
@@ -64,6 +65,10 @@ public class ParentServiceImpl implements IParentService
     @Override
     public List<ParentVo> selectParentList(Parent parent)
     {
+        // 传入登录用户的deptId，然后只查询比这个低职级的学员！
+        if (parent.getDeptId()==null){
+            parent.setDeptId(SecurityUtils.getDeptId());
+        }
         List<Parent> parents = parentMapper.selectParentList(parent);
         List<ParentVo> res = new ArrayList<>();
         Long selectDeptId = parent.getDeptId();

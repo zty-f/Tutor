@@ -2,6 +2,7 @@ package com.zty.system.service.impl;
 
 import com.zty.common.core.domain.entity.SysUser;
 import com.zty.common.utils.DateUtils;
+import com.zty.common.utils.SecurityUtils;
 import com.zty.common.utils.StringUtils;
 import com.zty.system.domain.Parent;
 import com.zty.system.domain.Student;
@@ -63,6 +64,10 @@ public class StudentServiceImpl implements IStudentService {
      */
     @Override
     public List<StudentVo> selectStudentList(Student student) {
+        // 传入登录用户的deptId，然后只查询比这个高职级的大学生！
+        if(student.getDeptId()==null){
+            student.setDeptId(SecurityUtils.getDeptId());
+        }
         List<Student> students = studentMapper.selectStudentList(student);
         List<StudentVo> res = new ArrayList<>();
         Long selectDeptId = student.getDeptId();
