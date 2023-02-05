@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -72,10 +73,17 @@ public class ParentServiceImpl implements IParentService
         List<Parent> parents = parentMapper.selectParentList(parent);
         List<ParentVo> res = new ArrayList<>();
         Long selectDeptId = parent.getDeptId();
+        List<Long> filterPostIds;
+        if(parent.getPostIds()!=null){
+            filterPostIds = Arrays.asList(parent.getPostIds());
+        }else {
+            filterPostIds = getLoginUserPostIds();
+        }
         for (Parent p : parents) {
             if (selectDeptId!=null&&p.getDeptId()>selectDeptId)continue;
-            List<Long> longs = postMapper.selectPostListByUserId(p.getUserId());
-            p.setPostIds(longs.toArray(new Long[longs.size()]));
+            List<Long> postIds = postMapper.selectPostListByUserId(p.getUserId());
+            if (!isContainsPostIds(filterPostIds,postIds))continue;
+            p.setPostIds(postIds.toArray(new Long[0]));
             ParentVo parentVo = new ParentVo(p);
             parentVo.setDeptName(deptMapper.selectDeptById(p.getDeptId()).getDeptName());
             parentVo.setRoleName(roleMapper.selectRolePermissionByUserId(p.getUserId()).get(0).getRoleName());
@@ -83,6 +91,31 @@ public class ParentServiceImpl implements IParentService
             res.add(parentVo);
         }
         return res;
+    }
+
+    /*
+     * @MethodName:  isContainsPostIds
+     * @author: zty-f
+     * @date:  2023-02-05 16:40
+     * @Description: 判断当前用户的岗位是否匹配登录用户或者搜索选项
+     * */
+    public boolean isContainsPostIds(List<Long> filterPostIds,List<Long> postIds){
+        for (Long filterPostId : filterPostIds) {
+            if (postIds.contains(filterPostId)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /*
+     * @MethodName:  getLoginUserPostIds
+     * @author: zty-f
+     * @date:  2023-02-05 16:02
+     * @Description: 获取登录用户岗位列表
+     * */
+    public List<Long> getLoginUserPostIds(){
+        return postMapper.selectPostListByUserId(SecurityUtils.getUserId());
     }
 
     /**

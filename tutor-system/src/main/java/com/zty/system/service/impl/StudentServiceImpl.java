@@ -1,14 +1,11 @@
 package com.zty.system.service.impl;
 
-import com.zty.common.core.domain.entity.SysUser;
 import com.zty.common.utils.DateUtils;
 import com.zty.common.utils.SecurityUtils;
 import com.zty.common.utils.StringUtils;
-import com.zty.system.domain.Parent;
 import com.zty.system.domain.Student;
 import com.zty.system.domain.SysStudent;
 import com.zty.system.domain.SysUserPost;
-import com.zty.system.domain.vo.ParentVo;
 import com.zty.system.domain.vo.StudentVo;
 import com.zty.system.mapper.*;
 import com.zty.system.service.IStudentService;
@@ -17,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -71,10 +69,17 @@ public class StudentServiceImpl implements IStudentService {
         List<Student> students = studentMapper.selectStudentList(student);
         List<StudentVo> res = new ArrayList<>();
         Long selectDeptId = student.getDeptId();
+        List<Long> filterPostIds;
+        if(student.getPostIds()!=null){
+            filterPostIds = Arrays.asList(student.getPostIds());
+        }else {
+            filterPostIds = getLoginUserPostIds();
+        }
         for (Student s : students) {
             if (selectDeptId!=null&&s.getDeptId()<selectDeptId)continue;
-            List<Long> longs = postMapper.selectPostListByUserId(s.getUserId());
-            s.setPostIds(longs.toArray(new Long[longs.size()]));
+            List<Long> postIds = postMapper.selectPostListByUserId(s.getUserId());
+            if (!isContainsPostIds(filterPostIds,postIds))continue;
+            s.setPostIds(postIds.toArray(new Long[0]));
             StudentVo studentVo = new StudentVo(s);
             studentVo.setDeptName(deptMapper.selectDeptById(s.getDeptId()).getDeptName());
             studentVo.setRoleName(roleMapper.selectRolePermissionByUserId(s.getUserId()).get(0).getRoleName());
@@ -82,6 +87,31 @@ public class StudentServiceImpl implements IStudentService {
             res.add(studentVo);
         }
         return res;
+    }
+
+    /*
+     * @MethodName:  isContainsPostIds
+     * @author: zty-f
+     * @date:  2023-02-05 16:40
+     * @Description: 判断当前用户的岗位是否匹配登录用户或者搜索选项
+     * */
+    public boolean isContainsPostIds(List<Long> filterPostIds,List<Long> postIds){
+        for (Long filterPostId : filterPostIds) {
+            if (postIds.contains(filterPostId)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /*
+     * @MethodName:  getLoginUserPostIds
+     * @author: zty-f
+     * @date:  2023-02-05 16:02
+     * @Description: 获取登录用户岗位列表
+     * */
+    public List<Long> getLoginUserPostIds(){
+        return postMapper.selectPostListByUserId(SecurityUtils.getUserId());
     }
 
     /**
