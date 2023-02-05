@@ -439,24 +439,6 @@ insert into sys_role_menu values ('2', '1059');
 insert into sys_role_menu values ('2', '1060');
 
 -- ----------------------------
--- 8、角色和职级关联表  角色1-N职级
--- ----------------------------
-drop table if exists sys_role_dept;
-create table sys_role_dept (
-                               role_id   bigint(20) not null comment '角色ID',
-                               dept_id   bigint(20) not null comment '职级ID',
-                               primary key(role_id, dept_id)
-) engine=innodb comment = '角色和职级关联表';
-
--- ----------------------------
--- 初始化-角色和职级关联表数据
--- ----------------------------
-insert into sys_role_dept values ('2', '100');
-insert into sys_role_dept values ('2', '101');
-insert into sys_role_dept values ('2', '105');
-
-
--- ----------------------------
 -- 9、用户与岗位关联表  用户1-N岗位
 -- ----------------------------
 drop table if exists sys_user_post;

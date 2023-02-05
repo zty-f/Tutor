@@ -16,10 +16,8 @@ import com.zty.common.exception.ServiceException;
 import com.zty.common.utils.SecurityUtils;
 import com.zty.common.utils.StringUtils;
 import com.zty.common.utils.spring.SpringUtils;
-import com.zty.system.domain.SysRoleDept;
 import com.zty.system.domain.SysRoleMenu;
 import com.zty.system.domain.SysUserRole;
-import com.zty.system.mapper.SysRoleDeptMapper;
 import com.zty.system.mapper.SysRoleMapper;
 import com.zty.system.mapper.SysRoleMenuMapper;
 import com.zty.system.mapper.SysUserRoleMapper;
@@ -41,9 +39,6 @@ public class SysRoleServiceImpl implements ISysRoleService
 
     @Autowired
     private SysUserRoleMapper userRoleMapper;
-
-    @Autowired
-    private SysRoleDeptMapper roleDeptMapper;
 
     /**
      * 根据条件分页查询角色数据
@@ -277,8 +272,6 @@ public class SysRoleServiceImpl implements ISysRoleService
     {
         // 修改角色信息
         roleMapper.updateRole(role);
-        // 删除角色与职级关联
-        roleDeptMapper.deleteRoleDeptByRoleId(role.getRoleId());
         // 新增角色和职级信息（数据权限）
         return insertRoleDept(role);
     }
@@ -315,19 +308,6 @@ public class SysRoleServiceImpl implements ISysRoleService
     public int insertRoleDept(SysRole role)
     {
         int rows = 1;
-        // 新增角色与职级（数据权限）管理
-        List<SysRoleDept> list = new ArrayList<SysRoleDept>();
-        for (Long deptId : role.getDeptIds())
-        {
-            SysRoleDept rd = new SysRoleDept();
-            rd.setRoleId(role.getRoleId());
-            rd.setDeptId(deptId);
-            list.add(rd);
-        }
-        if (list.size() > 0)
-        {
-            rows = roleDeptMapper.batchRoleDept(list);
-        }
         return rows;
     }
 
@@ -343,8 +323,6 @@ public class SysRoleServiceImpl implements ISysRoleService
     {
         // 删除角色与菜单关联
         roleMenuMapper.deleteRoleMenuByRoleId(roleId);
-        // 删除角色与职级关联
-        roleDeptMapper.deleteRoleDeptByRoleId(roleId);
         return roleMapper.deleteRoleById(roleId);
     }
 
@@ -370,8 +348,6 @@ public class SysRoleServiceImpl implements ISysRoleService
         }
         // 删除角色与菜单关联
         roleMenuMapper.deleteRoleMenu(roleIds);
-        // 删除角色与职级关联
-        roleDeptMapper.deleteRoleDept(roleIds);
         return roleMapper.deleteRoleByIds(roleIds);
     }
 
