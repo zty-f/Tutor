@@ -37,6 +37,17 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="待补科目" prop="postIds">
+        <el-select v-model="queryParams.postIds" multiple placeholder="请选择科目">
+          <el-option
+            v-for="item in postOptions"
+            :key="item.postId"
+            :label="item.postName"
+            :value="item.postId"
+            :disabled="item.status === 1"
+          ></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="登录时间" prop="loginDate">
         <el-date-picker clearable
                         v-model="queryParams.loginDate"
@@ -445,6 +456,7 @@ export default {
         nickName: null,
         sex: null,
         loginDate: null,
+        postIds: null,
       },
       // 表单参数
       form: {},
