@@ -62,18 +62,19 @@ public class StudentServiceImpl implements IStudentService {
      */
     @Override
     public List<StudentVo> selectStudentList(Student student) {
+        Long roleId = roleMapper.selectRoleListByUserId(SecurityUtils.getUserId()).get(0);
         // 传入登录用户的deptId，然后只查询比这个高职级的大学生！
-        if(student.getDeptId()==null){
+        if((roleId==3||roleId==4)&&student.getDeptId()==null){
             student.setDeptId(SecurityUtils.getDeptId());
         }
         List<Student> students = studentMapper.selectStudentList(student);
         List<StudentVo> res = new ArrayList<>();
         Long selectDeptId = student.getDeptId();
-        List<Long> filterPostIds;
-        if(student.getPostIds()!=null){
-            filterPostIds = Arrays.asList(student.getPostIds());
-        }else {
+        List<Long> filterPostIds = new ArrayList<>();
+        if((roleId==3||roleId==4)&&student.getPostIds()==null){
             filterPostIds = getLoginUserPostIds();
+        }else if(student.getPostIds()!=null){
+            filterPostIds = Arrays.asList(student.getPostIds());
         }
         for (Student s : students) {
             if (selectDeptId!=null&&s.getDeptId()<selectDeptId)continue;
@@ -96,6 +97,7 @@ public class StudentServiceImpl implements IStudentService {
      * @Description: 判断当前用户的岗位是否匹配登录用户或者搜索选项
      * */
     public boolean isContainsPostIds(List<Long> filterPostIds,List<Long> postIds){
+        if (filterPostIds.size()<=0) return true;
         for (Long filterPostId : filterPostIds) {
             if (postIds.contains(filterPostId)){
                 return true;

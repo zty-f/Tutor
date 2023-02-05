@@ -66,18 +66,19 @@ public class ParentServiceImpl implements IParentService
     @Override
     public List<ParentVo> selectParentList(Parent parent)
     {
+        Long roleId = roleMapper.selectRoleListByUserId(SecurityUtils.getUserId()).get(0);
         // 传入登录用户的deptId，然后只查询比这个低职级的学员！
-        if (parent.getDeptId()==null){
+        if ((roleId==3||roleId==4)&&parent.getDeptId()==null){
             parent.setDeptId(SecurityUtils.getDeptId());
         }
         List<Parent> parents = parentMapper.selectParentList(parent);
         List<ParentVo> res = new ArrayList<>();
         Long selectDeptId = parent.getDeptId();
-        List<Long> filterPostIds;
-        if(parent.getPostIds()!=null){
-            filterPostIds = Arrays.asList(parent.getPostIds());
-        }else {
+        List<Long> filterPostIds = new ArrayList<>();
+        if((roleId==3||roleId==4)&&parent.getPostIds()==null){
             filterPostIds = getLoginUserPostIds();
+        }else if (parent.getPostIds()!=null){
+            filterPostIds = Arrays.asList(parent.getPostIds());
         }
         for (Parent p : parents) {
             if (selectDeptId!=null&&p.getDeptId()>selectDeptId)continue;
@@ -100,6 +101,7 @@ public class ParentServiceImpl implements IParentService
      * @Description: 判断当前用户的岗位是否匹配登录用户或者搜索选项
      * */
     public boolean isContainsPostIds(List<Long> filterPostIds,List<Long> postIds){
+        if (filterPostIds.size()<=0) return true;
         for (Long filterPostId : filterPostIds) {
             if (postIds.contains(filterPostId)){
                 return true;
