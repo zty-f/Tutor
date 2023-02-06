@@ -89,6 +89,42 @@ spring:
         max-active: 8
         # #连接池最大阻塞等待时间（使用负值表示没有限制）
         max-wait: -1ms
+  # RabbitMQ 配置
+  rabbitmq:
+    # 服务器
+    host: 47.108.239.8
+    # 用户名
+    username: guest
+    # 密码
+    password: guest
+    # 虚拟主机
+    virtual-host: /
+    #端口
+    port: 5672
+    listener:
+      simple:
+        # 消费者最小数量
+        concurrency: 10
+        # 消费者最大数量
+        max-concurrency: 10
+        # 限制消费者每次只能处理一条消息，处理完再继续下一条消息
+        prefetch: 1
+        # 启动时是否默认启动容器，默认true
+        auto-startup: true
+        # 被拒绝时重新进入队列
+        default-requeue-rejected: true
+    template:
+      retry:
+        # 发布重试，默认false
+        enabled: true
+        # 重试时间 默认1000ms
+        initial-interval: 1000ms
+        # 重试最大时间间隔 默认10000ms
+        max-interval: 10000ms
+        # 重试最大次数 默认3
+        max-attempts: 3
+        # 重试的间隔时间乘数  比如2.0 第一次间隔10s 第二次间隔20s 第三次间隔40s
+        multiplier: 1
 
 # token配置
 token:
@@ -98,7 +134,7 @@ token:
     secret: abcdefghijklmnopqrstuvwxyz
     # 令牌有效期（默认30分钟）
     expireTime: 30
-  
+
 # MyBatis配置
 mybatis:
     # 搜索指定包别名

@@ -51,3 +51,13 @@ export function getCollectNum(userId) {
     method: 'get'
   })
 }
+
+
+// 在线认证
+export function onlineAuth(data) {
+  return request({
+    url: '/onlineAuth',
+    method: 'post',
+    data: data
+  })
+}

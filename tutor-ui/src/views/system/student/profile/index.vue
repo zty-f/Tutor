@@ -45,10 +45,18 @@
           </div>
           <el-button
             size="mini"
-            type="text"
+            type="primary"
             icon="el-icon-edit"
             @click="handleUpdate(user)"
           >修改个人信息</el-button>
+          <el-button
+            v-if="authStatus===0"
+            size="mini"
+            type="success"
+            icon="el-icon-s-check"
+            @click="handleAuth(user)"
+            class="pull-right"
+          >在线认证</el-button>
         </el-card>
       </el-col>
       <el-col :span="12" :xs="24">
@@ -60,6 +68,28 @@
         </el-card>
       </el-col>
     </el-row>
+
+    <el-dialog title="在线认证" :visible.sync="authOpen" width="700px" append-to-body>
+      <el-divider content-position="center">以下信息仅用于本网站在线认证，请放心填写~</el-divider>
+      <el-form ref="authForm" :model="authForm" :rules="authRules" label-width="80px" :style="{width:'300px',margin:'auto'}">
+        <el-form-item label="个人邮箱" prop="email">
+          <el-input v-model="authForm.email" placeholder="请输入个人邮箱" />
+        </el-form-item>
+        <el-form-item label="手机号码" prop="phonenumber">
+          <el-input v-model="authForm.phonenumber" placeholder="请输入手机号码" />
+        </el-form-item>
+        <el-form-item label="姓名" prop="trueName">
+          <el-input v-model="authForm.trueName" placeholder="请输入个人真实姓名" />
+        </el-form-item>
+        <el-form-item label="身份证号" prop="idCard">
+          <el-input v-model="authForm.idCard" placeholder="请输入个人身份证号" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="onlineAuth">认 证</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
 
     <el-dialog title="修改个人信息" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
@@ -158,6 +188,7 @@ import resetPwd from "./resetPwd";
 import { getUserProfile } from "@/api/system/user";
 import {addStudent, getAuthStatus, getStudent, updateStudent} from "@/api/core/student";
 import store from "@/store";
+import {onlineAuth} from "@/api/core/common";
 
 export default {
   name: "Profile",
@@ -166,6 +197,7 @@ export default {
   data() {
     return {
       open: false,
+      authOpen: false,
       user: {},
       sysStudent: {},
       roleGroup: {},
@@ -174,6 +206,7 @@ export default {
       postId: [],
       // 表单参数
       form: {},
+      authForm: {},
       // 表单校验
       rules: {
         deptId: [
@@ -184,6 +217,31 @@ export default {
         ],
         nickName: [
           { required: true, message: "用户昵称不能为空", trigger: "blur" }
+        ],
+      },
+      authRules: {
+        phonenumber: [
+          {
+            required: true,
+            pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
+            message: "请输入正确的手机号码",
+            trigger: ["blur", "change"]
+          }
+        ],
+        email: [
+          {
+            required: true,
+            type: "email",
+            message: "请输入正确的邮箱地址",
+            trigger: ["blur", "change"]
+          }
+        ],
+        trueName: [
+          { required: true, message: "真实姓名不能为空", trigger: "blur" }
+        ],
+        idCard: [
+          { required: true,pattern: /^[1-9]\d{5}(18|19|20|(3\d))\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/
+          , message: "请输入正确的身份证号", trigger: ["blur", "change"] }
         ],
       },
       authStatus: '',
@@ -217,8 +275,15 @@ export default {
         updateTime: null,
         remark: null
       };
+      this.authForm = {
+        email: null,
+        phonenumber: null,
+        trueName: null,
+        idCard: null,
+      };
       this.sysStudent = {};
       this.resetForm("form");
+      this.resetForm("authForm");
     },
     getUser() {
       getUserProfile().then(response => {
@@ -247,11 +312,40 @@ export default {
         this.open = true;
       });
     },
+    /** 在线认证按钮操作 */
+    handleAuth(user) {
+      this.reset();
+      this.authForm.userId = user.userId;
+      this.authForm.role = this.roleGroup;
+      this.authForm.email = user.email;
+      this.authForm.phonenumber = user.phonenumber;
+      this.authOpen = true;
+    },
     // 取消按钮
     cancel() {
       this.open = false;
       this.openDetail = false;
+      this.authOpen = false;
       this.reset();
+    },
+    onlineAuth(){
+      this.$refs["authForm"].validate(valid => {
+        if (valid) {
+          onlineAuth(this.authForm).then(response => {
+            if (response.code===200){
+              this.$modal.msgSuccess(response.msg);
+              this.$modal.alertWarning("**********一周后认证状态未改变表示认证失败*********请修改个人信息再次进行在线认证或者联系管理员咨询")
+            }else{
+              this.$modal.msgError(response.msg);
+            }
+          });
+          this.authOpen = false;
+          setTimeout(() => {
+            this.getUser();
+            this.getAuth();
+          }, 1000);
+        }
+      });
     },
     /** 提交按钮 */
     submitForm() {
@@ -269,11 +363,11 @@ export default {
               this.open = false;
             });
           }
+          setTimeout(() => {
+            this.getUser();
+            this.getAuth();
+          }, 1000);
         }
-        setTimeout(() => {
-          this.getUser();
-          this.getAuth();
-        }, 1000);
       });
     },
   }
