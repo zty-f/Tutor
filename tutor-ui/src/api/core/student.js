@@ -42,3 +42,11 @@ export function delStudent(userId) {
     method: 'delete'
   })
 }
+
+// 查询学生认证状态
+export function getAuthStatus(userId) {
+  return request({
+    url: '/core/student/getAuthStatus/' + userId,
+    method: 'get'
+  })
+}

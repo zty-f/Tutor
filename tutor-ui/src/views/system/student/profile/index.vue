@@ -35,6 +35,12 @@
                 <svg-icon icon-class="date" />创建日期
                 <div class="pull-right">{{ user.createTime }}</div>
               </li>
+              <li class="list-group-item">
+                <i class="el-icon-s-check"></i>认证状态
+                <div class="pull-right">
+                  <dict-tag :options="dict.type.sys_auth_status" :value="authStatus"/>
+                </div>
+              </li>
             </ul>
           </div>
           <el-button
@@ -150,7 +156,8 @@
 import userAvatar from "./userAvatar";
 import resetPwd from "./resetPwd";
 import { getUserProfile } from "@/api/system/user";
-import {addStudent, getStudent, updateStudent} from "@/api/core/student";
+import {addStudent, getAuthStatus, getStudent, updateStudent} from "@/api/core/student";
+import store from "@/store";
 
 export default {
   name: "Profile",
@@ -178,11 +185,13 @@ export default {
         nickName: [
           { required: true, message: "用户昵称不能为空", trigger: "blur" }
         ],
-      }
+      },
+      authStatus: '',
     };
   },
   created() {
     this.getUser();
+    this.getAuth();
   },
   methods: {
     // 表单重置
@@ -218,6 +227,12 @@ export default {
         this.postGroup = response.postGroup;
         this.postOptions = response.posts;
         this.postId = response.postIds;
+      });
+    },
+    getAuth(){
+      var userId = store.getters.userId
+      getAuthStatus(userId).then(response => {
+        this.authStatus = response.data;
       });
     },
     /** 修改按钮操作 */
@@ -257,6 +272,7 @@ export default {
         }
         setTimeout(() => {
           this.getUser();
+          this.getAuth();
         }, 1000);
       });
     },
