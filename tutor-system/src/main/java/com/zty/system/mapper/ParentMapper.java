@@ -86,4 +86,11 @@ public interface ParentMapper
      * @return 结果
      */
     public int deleteSysParentByUserId(Long userId);
+
+    /**
+     * 获取认证状态
+     * @param userId
+     * @return
+     */
+    public int getAuthStatus(Long userId);
 }

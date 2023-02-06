@@ -226,4 +226,9 @@ public class ParentServiceImpl implements IParentService
             parentMapper.batchSysParent(sysParent);
         }
     }
+
+    // 获取认证状态
+    public int getAuthStatus(Long userId){
+        return parentMapper.getAuthStatus(userId);
+    }
 }

@@ -118,4 +118,13 @@ public class ParentController extends BaseController
     {
         return toAjax(parentService.deleteParentByUserIds(userIds));
     }
+
+    /**
+     * 根据用户id查询认证状态
+     */
+    @GetMapping(value = "/getAuthStatus/{userId}")
+    public AjaxResult getAuthStatus(@PathVariable("userId") Long userId)
+    {
+        return AjaxResult.success(parentService.getAuthStatus(userId));
+    }
 }

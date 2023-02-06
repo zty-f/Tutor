@@ -61,4 +61,9 @@ public interface IStudentService
      * @return 结果
      */
     public int deleteStudentByUserId(Long userId);
+
+    /**
+     * 获取认证状态
+     */
+    public int getAuthStatus(Long userId);
 }

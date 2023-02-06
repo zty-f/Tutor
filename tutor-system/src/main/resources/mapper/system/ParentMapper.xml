@@ -166,4 +166,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into sys_parent( id, user_id, location, background, salary_reward, auth_status, del_flag, create_by, create_time, update_by, update_time, remark) values
             ( #{id}, #{userId}, #{location}, #{background},#{salaryReward}, #{authStatus}, #{delFlag}, #{createBy}, #{createTime}, #{updateBy}, #{updateTime}, #{remark})
     </insert>
+
+    <select id="getAuthStatus" parameterType="Long" resultType="Integer">
+        select auth_status
+        from sys_parent
+        where user_id = #{userId}
+    </select>
 </mapper>

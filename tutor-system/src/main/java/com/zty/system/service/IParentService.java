@@ -60,4 +60,9 @@ public interface IParentService
      * @return 结果
      */
     public int deleteParentByUserId(Long userId);
+
+    /**
+     * 获取认证状态
+     */
+    public int getAuthStatus(Long userId);
 }

@@ -85,4 +85,11 @@ public interface StudentMapper
      * @return 结果
      */
     public int deleteSysStudentByUserId(Long userId);
+
+    /**
+     * 获取认证状态
+     * @param userId
+     * @return
+     */
+    public int getAuthStatus(Long userId);
 }

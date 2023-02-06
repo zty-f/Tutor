@@ -119,4 +119,13 @@ public class StudentController extends BaseController
     {
         return toAjax(studentService.deleteStudentByUserIds(userIds));
     }
+
+    /**
+     * 根据用户id查询认证状态
+     */
+    @GetMapping(value = "/getAuthStatus/{userId}")
+    public AjaxResult getAuthStatus(@PathVariable("userId") Long userId)
+    {
+        return AjaxResult.success(studentService.getAuthStatus(userId));
+    }
 }

@@ -217,4 +217,9 @@ public class StudentServiceImpl implements IStudentService {
             studentMapper.batchSysStudent(sysStudent);
         }
     }
+
+    // 获取认证状态
+    public int getAuthStatus(Long userId){
+        return studentMapper.getAuthStatus(userId);
+    }
 }
