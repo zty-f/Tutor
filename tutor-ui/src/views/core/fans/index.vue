@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-row :gutter="20" >
-      <el-col :span="6" v-for="user in likeList" :key="user.userId" :style="{marginTop:'20px'}">
+      <el-col :span="6" v-for="user in fansList" :key="user.userId" :style="{marginTop:'20px'}">
         <el-card class="box-card">
           <div>
             <div class="text-center">
@@ -314,13 +314,13 @@
 </template>
 
 <script>
-import {addCollect, addLike, delCollect, delLike, getLikeList} from "@/api/core/common";
+import {addCollect, addLike, delCollect, delLike, getFansList} from "@/api/core/common";
 import {getStudent} from "@/api/core/student";
 import {getParent} from "@/api/core/parent";
 import store from "@/store";
 
 export default {
-  name: "Like",
+  name: "Fans",
   dicts: ['sys_teach_way','sys_auth_status','sys_salary_dict', 'sys_delete_status', 'sys_user_sex', 'sys_normal_disable','sys_dept_name'],
   data() {
     return {
@@ -333,7 +333,7 @@ export default {
       isCollect: false,
       collectNum: '',
       // 学员信息表格数据
-      likeList: [],
+      fansList: [],
       // 学员家教信息表格数据
       sysStudent: {},
       sysParent: {},
@@ -348,10 +348,10 @@ export default {
   },
   methods:{
     getList(){
-      getLikeList().then(response=>{
-        this.likeList = response.rows;
+      getFansList().then(response=>{
+        this.fansList = response.rows;
         if (response.rows.length<=0){
-          this.$modal.alertSuccess("您的喜欢列表为空，快快去发现和探索吧！");
+          this.$modal.alertSuccess("您的粉丝列表为空，快快去提升和展示自己吧！");
         }
       })
     },

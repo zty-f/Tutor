@@ -1,10 +1,12 @@
 package com.zty.core.controller.common;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.zty.common.core.domain.entity.SysUser;
 import com.zty.common.utils.SecurityUtils;
+import com.zty.framework.web.domain.server.Sys;
 import com.zty.system.domain.Student;
 import com.zty.system.domain.vo.StudentVo;
 import com.zty.system.mapper.SysPostMapper;
@@ -91,14 +93,34 @@ public class SysUserLikeController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list()
     {
-        startPage();
         Long userId = SecurityUtils.getUserId();
         List<Long> likeIds = sysUserLikeService.selectSysUserLikeIds(userId);
-        List<SysUser> list = userMapper.selectUserByIds(likeIds.toArray(new Long[0]));
+        if (likeIds.size()<=0){
+            return getDataTable(new ArrayList<>());
+        }
+        return getDataTable(getUserInfos(likeIds));
+    }
+
+    /**
+     * 查询粉丝列表
+     */
+    @GetMapping("/fans")
+    public TableDataInfo fans()
+    {
+        Long userId = SecurityUtils.getUserId();
+        List<Long> fansIds = sysUserLikeService.selectSysUserFansIds(userId);
+        if (fansIds.size()<=0){
+            return getDataTable(new ArrayList<>());
+        }
+        return getDataTable(getUserInfos(fansIds));
+    }
+
+    public List<SysUser> getUserInfos(List<Long> ids){
+        List<SysUser> list = userMapper.selectUserByIds(ids.toArray(new Long[0]));
         for (SysUser sysUser : list) {
             sysUser.setPostIds(postMapper.selectPostListByUserId(sysUser.getUserId()).toArray(new Long[0]));
             sysUser.setPostGroup(userService.selectUserPostGroup(sysUser.getUserName()));
         }
-        return getDataTable(list);
+        return list;
     }
 }

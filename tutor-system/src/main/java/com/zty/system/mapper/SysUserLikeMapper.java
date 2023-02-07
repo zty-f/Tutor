@@ -22,6 +22,11 @@ public interface SysUserLikeMapper {
     public List<Long> selectSysUserLikeIds(Long userId);
 
     /**
+     * 查询用户粉丝列表id
+     */
+    public List<Long> selectSysUserFansIds(Long userId);
+
+    /**
      * 新增用户点赞关联
      *
      * @param sysUserLike 用户点赞关联

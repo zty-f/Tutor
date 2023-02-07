@@ -62,10 +62,18 @@ export function onlineAuth(data) {
   })
 }
 
-// 查询用户点赞关联详细
+// 查询用户点赞列表
 export function getLikeList() {
   return request({
     url: '/core/like/list',
+    method: 'get'
+  })
+}
+
+// 查询用户粉丝列表
+export function getFansList() {
+  return request({
+    url: '/core/like/fans',
     method: 'get'
   })
 }
