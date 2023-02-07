@@ -27,6 +27,14 @@ public class ParentVo {
     @Excel(name = "角色")
     private String roleName;
 
+    private boolean isLike;
+
+    private boolean isCollect;
+
+    private int likeNum;
+
+    private int collectNum;
+
     /** 学员信息 */
     private Parent parent;
 
@@ -42,6 +50,38 @@ public class ParentVo {
         this.posts = posts;
         this.roleName = roleName;
         this.parent = parent;
+    }
+
+    public boolean isLike() {
+        return isLike;
+    }
+
+    public void setLike(boolean like) {
+        isLike = like;
+    }
+
+    public boolean isCollect() {
+        return isCollect;
+    }
+
+    public void setCollect(boolean collect) {
+        isCollect = collect;
+    }
+
+    public int getLikeNum() {
+        return likeNum;
+    }
+
+    public void setLikeNum(int likeNum) {
+        this.likeNum = likeNum;
+    }
+
+    public int getCollectNum() {
+        return collectNum;
+    }
+
+    public void setCollectNum(int collectNum) {
+        this.collectNum = collectNum;
     }
 
     public String getDeptName() {
@@ -82,6 +122,10 @@ public class ParentVo {
                 "deptName='" + deptName + '\'' +
                 ", posts=" + posts +
                 ", roleName='" + roleName + '\'' +
+                ", isLike=" + isLike +
+                ", isCollect=" + isCollect +
+                ", likeNum=" + likeNum +
+                ", collectNum=" + collectNum +
                 ", parent=" + parent +
                 '}';
     }

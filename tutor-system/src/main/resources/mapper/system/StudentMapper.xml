@@ -27,7 +27,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <resultMap id="StudentSysStudentResult" type="Student" extends="StudentResult">
-        <collection property="sysStudent" notNullColumn="sub_id" javaType="com.zty.system.domain.SysStudent" resultMap="SysStudentResult" />
+        <association property="sysStudent" notNullColumn="sub_id" javaType="com.zty.system.domain.SysStudent" resultMap="SysStudentResult" />
     </resultMap>
 
     <resultMap type="SysStudent" id="SysStudentResult">

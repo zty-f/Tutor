@@ -257,7 +257,7 @@
       <el-descriptions-item>
         <template slot="label">
           <i class="el-icon-s-finance"></i>
-          期望报酬
+          预计报酬
         </template>
         <dict-tag :options="dict.type.sys_salary_dict" :value="sysParent.salaryReward"/>
       </el-descriptions-item>

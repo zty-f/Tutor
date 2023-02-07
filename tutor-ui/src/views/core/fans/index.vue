@@ -1,5 +1,6 @@
 <template>
   <div>
+    <el-empty description="您的粉丝列表为空，快快去发现和探索吧！" v-if="openEmpty"></el-empty>
     <el-row :gutter="20" >
       <el-col :span="6" v-for="user in fansList" :key="user.userId" :style="{marginTop:'20px'}">
         <el-card class="box-card">
@@ -121,7 +122,7 @@
         <el-descriptions-item>
           <template slot="label">
             <i class="el-icon-s-finance"></i>
-            期望报酬
+            预计报酬
           </template>
           <dict-tag :options="dict.type.sys_salary_dict" :value="sysParent.salaryReward"/>
         </el-descriptions-item>
@@ -339,6 +340,7 @@ export default {
       sysParent: {},
       openStudentDetail: false,
       openParentDetail: false,
+      openEmpty: false,
       form: {},
       tPosts: "",
     };
@@ -351,6 +353,7 @@ export default {
       getFansList().then(response=>{
         this.fansList = response.rows;
         if (response.rows.length<=0){
+          this.openEmpty = true;
           this.$modal.alertSuccess("您的粉丝列表为空，快快去提升和展示自己吧！");
         }
       })

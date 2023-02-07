@@ -1,8 +1,8 @@
 <template>
   <div>
-    <el-empty description="您的喜欢列表为空，快快去发现和探索吧！" v-if="openEmpty"></el-empty>
-    <el-row :gutter="20" >
-      <el-col :span="6" v-for="user in likeList" :key="user.userId" :style="{marginTop:'20px'}">
+    <el-empty description="您的收藏列表为空，快快去发现和探索吧！" v-if="openEmpty"></el-empty>
+    <el-row :gutter="20" v-if="isManager">
+      <el-col :span="6" v-for="user in collectList" :key="user.userId" :style="{marginTop:'20px'}">
         <el-card class="box-card">
           <div>
             <div class="text-center">
@@ -45,6 +45,278 @@
         </el-card>
       </el-col>
     </el-row>
+
+    <!--学员收藏列表【收藏学生信息】-->
+    <div style="overflow:auto" v-if="isParent">
+      <ul class="infinite-list"  v-infinite-scroll="" style="overflow:auto">
+        <li v-for="form in collectStudentList" class="infinite-list-item">
+          <el-card :style="{ margin: '40px',width:'800px'}" shadow="hover">
+            <el-descriptions class="margin-top" :column="2" border :labelStyle="rowCenter">
+              <template slot="title">
+                <image-preview :src="form.student.avatar" :width="100" :height="100"/>
+              </template>
+              <el-descriptions-item>
+                <template slot="label">
+                  <i class="el-icon-s-flag"></i>
+                  学生编号
+                </template>
+                {{ form.student.userId }}
+              </el-descriptions-item>
+              <el-descriptions-item>
+                <template slot="label">
+                  <i class="el-icon-star-on"></i>
+                  学生账号
+                </template>
+                {{ form.student.userName }}
+              </el-descriptions-item>
+              <el-descriptions-item>
+                <template slot="label">
+                  <i class="el-icon-user"></i>
+                  学生昵称
+                </template>
+                {{ form.student.nickName }}
+              </el-descriptions-item>
+              <el-descriptions-item>
+                <template slot="label">
+                  <i class="el-icon-guide"></i>
+                  学生性别
+                </template>
+                <dict-tag :options="dict.type.sys_user_sex" :value="form.student.sex"/>
+              </el-descriptions-item>
+              <el-descriptions-item>
+                <template slot="label">
+                  <svg-icon slot="prefix" icon-class="dept" class="el-input__icon input-icon" />
+                  学生职级
+                </template>
+                <dict-tag :options="dict.type.sys_dept_name" :value="form.student.deptId"/>
+              </el-descriptions-item>
+              <el-descriptions-item>
+                <template slot="label">
+                  <svg-icon slot="prefix" icon-class="post" class="el-input__icon input-icon" />
+                  胜任岗位
+                </template>
+                <el-tag
+                  v-for="post in form.posts"
+                  effect="plain">
+                  {{ post }}
+                </el-tag>
+              </el-descriptions-item>
+              <el-descriptions-item>
+                <template slot="label">
+                  <i class="el-icon-mobile-phone"></i>
+                  手机号
+                </template>
+                {{ form.student.phonenumber }}
+              </el-descriptions-item>
+              <el-descriptions-item>
+                <template slot="label">
+                  <i class="el-icon-message"></i>
+                  邮箱
+                </template>
+                {{ form.student.email }}
+              </el-descriptions-item>
+              <el-descriptions-item>
+                <template slot="label">
+                  <i class="el-icon-school"></i>
+                  就读学校
+                </template>
+                {{ form.student.sysStudent.university }}
+              </el-descriptions-item>
+              <el-descriptions-item>
+                <template slot="label">
+                  <i class="el-icon-reading"></i>
+                  所学专业
+                </template>
+                {{ form.student.sysStudent.major }}
+              </el-descriptions-item>
+              <el-descriptions-item>
+                <template slot="label">
+                  <i class="el-icon-location-information"></i>
+                  所在地
+                </template>
+                {{ form.student.sysStudent.location }}
+              </el-descriptions-item>
+              <el-descriptions-item>
+                <template slot="label">
+                  <i class="el-icon-magic-stick"></i>
+                  授课方式
+                </template>
+                <dict-tag :options="dict.type.sys_teach_way" :value="form.student.sysStudent.teachWay"/>
+              </el-descriptions-item>
+              <el-descriptions-item>
+                <template slot="label">
+                  <i class="el-icon-s-finance"></i>
+                  期望报酬
+                </template>
+                <dict-tag :options="dict.type.sys_salary_dict" :value="form.student.sysStudent.salaryExpect"/>
+              </el-descriptions-item>
+              <el-descriptions-item>
+                <template slot="label">
+                  <i class="el-icon-time"></i>
+                  最近上线
+                </template>
+                {{ form.student.loginDate }}
+              </el-descriptions-item>
+              <el-descriptions-item>
+                <template slot="label">
+                  <i class="el-icon-s-check"></i>
+                  认证状态
+                </template>
+                <dict-tag :options="dict.type.sys_auth_status" :value="form.student.sysStudent.authStatus"/>
+              </el-descriptions-item>
+            </el-descriptions>
+            <el-divider></el-divider>
+            <el-descriptions border direction="vertical">
+              <template slot="title">
+                <i class="el-icon-info"></i>
+                学生详细背景
+              </template>
+              <el-descriptions-item>
+                {{  form.student.sysStudent.background }}
+              </el-descriptions-item>
+            </el-descriptions>
+            <div :style="{height:'90px',marginTop:'20px',display:'flex',justifyContent: 'flex-start'}">
+              <div @click="like(form.student.userId)"  :style="{width: '50px',height: '80px',textAlign: 'center',margin:'10px'}">
+                <img src="@/assets/images/love-white.svg" v-if="!form.like" slot="footer">
+                <img src="@/assets/images/love-red.svg" v-if="form.like" slot="footer">
+                <span>{{form.likeNum}}</span>
+              </div>
+              <div @click="collect(form.student.userId)" :style="{width: '50px',height: '80px',textAlign: 'center',margin:'10px'}">
+                <img src="@/assets/images/collect-white.svg" v-if="!form.collect" slot="footer">
+                <img src="@/assets/images/collect-black.svg" v-if="form.collect" slot="footer">
+                <span>{{form.collectNum}}</span>
+              </div>
+            </div>
+          </el-card>
+        </li>
+      </ul>
+    </div>
+
+
+    <!--学生收藏列表【收藏学员信息】-->
+    <div :style="{margin: 'auto'}" v-if="isStudent">
+      <ul class="infinite-list">
+        <li v-for="form in collectParentList" class="infinite-list-item">
+          <el-card :style="{ margin: '40px',width:'800px'}" shadow="hover">
+            <el-descriptions class="margin-top" :column="2" border :labelStyle="rowCenter">
+              <template slot="title">
+                <image-preview :src="form.parent.avatar" :width="100" :height="100"/>
+              </template>
+              <el-descriptions-item>
+                <template slot="label">
+                  <i class="el-icon-s-flag"></i>
+                  学员编号
+                </template>
+                {{ form.parent.userId }}
+              </el-descriptions-item>
+              <el-descriptions-item>
+                <template slot="label">
+                  <i class="el-icon-star-on"></i>
+                  学员账号
+                </template>
+                {{ form.parent.userName }}
+              </el-descriptions-item>
+              <el-descriptions-item>
+                <template slot="label">
+                  <i class="el-icon-user"></i>
+                  学员昵称
+                </template>
+                {{ form.parent.nickName }}
+              </el-descriptions-item>
+              <el-descriptions-item>
+                <template slot="label">
+                  <i class="el-icon-guide"></i>
+                  学员性别
+                </template>
+                <dict-tag :options="dict.type.sys_user_sex" :value="form.parent.sex"/>
+              </el-descriptions-item>
+              <el-descriptions-item>
+                <template slot="label">
+                  <svg-icon slot="prefix" icon-class="dept" class="el-input__icon input-icon" />
+                  学员现级
+                </template>
+                <dict-tag :options="dict.type.sys_dept_name" :value="form.parent.deptId"/>
+              </el-descriptions-item>
+              <el-descriptions-item>
+                <template slot="label">
+                  <svg-icon slot="prefix" icon-class="post" class="el-input__icon input-icon" />
+                  待补学科
+                </template>
+                <el-tag
+                  v-for="post in form.posts"
+                  effect="plain">
+                  {{ post }}
+                </el-tag>
+              </el-descriptions-item>
+              <el-descriptions-item>
+                <template slot="label">
+                  <i class="el-icon-mobile-phone"></i>
+                  手机号
+                </template>
+                {{ form.parent.phonenumber }}
+              </el-descriptions-item>
+              <el-descriptions-item>
+                <template slot="label">
+                  <i class="el-icon-message"></i>
+                  邮箱
+                </template>
+                {{ form.parent.email }}
+              </el-descriptions-item>
+              <el-descriptions-item>
+                <template slot="label">
+                  <i class="el-icon-location-information"></i>
+                  所在地
+                </template>
+                {{ form.parent.sysParent.location }}
+              </el-descriptions-item>
+              <el-descriptions-item>
+                <template slot="label">
+                  <i class="el-icon-s-finance"></i>
+                  预计报酬
+                </template>
+                <dict-tag :options="dict.type.sys_salary_dict" :value="form.parent.sysParent.salaryReward"/>
+              </el-descriptions-item>
+              <el-descriptions-item>
+                <template slot="label">
+                  <i class="el-icon-time"></i>
+                  最近上线
+                </template>
+                {{ form.parent.loginDate }}
+              </el-descriptions-item>
+              <el-descriptions-item>
+                <template slot="label">
+                  <i class="el-icon-s-check"></i>
+                  认证状态
+                </template>
+                <dict-tag :options="dict.type.sys_auth_status" :value="form.parent.sysParent.authStatus"/>
+              </el-descriptions-item>
+            </el-descriptions>
+            <el-divider></el-divider>
+            <el-descriptions border direction="vertical">
+              <template slot="title">
+                <i class="el-icon-info"></i>
+                学员详细背景
+              </template>
+              <el-descriptions-item>
+                {{  form.parent.sysParent.background }}
+              </el-descriptions-item>
+            </el-descriptions>
+            <div :style="{height:'90px',marginTop:'20px',display:'flex',justifyContent: 'flex-start'}">
+              <div @click="like(form.parent.userId)"  :style="{width: '50px',height: '80px',textAlign: 'center',margin:'10px'}">
+                <img src="@/assets/images/love-white.svg" v-if="!form.like" slot="footer">
+                <img src="@/assets/images/love-red.svg" v-if="form.like" slot="footer">
+                <span>{{form.likeNum}}</span>
+              </div>
+              <div @click="collect(form.parent.userId)" :style="{width: '50px',height: '80px',textAlign: 'center',margin:'10px'}">
+                <img src="@/assets/images/collect-white.svg" v-if="!form.collect" slot="footer">
+                <img src="@/assets/images/collect-black.svg" v-if="form.collect" slot="footer">
+                <span>{{form.collectNum}}</span>
+              </div>
+            </div>
+          </el-card>
+        </li>
+      </ul>
+    </div>
 
     <!-- 查看每个学员详细信息描述列表 -->
     <el-dialog title="学员详细信息" :visible.sync="openParentDetail" width="800px" append-to-body>
@@ -315,7 +587,7 @@
 </template>
 
 <script>
-import {addCollect, addLike, delCollect, delLike, getLikeList} from "@/api/core/common";
+import {addCollect, addLike, delCollect, delLike, getCollectList} from "@/api/core/common";
 import {getStudent} from "@/api/core/student";
 import {getParent} from "@/api/core/parent";
 import store from "@/store";
@@ -334,13 +606,18 @@ export default {
       isCollect: false,
       collectNum: '',
       // 学员信息表格数据
-      likeList: [],
+      collectList: [],
+      collectStudentList: [],
+      collectParentList: [],
       // 学员家教信息表格数据
       sysStudent: {},
       sysParent: {},
       openStudentDetail: false,
       openParentDetail: false,
       openEmpty: false,
+      isManager: false,
+      isStudent: false,
+      isParent: false,
       form: {},
       tPosts: "",
     };
@@ -350,11 +627,21 @@ export default {
   },
   methods:{
     getList(){
-      getLikeList().then(response=>{
-        this.likeList = response.rows;
+      getCollectList().then(response=>{
         if (response.rows.length<=0){
           this.openEmpty = true;
-          this.$modal.alertSuccess("您的喜欢列表为空，快快去发现和探索吧！");
+          this.$modal.alertSuccess("您的收藏列表为空，快快去发现和探索吧！");
+        }
+        var role = store.getters.roles[0];
+        if (role!=="student"&&role!=="parent"){
+          this.collectList = response.rows;
+          this.isManager = true;
+        }else if (role==="student"){
+          this.collectParentList = response.rows;
+          this.isStudent = true;
+        }else if (role==="parent"){
+          this.collectStudentList = response.rows;
+          this.isParent = true;
         }
       })
     },

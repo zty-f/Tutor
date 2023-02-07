@@ -25,6 +25,11 @@ public interface SysUserCollectMapper
     public int selectSysUserCollectNum(Long userId);
 
     /**
+     * 查询用户收藏列表id
+     */
+    public List<Long> selectSysUserCollectIds(Long userId);
+
+    /**
      * 新增用户收藏关联
      * 
      * @param sysUserCollect 用户收藏关联

@@ -526,6 +526,7 @@ export default {
       this.loading = true;
       listStudent(this.queryParams).then(response => {
         this.studentList = response.rows;
+        console.log(response.rows);
         this.total = response.total;
         this.loading = false;
       });

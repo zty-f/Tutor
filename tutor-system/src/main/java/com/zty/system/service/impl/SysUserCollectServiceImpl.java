@@ -32,6 +32,11 @@ public class SysUserCollectServiceImpl implements ISysUserCollectService
     }
 
     @Override
+    public List<Long> selectSysUserCollectIds(Long userId) {
+        return sysUserCollectMapper.selectSysUserCollectIds(userId);
+    }
+
+    @Override
     public int insertSysUserCollect(SysUserCollect sysUserCollect) {
         return sysUserCollectMapper.insertSysUserCollect(sysUserCollect);
     }

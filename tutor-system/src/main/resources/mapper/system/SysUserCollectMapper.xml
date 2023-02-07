@@ -23,6 +23,11 @@
         where collect_id = #{collectId}
     </select>
 
+    <select id="selectSysUserCollectIds" parameterType="Long" resultType="Long">
+        select collect_id from sys_user_collect
+        where user_id = #{userId}
+    </select>
+
     <insert id="insertSysUserCollect" parameterType="SysUserCollect">
         insert into sys_user_collect
         <trim prefix="(" suffix=")" suffixOverrides=",">

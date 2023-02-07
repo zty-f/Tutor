@@ -78,3 +78,11 @@ export function getFansList() {
   })
 }
 
+// 查询用户点赞列表
+export function getCollectList() {
+  return request({
+    url: '/core/collect/list',
+    method: 'get'
+  })
+}
+
