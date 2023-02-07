@@ -22,6 +22,11 @@ public interface ISysUserLikeService
     public int selectSysUserLikeNum(Long userId);
 
     /**
+     * 查询用户喜欢列表id
+     */
+    public List<Long> selectSysUserLikeIds(Long userId);
+
+    /**
      * 新增用户点赞关联
      * 
      * @param sysUserLike 用户点赞关联

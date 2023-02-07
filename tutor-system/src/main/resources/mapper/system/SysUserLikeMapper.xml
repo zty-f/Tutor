@@ -18,6 +18,11 @@
         where like_id = #{userId}
     </select>
 
+    <select id="selectSysUserLikeIds" parameterType="Long" resultType="Long">
+        select like_id from sys_user_like
+        where user_id = #{userId}
+    </select>
+
     <select id="selectSysUserLikeByUserIdAndLikeId" parameterType="SysUserLike" resultType="Integer">
         select count(1) from sys_user_like
         where user_id = #{userId} and like_id = #{likeId}

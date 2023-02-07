@@ -39,6 +39,13 @@ public class SysUserLikeServiceImpl implements ISysUserLikeService
     }
 
     /**
+     * 查询用户喜欢列表id
+     */
+    public List<Long> selectSysUserLikeIds(Long userId){
+        return sysUserLikeMapper.selectSysUserLikeIds(userId);
+    }
+
+    /**
      * 新增用户点赞关联
      * 
      * @param sysUserLike 用户点赞关联

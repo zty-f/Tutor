@@ -61,3 +61,12 @@ export function onlineAuth(data) {
     data: data
   })
 }
+
+// 查询用户点赞关联详细
+export function getLikeList() {
+  return request({
+    url: '/core/like/list',
+    method: 'get'
+  })
+}
+

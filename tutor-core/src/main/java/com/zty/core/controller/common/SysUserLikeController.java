@@ -3,7 +3,14 @@ package com.zty.core.controller.common;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.zty.common.core.domain.entity.SysUser;
 import com.zty.common.utils.SecurityUtils;
+import com.zty.system.domain.Student;
+import com.zty.system.domain.vo.StudentVo;
+import com.zty.system.mapper.SysPostMapper;
+import com.zty.system.mapper.SysUserMapper;
+import com.zty.system.mapper.SysUserPostMapper;
+import com.zty.system.service.ISysUserService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,6 +43,15 @@ public class SysUserLikeController extends BaseController
     @Autowired
     private ISysUserLikeService sysUserLikeService;
 
+    @Autowired
+    private SysUserMapper userMapper;
+
+    @Autowired
+    private SysPostMapper postMapper;
+
+    @Autowired
+    private ISysUserService userService;
+
     /**
      * 新增用户点赞关联
      */
@@ -66,5 +82,23 @@ public class SysUserLikeController extends BaseController
         int likeNum = sysUserLikeService.selectSysUserLikeNum(userId);
         ajax.put("likeNum", likeNum);
         return ajax;
+    }
+
+
+    /**
+     * 查询喜欢列表
+     */
+    @GetMapping("/list")
+    public TableDataInfo list()
+    {
+        startPage();
+        Long userId = SecurityUtils.getUserId();
+        List<Long> likeIds = sysUserLikeService.selectSysUserLikeIds(userId);
+        List<SysUser> list = userMapper.selectUserByIds(likeIds.toArray(new Long[0]));
+        for (SysUser sysUser : list) {
+            sysUser.setPostIds(postMapper.selectPostListByUserId(sysUser.getUserId()).toArray(new Long[0]));
+            sysUser.setPostGroup(userService.selectUserPostGroup(sysUser.getUserName()));
+        }
+        return getDataTable(list);
     }
 }

@@ -2,6 +2,8 @@ package com.zty.system.mapper;
 
 import com.zty.system.domain.SysUserLike;
 
+import java.util.List;
+
 public interface SysUserLikeMapper {
 
     /**
@@ -13,6 +15,11 @@ public interface SysUserLikeMapper {
      * 查询用户点赞获取数量
      */
     public int selectSysUserLikeNum(Long userId);
+
+    /**
+     * 查询用户喜欢列表id
+     */
+    public List<Long> selectSysUserLikeIds(Long userId);
 
     /**
      * 新增用户点赞关联
