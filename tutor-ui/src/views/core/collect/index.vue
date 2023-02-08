@@ -47,8 +47,8 @@
     </el-row>
 
     <!--学员收藏列表【收藏学生信息】-->
-    <div style="overflow:auto" v-if="isParent">
-      <ul class="infinite-list"  v-infinite-scroll="" style="overflow:auto">
+    <div style="display:flex;justify-content:center;align-items:center;border:1px solid green;text-align:center;" v-if="isParent">
+      <ol class="infinite-list" style="overflow:auto">
         <li v-for="form in collectStudentList" class="infinite-list-item">
           <el-card :style="{ margin: '40px',width:'800px'}" shadow="hover">
             <el-descriptions class="margin-top" :column="2" border :labelStyle="rowCenter">
@@ -176,12 +176,12 @@
               </el-descriptions-item>
             </el-descriptions>
             <div :style="{height:'90px',marginTop:'20px',display:'flex',justifyContent: 'flex-start'}">
-              <div @click="like(form.student.userId)"  :style="{width: '50px',height: '80px',textAlign: 'center',margin:'10px'}">
+              <div @click="tLike(form.student.userId,form.like)"  :style="{width: '50px',height: '80px',textAlign: 'center',margin:'10px'}">
                 <img src="@/assets/images/love-white.svg" v-if="!form.like" slot="footer">
                 <img src="@/assets/images/love-red.svg" v-if="form.like" slot="footer">
                 <span>{{form.likeNum}}</span>
               </div>
-              <div @click="collect(form.student.userId)" :style="{width: '50px',height: '80px',textAlign: 'center',margin:'10px'}">
+              <div @click="tCollect(form.student.userId,form.collect)" :style="{width: '50px',height: '80px',textAlign: 'center',margin:'10px'}">
                 <img src="@/assets/images/collect-white.svg" v-if="!form.collect" slot="footer">
                 <img src="@/assets/images/collect-black.svg" v-if="form.collect" slot="footer">
                 <span>{{form.collectNum}}</span>
@@ -189,13 +189,13 @@
             </div>
           </el-card>
         </li>
-      </ul>
+      </ol>
     </div>
 
 
     <!--学生收藏列表【收藏学员信息】-->
-    <div :style="{margin: 'auto'}" v-if="isStudent">
-      <ul class="infinite-list">
+    <div style="display:flex;justify-content:center;align-items:center;border:1px solid green;text-align:center;" v-if="isStudent">
+      <ol class="infinite-list" style="overflow:auto">
         <li v-for="form in collectParentList" class="infinite-list-item">
           <el-card :style="{ margin: '40px',width:'800px'}" shadow="hover">
             <el-descriptions class="margin-top" :column="2" border :labelStyle="rowCenter">
@@ -302,12 +302,12 @@
               </el-descriptions-item>
             </el-descriptions>
             <div :style="{height:'90px',marginTop:'20px',display:'flex',justifyContent: 'flex-start'}">
-              <div @click="like(form.parent.userId)"  :style="{width: '50px',height: '80px',textAlign: 'center',margin:'10px'}">
+              <div @click="tLike(form.parent.userId,form.like)"  :style="{width: '50px',height: '80px',textAlign: 'center',margin:'10px'}">
                 <img src="@/assets/images/love-white.svg" v-if="!form.like" slot="footer">
                 <img src="@/assets/images/love-red.svg" v-if="form.like" slot="footer">
                 <span>{{form.likeNum}}</span>
               </div>
-              <div @click="collect(form.parent.userId)" :style="{width: '50px',height: '80px',textAlign: 'center',margin:'10px'}">
+              <div @click="tCollect(form.parent.userId,form.collect)" :style="{width: '50px',height: '80px',textAlign: 'center',margin:'10px'}">
                 <img src="@/assets/images/collect-white.svg" v-if="!form.collect" slot="footer">
                 <img src="@/assets/images/collect-black.svg" v-if="form.collect" slot="footer">
                 <span>{{form.collectNum}}</span>
@@ -315,7 +315,7 @@
             </div>
           </el-card>
         </li>
-      </ul>
+      </ol>
     </div>
 
     <!-- 查看每个学员详细信息描述列表 -->
@@ -583,6 +583,22 @@
       </div>
     </el-dialog>
 
+    <template>
+      <el-backtop @click="getList">
+        <div style="{
+          height: 100%;
+          width: 100%;
+          background-color: #f2f5f6;
+          box-shadow: 0 0 6px rgba(0,0,0, .12);
+          text-align: center;
+          line-height: 40px;
+          color: #1989fa;
+        }"
+        >
+          UP
+        </div>
+      </el-backtop>
+    </template>
   </div>
 </template>
 
@@ -724,6 +740,25 @@ export default {
       }
       this.isLike = !this.isLike;
     },
+    // 点赞
+    tLike(id,like) {
+      var sysUserLike={
+        userId: store.getters.userId,
+        likeId: id,
+      }
+      if (!like){
+        addLike(sysUserLike).then(response => {
+          this.$modal.msgSuccess("点赞成功");
+        });
+      }else {
+        delLike(sysUserLike).then(response => {
+          this.$modal.msgSuccess("取消点赞成功");
+        });
+      }
+      setTimeout(()=>{
+        this.getList();
+      },1000);
+    },
     // 收藏
     collect(id) {
       var sysUserCollect={
@@ -742,6 +777,25 @@ export default {
         this.collectNum = this.collectNum===0?0:this.collectNum - 1;
       }
       this.isCollect = !this.isCollect;
+    },
+    // 收藏
+    tCollect(id,collect) {
+      var sysUserCollect={
+        userId: store.getters.userId,
+        collectId: id,
+      }
+      if (!collect){
+        addCollect(sysUserCollect).then(response => {
+          this.$modal.msgSuccess("收藏成功");
+        });
+      }else {
+        delCollect(sysUserCollect).then(response => {
+          this.$modal.msgSuccess("取消收藏成功");
+        });
+      }
+      setTimeout(()=>{
+        this.getList();
+      },1000);
     },
   }
 }
