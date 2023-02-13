@@ -319,8 +319,21 @@
           <span>{{collectNum}}</span>
         </div>
       </div>
+      <div :style="{marginLeft:'20px',marginTop: '20px'}">
+        <el-button type="primary" round @click="toLeave(form)">在线留言</el-button>
+      </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="cancel" >关 闭</el-button>
+      </div>
+    </el-dialog>
+
+    <!-- 在线留言对话框 -->
+    <el-dialog title="在线留言" :visible.sync="openLeave" width="500px" append-to-body>
+      <span>留言内容，仅对方可见，建议留下联系方式方便对方联系~</span>
+      <editor v-model="leaveMsg.context" :min-height="192"/>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="leave">确 定 留 言</el-button>
+        <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
 
@@ -445,7 +458,7 @@
 
 <script>
 import { listStudent, getStudent, delStudent, addStudent, updateStudent } from "@/api/core/student";
-import {addCollect, addLike, delCollect, delLike} from "@/api/core/common";
+import {addCollect, addLeave, addLike, delCollect, delLike} from "@/api/core/common";
 import store from "@/store";
 import {listPost} from "@/api/system/post";
 
@@ -485,6 +498,7 @@ export default {
       // 是否显示弹出层
       open: false,
       openDetail: false,
+      openLeave: false,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -498,6 +512,7 @@ export default {
       },
       // 表单参数
       form: {},
+      leaveMsg: {},
       // 表单校验
       rules: {
         deptId: [
@@ -526,7 +541,6 @@ export default {
       this.loading = true;
       listStudent(this.queryParams).then(response => {
         this.studentList = response.rows;
-        console.log(response.rows);
         this.total = response.total;
         this.loading = false;
       });
@@ -540,7 +554,23 @@ export default {
     cancel() {
       this.open = false;
       this.openDetail = false;
+      this.openLeave = false;
       this.reset();
+    },
+    toLeave(form){
+      this.leaveMsg.receivedId = form.userId;
+      this.leaveMsg.receivedUsername = form.userName;
+      this.openLeave = true;
+    },
+    leave(){
+      addLeave(this.leaveMsg).then(response => {
+        if (response.code === 200){
+          this.$modal.msgSuccess("留言成功");
+          this.openLeave = false;
+        }else{
+          this.$modal.msgError("留言失败");
+        }
+      });
     },
     // 点赞
     like(id) {
@@ -604,7 +634,9 @@ export default {
         remark: null
       };
       this.sysStudent = {};
+      this.leaveMsg = {};
       this.resetForm("form");
+      this.resetForm("leave");
     },
     /** 搜索按钮操作 */
     handleQuery() {

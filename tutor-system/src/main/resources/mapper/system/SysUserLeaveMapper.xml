@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zty.system.mapper.SysUserLeaveMapper">
+
+    <resultMap type="SysUserLeave" id="SysUserLeaveResult">
+        <result property="id"    column="id"    />
+        <result property="sendId"    column="send_id"    />
+        <result property="sendUsername"    column="send_username"    />
+        <result property="receivedId"    column="received_id"    />
+        <result property="receivedUsername"    column="received_username"    />
+        <result property="context"    column="context"    />
+        <result property="status"    column="status"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectSysUserLeaveVo">
+        select id, send_id, send_username, received_id, received_username, context, status, create_time from sys_user_leave
+    </sql>
+
+    <select id="selectSysUserSendLeaveList" parameterType="SysUserLeave" resultMap="SysUserLeaveResult">
+        <include refid="selectSysUserLeaveVo"/>
+        <where>
+            <if test="sendId != null "> and send_id = #{sendId}</if>
+            <if test="receivedId != null "> and received_id = #{receivedId}</if>
+            <if test="receivedUsername != null  and receivedUsername != ''"> and received_username like concat('%', #{receivedUsername}, '%')</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="createTime != null "> and create_time >= #{createTime}</if>
+        </where>
+    </select>
+
+    <select id="selectSysUserReceivedLeaveList" parameterType="SysUserLeave" resultMap="SysUserLeaveResult">
+        <include refid="selectSysUserLeaveVo"/>
+        <where>
+            <if test="sendId != null "> and send_id = #{sendId}</if>
+            <if test="sendUsername != null  and sendUsername != ''"> and send_username like concat('%', #{sendUsername}, '%')</if>
+            <if test="receivedId != null "> and received_id = #{receivedId}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="createTime != null "> and create_time >= #{createTime}</if>
+        </where>
+    </select>
+
+    <select id="selectSysUserLeaveById" parameterType="Long" resultMap="SysUserLeaveResult">
+        <include refid="selectSysUserLeaveVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSysUserLeave" parameterType="SysUserLeave" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_user_leave
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sendId != null">send_id,</if>
+            <if test="sendUsername != null and sendUsername != ''">send_username,</if>
+            <if test="receivedId != null">received_id,</if>
+            <if test="receivedUsername != null and receivedUsername != ''">received_username,</if>
+            <if test="context != null">context,</if>
+            <if test="status != null">status,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sendId != null">#{sendId},</if>
+            <if test="sendUsername != null and sendUsername != ''">#{sendUsername},</if>
+            <if test="receivedId != null">#{receivedId},</if>
+            <if test="receivedUsername != null and receivedUsername != ''">#{receivedUsername},</if>
+            <if test="context != null">#{context},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysUserLeave" parameterType="SysUserLeave">
+        update sys_user_leave
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sendId != null">send_id = #{sendId},</if>
+            <if test="sendUsername != null and sendUsername != ''">send_username = #{sendUsername},</if>
+            <if test="receivedId != null">received_id = #{receivedId},</if>
+            <if test="receivedUsername != null and receivedUsername != ''">received_username = #{receivedUsername},</if>
+            <if test="context != null">context = #{context},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysUserLeaveByIds" parameterType="String">
+        delete from sys_user_leave where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="updateSysUserLeaveByIds" parameterType="String">
+        update sys_user_leave
+        set status = 1
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+
+    </update>
+</mapper>

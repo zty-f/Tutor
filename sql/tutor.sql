@@ -76,6 +76,22 @@ create table sys_user_collect (
 ) engine=innodb comment = '用户收藏关联表';
 
 -- ----------------------------
+-- #、用户留言信息表
+-- ----------------------------
+drop table if exists sys_user_leave;
+create table sys_user_leave (
+                                  id        bigint(20)      not null auto_increment    comment '留言信息表ID',
+                                  send_id   bigint(20) not null comment '留言用户ID',
+                                  send_username varchar(30)     not null              comment '留言用户账户名',
+                                  received_id   bigint(20) not null comment '被留言用户id',
+                                  received_username varchar(30)     not null              comment '被留言用户账户名',
+                                  context    longblob        default null           comment '留言内容',
+                                  status char(1)         default '0'                comment '读取状态（0代表未读 2代表已读）',
+                                  create_time       datetime                        comment '创建时间',
+                                  primary key(id)
+) engine=innodb comment = '用户留言信息表';
+
+-- ----------------------------
 -- #、学生家教信息表
 -- ----------------------------
 drop table if exists sys_student;

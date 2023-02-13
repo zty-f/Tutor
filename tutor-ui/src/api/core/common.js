@@ -86,3 +86,63 @@ export function getCollectList() {
   })
 }
 
+
+// 查询用户留言信息列表
+export function sendListLeave(query) {
+  return request({
+    url: '/core/leave/sendList',
+    method: 'get',
+    params: query
+  })
+}
+
+// 查询用户留言信息列表
+export function receivedListLeave(query) {
+  return request({
+    url: '/core/leave/receivedList',
+    method: 'get',
+    params: query
+  })
+}
+
+// 查询用户留言信息详细
+export function getLeave(id) {
+  return request({
+    url: '/core/leave/' + id,
+    method: 'get'
+  })
+}
+
+// 新增用户留言信息
+export function addLeave(data) {
+  return request({
+    url: '/core/leave',
+    method: 'post',
+    data: data
+  })
+}
+
+// 修改用户留言信息
+export function updateLeave(data) {
+  return request({
+    url: '/core/leave',
+    method: 'put',
+    data: data
+  })
+}
+
+// 修改用户留言状态信息
+export function updateStatus(id) {
+  return request({
+    url: '/core/leave/'+id,
+    method: 'put',
+  })
+}
+
+// 删除用户留言信息
+export function delLeave(id) {
+  return request({
+    url: '/core/leave/' + id,
+    method: 'delete'
+  })
+}
