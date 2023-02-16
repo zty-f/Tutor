@@ -91,6 +91,52 @@ create table sys_user_leave (
                                   primary key(id)
 ) engine=innodb comment = '用户留言信息表';
 
+
+-- ----------------------------
+-- #、用户押金信息表
+-- ----------------------------
+drop table if exists sys_user_deposit;
+create table sys_user_deposit (
+                                id        bigint(20)      not null auto_increment    comment '用户押金信息表ID',
+                                user_id   bigint(20) not null comment '用户ID',
+                                balance   decimal(10,2) not null comment '押金余额',
+                                password          varchar(100)    default ''                 comment '交易密码',
+                                status char(1)         default '0'                comment '押金状态（0代表可用 1代表冻结）',
+                                update_time       datetime                        comment '最近操作时间',
+                                primary key(id)
+) engine=innodb comment = '用户押金信息表';
+
+-- ----------------------------
+-- #、用户押金操作信息表
+-- ----------------------------
+drop table if exists sys_deposit_detail;
+create table sys_deposit_detail (
+                                  id        bigint(20)      not null auto_increment    comment '用户押金操作信息表ID',
+                                  user_id   bigint(20) not null comment '用户ID',
+                                  amount   decimal(10,2) not null comment '操作押金金额数量',
+                                  balance   decimal(10,2) not null comment '押金余额',
+                                  action char(1)         default '0'                comment '操作状态（0代表存钱 1代表取钱）',
+                                  create_time       datetime                        comment '操作时间',
+                                  primary key(id)
+) engine=innodb comment = '用户押金操作信息表';
+
+-- ----------------------------
+-- #、用户下单信息表
+-- ----------------------------
+drop table if exists sys_user_order;
+create table sys_user_order (
+                                    id        bigint(20)      not null auto_increment    comment '用户下单信息表ID',
+                                    student_id   bigint(20) not null comment '大学生用户ID',
+                                    parent_id   bigint(20) not null comment '家长（学员）用户ID',
+                                    student_status char(1)         default '0'                comment '订单状态（0代表初始 1代表确认 2代表取消 3代表完成 4代表违约中）',
+                                    parent_status char(1)         default '0'                 comment '订单状态（0代表初始 1代表确认 2代表取消 3代表完成 4代表违约中）',
+                                    amount   decimal(10,2) not null comment '订单金额',
+                                    promise            varchar(500)    default null               comment '订单双方约定',
+                                    status char(1)         default '0'                comment '下单状态（0代表大学生发起 1代表家长（学员）发起）',
+                                    order_time       datetime                        comment '下单时间',
+                                    primary key(id)
+) engine=innodb comment = '用户下单信息表';
+
 -- ----------------------------
 -- #、学生家教信息表
 -- ----------------------------

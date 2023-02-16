@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zty.system.mapper.SysUserOrderMapper">
+
+    <resultMap type="SysUserOrder" id="SysUserOrderResult">
+        <result property="id"    column="id"    />
+        <result property="studentId"    column="student_id"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="studentStatus"    column="student_status"    />
+        <result property="parentStatus"    column="parent_status"    />
+        <result property="amount"    column="amount"    />
+        <result property="promise"    column="promise"    />
+        <result property="status"    column="status"    />
+        <result property="orderTime"    column="order_time"    />
+    </resultMap>
+
+    <sql id="selectSysUserOrderVo">
+        select id, student_id, parent_id, student_status, parent_status, amount, promise, status, order_time from sys_user_order
+    </sql>
+
+    <select id="selectSysUserOrderList" parameterType="SysUserOrder" resultMap="SysUserOrderResult">
+        <include refid="selectSysUserOrderVo"/>
+        <where>
+            <if test="studentId != null "> and student_id = #{studentId}</if>
+            <if test="parentId != null "> and parent_id = #{parentId}</if>
+            <if test="studentStatus != null  and studentStatus != ''"> and student_status = #{studentStatus}</if>
+            <if test="parentStatus != null  and parentStatus != ''"> and parent_status = #{parentStatus}</if>
+            <if test="amount != null "> and amount = #{amount}</if>
+            <if test="promise != null  and promise != ''"> and promise = #{promise}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectSysUserOrderById" parameterType="Long" resultMap="SysUserOrderResult">
+        <include refid="selectSysUserOrderVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSysUserOrder" parameterType="SysUserOrder" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_user_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="studentId != null">student_id,</if>
+            <if test="parentId != null">parent_id,</if>
+            <if test="studentStatus != null">student_status,</if>
+            <if test="parentStatus != null">parent_status,</if>
+            <if test="amount != null">amount,</if>
+            <if test="promise != null">promise,</if>
+            <if test="status != null">status,</if>
+            <if test="orderTime != null">order_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="studentId != null">#{studentId},</if>
+            <if test="parentId != null">#{parentId},</if>
+            <if test="studentStatus != null">#{studentStatus},</if>
+            <if test="parentStatus != null">#{parentStatus},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="promise != null">#{promise},</if>
+            <if test="status != null">#{status},</if>
+            <if test="orderTime != null">#{orderTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysUserOrder" parameterType="SysUserOrder">
+        update sys_user_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="studentId != null">student_id = #{studentId},</if>
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="studentStatus != null">student_status = #{studentStatus},</if>
+            <if test="parentStatus != null">parent_status = #{parentStatus},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="promise != null">promise = #{promise},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="orderTime != null">order_time = #{orderTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysUserOrderById" parameterType="Long">
+        delete from sys_user_order where id = #{id}
+    </delete>
+
+    <delete id="deleteSysUserOrderByIds" parameterType="String">
+        delete from sys_user_order where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
