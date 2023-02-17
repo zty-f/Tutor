@@ -128,11 +128,11 @@ create table sys_user_order (
                                     id        bigint(20)      not null auto_increment    comment '用户下单信息表ID',
                                     student_id   bigint(20) not null comment '大学生用户ID',
                                     parent_id   bigint(20) not null comment '家长（学员）用户ID',
-                                    student_status char(1)         default '0'                comment '订单状态（0代表初始 1代表确认 2代表取消 3代表完成 4代表违约中）',
-                                    parent_status char(1)         default '0'                 comment '订单状态（0代表初始 1代表确认 2代表取消 3代表完成 4代表违约中）',
+                                    student_status char(1)         default '0'                comment '订单大学生方状态（0代表初始 1代表确认 2代表取消 3代表完成 4代表违约中）',
+                                    parent_status char(1)         default '0'                 comment '订单学员方状态（0代表初始 1代表确认 2代表取消 3代表完成 4代表违约中）',
                                     amount   decimal(10,2) not null comment '订单金额',
                                     promise            varchar(500)    default null               comment '订单双方约定',
-                                    status char(1)         default '0'                comment '下单状态（0代表大学生发起 1代表家长（学员）发起）',
+                                    status char(1)         default '0'                comment '订单总状态（0代表初始 1代表确认 2代表取消 3代表完成 4代表违约中）',
                                     order_time       datetime                        comment '下单时间',
                                     primary key(id)
 ) engine=innodb comment = '用户下单信息表';

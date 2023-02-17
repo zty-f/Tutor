@@ -29,11 +29,11 @@ public class SysUserOrder extends BaseEntity
     @Excel(name = "家长", readConverterExp = "学=员")
     private Long parentId;
 
-    /** 订单状态（0代表初始 1代表确认 2代表取消 3代表完成 4代表违约中） */
+    /** 订单大学生方状态（0代表初始 1代表确认 2代表取消 3代表完成 4代表违约中） */
     @Excel(name = "订单状态", readConverterExp = "0=代表初始,1=代表确认,2=代表取消,3=代表完成,4=代表违约中")
     private String studentStatus;
 
-    /** 订单状态（0代表初始 1代表确认 2代表取消 3代表完成 4代表违约中） */
+    /** 订单学员方状态（0代表初始 1代表确认 2代表取消 3代表完成 4代表违约中） */
     @Excel(name = "订单状态", readConverterExp = "0=代表初始,1=代表确认,2=代表取消,3=代表完成,4=代表违约中")
     private String parentStatus;
 
@@ -45,8 +45,8 @@ public class SysUserOrder extends BaseEntity
     @Excel(name = "订单双方约定")
     private String promise;
 
-    /** 下单状态（0代表大学生发起 1代表家长（学员）发起） */
-    @Excel(name = "下单状态", readConverterExp = "0=代表大学生发起,1=代表家长（学员")
+    /** 订单总状态（0代表初始 1代表确认 2代表取消 3代表完成 4代表违约中） */
+    @Excel(name = "下单状态", readConverterExp = "0=代表初始,1=代表确认,2=代表取消,3=代表完成,4=代表违约中")
     private String status;
 
     /** 下单时间 */

@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="大学生用户ID" prop="studentId">
+      <el-form-item label="大学生ID" prop="studentId">
         <el-input
           v-model="queryParams.studentId"
           placeholder="请输入大学生用户ID"
@@ -9,16 +9,16 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="家长" prop="parentId">
+      <el-form-item label="家长ID" prop="parentId">
         <el-input
           v-model="queryParams.parentId"
-          placeholder="请输入家长"
+          placeholder="请输入家长（学员）用户ID"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="订单状态" prop="studentStatus">
-        <el-select v-model="queryParams.studentStatus" placeholder="请选择订单状态" clearable>
+      <el-form-item label="大学生方状态" prop="studentStatus">
+        <el-select v-model="queryParams.studentStatus" placeholder="请选择大学生方订单状态" clearable>
           <el-option
             v-for="dict in dict.type.sys_order_status"
             :key="dict.value"
@@ -27,8 +27,8 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="订单状态" prop="parentStatus">
-        <el-select v-model="queryParams.parentStatus" placeholder="请选择订单状态" clearable>
+      <el-form-item label="家长方状态" prop="parentStatus">
+        <el-select v-model="queryParams.parentStatus" placeholder="请选择家长（学员）方订单状态" clearable>
           <el-option
             v-for="dict in dict.type.sys_order_status"
             :key="dict.value"
@@ -37,23 +37,23 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="订单金额" prop="amount">
-        <el-input
-          v-model="queryParams.amount"
-          placeholder="请输入订单金额"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="下单状态" prop="status">
-        <el-select v-model="queryParams.status" placeholder="请选择下单状态" clearable>
+      <el-form-item label="订单状态" prop="status">
+        <el-select v-model="queryParams.status" placeholder="请选择订单总状态" clearable>
           <el-option
-            v-for="dict in dict.type.sys_order_start"
+            v-for="dict in dict.type.sys_order_status"
             :key="dict.value"
             :label="dict.label"
             :value="dict.value"
           />
         </el-select>
+      </el-form-item>
+      <el-form-item label="创建时间" prop="orderTime">
+        <el-date-picker clearable
+                        v-model="queryParams.orderTime"
+                        type="date"
+                        value-format="yyyy-MM-dd"
+                        placeholder="请选择创建时间">
+        </el-date-picker>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -69,17 +69,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-        >修改</el-button>
+        >在线下单</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -104,25 +94,29 @@
     </el-row>
 
     <el-table v-loading="loading" :data="orderList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="用户下单信息表ID" align="center" prop="id" />
-      <el-table-column label="大学生用户ID" align="center" prop="studentId" />
-      <el-table-column label="家长" align="center" prop="parentId" />
-      <el-table-column label="订单状态" align="center" prop="studentStatus">
+      <el-table-column type="selection" width="20" align="center" />
+      <el-table-column label="大学生ID" align="center" prop="studentId" />
+      <el-table-column label="家长(学员)ID" align="center" prop="parentId" />
+      <el-table-column label="大学生方状态" align="center" prop="studentStatus">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.sys_order_status" :value="scope.row.studentStatus"/>
         </template>
       </el-table-column>
-      <el-table-column label="订单状态" align="center" prop="parentStatus">
+      <el-table-column label="家长(学员)方状态" align="center" prop="parentStatus" width="150">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.sys_order_status" :value="scope.row.parentStatus"/>
         </template>
       </el-table-column>
       <el-table-column label="订单金额" align="center" prop="amount" />
-      <el-table-column label="订单双方约定" align="center" prop="promise" />
-      <el-table-column label="下单状态" align="center" prop="status">
+      <el-table-column label="订单双方约定" align="center" prop="promise" width="150"/>
+      <el-table-column label="订单总状态" align="center" prop="status">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.sys_order_start" :value="scope.row.status"/>
+          <dict-tag :options="dict.type.sys_order_status" :value="scope.row.status"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="创建时间" align="center" prop="orderTime">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.orderTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -152,54 +146,19 @@
     />
 
     <!-- 添加或修改用户下单信息对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="大学生用户ID" prop="studentId">
+    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="150px">
+        <el-form-item label="大学生ID" prop="studentId" v-if="isManager||isParent">
           <el-input v-model="form.studentId" placeholder="请输入大学生用户ID" />
         </el-form-item>
-        <el-form-item label="家长" prop="parentId">
-          <el-input v-model="form.parentId" placeholder="请输入家长" />
-        </el-form-item>
-        <el-form-item label="订单状态">
-          <el-radio-group v-model="form.studentStatus">
-            <el-radio
-              v-for="dict in dict.type.sys_order_status"
-              :key="dict.value"
-              :label="dict.value"
-            >{{dict.label}}</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="订单状态">
-          <el-radio-group v-model="form.parentStatus">
-            <el-radio
-              v-for="dict in dict.type.sys_order_status"
-              :key="dict.value"
-              :label="dict.value"
-            >{{dict.label}}</el-radio>
-          </el-radio-group>
+        <el-form-item label="家长(学员)ID" prop="parentId" v-if="isManager||isStudent">
+          <el-input v-model="form.parentId" placeholder="请输入家长(学员)用户ID" />
         </el-form-item>
         <el-form-item label="订单金额" prop="amount">
           <el-input v-model="form.amount" placeholder="请输入订单金额" />
         </el-form-item>
         <el-form-item label="订单双方约定" prop="promise">
-          <el-input v-model="form.promise" type="textarea" placeholder="请输入内容" />
-        </el-form-item>
-        <el-form-item label="下单状态">
-          <el-radio-group v-model="form.status">
-            <el-radio
-              v-for="dict in dict.type.sys_order_start"
-              :key="dict.value"
-              :label="dict.value"
-            >{{dict.label}}</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="下单时间" prop="orderTime">
-          <el-date-picker clearable
-                          v-model="form.orderTime"
-                          type="date"
-                          value-format="yyyy-MM-dd"
-                          placeholder="请选择下单时间">
-          </el-date-picker>
+          <el-input v-model="form.promise" type="textarea" placeholder="[请写出双方详细约定，方便后续订单完成~]" rows="4"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -212,10 +171,10 @@
 
 <script>
 import { listOrder, getOrder, delOrder, addOrder, updateOrder } from "@/api/core/deposit";
-
+import store from "@/store";
 export default {
   name: "Order",
-  dicts: ['sys_order_start', 'sys_order_status'],
+  dicts: ['sys_order_status'],
   data() {
     return {
       // 遮罩层
@@ -236,6 +195,9 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      isManager: false,
+      isStudent: false,
+      isParent: false,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -247,6 +209,7 @@ export default {
         amount: null,
         promise: null,
         status: null,
+        orderTime: null,
       },
       // 表单参数
       form: {},
@@ -256,16 +219,17 @@ export default {
           { required: true, message: "大学生用户ID不能为空", trigger: "blur" }
         ],
         parentId: [
-          { required: true, message: "家长不能为空", trigger: "blur" }
+          { required: true, message: "家长(学员)用户ID不能为空", trigger: "blur" }
         ],
         amount: [
-          { required: true, message: "订单金额不能为空", trigger: "blur" }
+          { required: true, message: "订单约定金额不能为空", trigger: "blur" }
         ],
       }
     };
   },
   created() {
     this.getList();
+    this.getRole();
   },
   methods: {
     /** 查询用户下单信息列表 */
@@ -276,6 +240,16 @@ export default {
         this.total = response.total;
         this.loading = false;
       });
+    },
+    getRole(){
+      let role = store.getters.roles[0];
+      if (role==='parent'){
+        this.isParent = true;
+      }else if (role==='student'){
+        this.isStudent = true;
+      }else {
+        this.isManager = true;
+      }
     },
     // 取消按钮
     cancel() {
@@ -317,7 +291,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加用户下单信息";
+      this.title = "在线下单";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {

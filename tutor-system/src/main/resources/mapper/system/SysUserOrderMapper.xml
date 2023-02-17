@@ -27,9 +27,8 @@
             <if test="parentId != null "> and parent_id = #{parentId}</if>
             <if test="studentStatus != null  and studentStatus != ''"> and student_status = #{studentStatus}</if>
             <if test="parentStatus != null  and parentStatus != ''"> and parent_status = #{parentStatus}</if>
-            <if test="amount != null "> and amount = #{amount}</if>
-            <if test="promise != null  and promise != ''"> and promise = #{promise}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="orderTime != null "> and order_time >= #{orderTime}</if>
         </where>
     </select>
 

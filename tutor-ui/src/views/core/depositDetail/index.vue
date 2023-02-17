@@ -410,10 +410,14 @@ export default {
     },
     /** 取出按钮操作 */
     handleFetch() {
-      this.tmp = {};
-      this.openAction = true;
-      this.isStore = false;
-      this.title = "押金取出窗口";
+      if (this.deposit.status === "1"){
+        this.$modal.msgError("您尚有未完成的家教订单，目前押金处于冻结状态，请完成所有订单后再试~");
+      }else {
+        this.tmp = {};
+        this.openAction = true;
+        this.isStore = false;
+        this.title = "押金取出窗口";
+      }
     },
     action(){
       if (this.isStore){

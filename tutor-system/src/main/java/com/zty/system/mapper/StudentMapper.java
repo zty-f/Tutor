@@ -15,11 +15,19 @@ public interface StudentMapper
 {
     /**
      * 查询学生信息
-     * 
+     *
      * @param userId 学生信息主键
      * @return 学生信息
      */
     public Student selectStudentByUserId(Long userId);
+
+    /**
+     * 查询学生信息是否存在
+     *
+     * @param userId 学生信息主键
+     * @return 学生信息
+     */
+    public int selectExistByUserId(Long userId);
 
     /**
      * 查询学生信息列表

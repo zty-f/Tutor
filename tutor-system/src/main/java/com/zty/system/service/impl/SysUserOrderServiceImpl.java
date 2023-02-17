@@ -1,6 +1,9 @@
 package com.zty.system.service.impl;
 
 import java.util.List;
+
+import com.zty.system.mapper.ParentMapper;
+import com.zty.system.mapper.StudentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.zty.system.mapper.SysUserOrderMapper;
@@ -18,6 +21,12 @@ public class SysUserOrderServiceImpl implements ISysUserOrderService
 {
     @Autowired
     private SysUserOrderMapper sysUserOrderMapper;
+
+    @Autowired
+    private ParentMapper parentMapper;
+
+    @Autowired
+    private StudentMapper studentMapper;
 
     /**
      * 查询用户下单信息
@@ -52,6 +61,12 @@ public class SysUserOrderServiceImpl implements ISysUserOrderService
     @Override
     public int insertSysUserOrder(SysUserOrder sysUserOrder)
     {
+        if (studentMapper.selectExistByUserId(sysUserOrder.getStudentId())<=0){
+            throw new RuntimeException("该大学生用户ID不存在，请核对后重新输入");
+        }
+        if (parentMapper.selectExistByUserId(sysUserOrder.getParentId())<=0){
+            throw new RuntimeException("该家长(学员)用户ID不存在，请核对后重新输入");
+        }
         return sysUserOrderMapper.insertSysUserOrder(sysUserOrder);
     }
 

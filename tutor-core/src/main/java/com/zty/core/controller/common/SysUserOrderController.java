@@ -2,6 +2,10 @@ package com.zty.core.controller.common;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.zty.common.utils.DateUtils;
+import com.zty.common.utils.SecurityUtils;
+import com.zty.system.mapper.SysUserRoleMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +37,9 @@ public class SysUserOrderController extends BaseController
 {
     @Autowired
     private ISysUserOrderService sysUserOrderService;
+
+    @Autowired
+    private SysUserRoleMapper roleMapper;
 
     /**
      * 查询用户下单信息列表
@@ -73,6 +80,16 @@ public class SysUserOrderController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody SysUserOrder sysUserOrder)
     {
+        int role = roleMapper.selectUserRoleIdByUserId(SecurityUtils.getUserId());
+        if (role==3){
+            sysUserOrder.setStudentId(SecurityUtils.getUserId());
+        } else if (role == 4) {
+            sysUserOrder.setParentId(SecurityUtils.getUserId());
+        }
+        sysUserOrder.setStudentStatus("0");
+        sysUserOrder.setParentStatus("0");
+        sysUserOrder.setStatus("0");
+        sysUserOrder.setOrderTime(DateUtils.getNowDate());
         return toAjax(sysUserOrderService.insertSysUserOrder(sysUserOrder));
     }
 

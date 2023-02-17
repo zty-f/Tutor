@@ -23,6 +23,14 @@ public interface ParentMapper
     public Parent selectParentByUserId(Long userId);
 
     /**
+     * 查询学员信息是否存在
+     *
+     * @param userId 学员信息主键
+     * @return 学员信息
+     */
+    public int selectExistByUserId(Long userId);
+
+    /**
      * 查询学员信息列表
      * 
      * @param parent 学员信息
