@@ -21,10 +21,10 @@
         <include refid="selectSysDepositDetailVo"/>
         <where>
             <if test="userId != null "> and user_id = #{userId}</if>
-            <if test="amount != null "> and amount = #{amount}</if>
-            <if test="balance != null "> and balance = #{balance}</if>
             <if test="action != null  and action != ''"> and action = #{action}</if>
+            <if test="createTime != null "> and create_time >= #{createTime}</if>
         </where>
+        order by create_time desc
     </select>
 
     <select id="selectSysDepositDetailById" parameterType="Long" resultMap="SysDepositDetailResult">

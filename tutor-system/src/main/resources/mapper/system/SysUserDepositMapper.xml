@@ -14,21 +14,27 @@
     </resultMap>
 
     <sql id="selectSysUserDepositVo">
-        select id, user_id, balance, password, status, update_time from sys_user_deposit
+        select id, user_id, balance, status, update_time from sys_user_deposit
     </sql>
 
     <select id="selectSysUserDepositList" parameterType="SysUserDeposit" resultMap="SysUserDepositResult">
         <include refid="selectSysUserDepositVo"/>
         <where>
             <if test="userId != null "> and user_id = #{userId}</if>
-            <if test="balance != null "> and balance = #{balance}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="updateTime != null "> and update_time >= #{updateTime}</if>
         </where>
     </select>
 
     <select id="selectSysUserDepositById" parameterType="Long" resultMap="SysUserDepositResult">
         <include refid="selectSysUserDepositVo"/>
-        where id = #{id}
+        where user_id = #{id}
+    </select>
+
+
+    <select id="selectSysUserDepositPasswordById" parameterType="Long" resultType="String">
+        select password from sys_user_deposit
+        where user_id = #{id}
     </select>
 
     <insert id="insertSysUserDeposit" parameterType="SysUserDeposit" useGeneratedKeys="true" keyProperty="id">
@@ -59,6 +65,26 @@
             <if test="updateTime != null">update_time = #{updateTime},</if>
         </trim>
         where id = #{id}
+    </update>
+
+    <update id="updateSysUserDepositPwdByUserId" parameterType="SysUserDeposit">
+        update sys_user_deposit
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="password != null">password = #{password},</if>
+        </trim>
+        where user_id = #{userId}
+    </update>
+
+    <update id="storeSysUserDeposit" parameterType="SysUserDeposit">
+        update sys_user_deposit
+        set balance = balance + #{balance}
+        where user_id = #{userId}
+    </update>
+
+    <update id="fetchSysUserDeposit" parameterType="SysUserDeposit">
+        update sys_user_deposit
+        set balance = balance - #{balance}
+        where user_id = #{userId}
     </update>
 
     <delete id="deleteSysUserDepositById" parameterType="Long">

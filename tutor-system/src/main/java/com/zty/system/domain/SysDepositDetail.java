@@ -34,7 +34,17 @@ public class SysDepositDetail extends BaseEntity
     @Excel(name = "操作状态", readConverterExp = "0=代表存钱,1=代表取钱")
     private String action;
 
-    public void setId(Long id) 
+    public SysDepositDetail() {
+    }
+
+    public SysDepositDetail(Long userId, BigDecimal amount, BigDecimal balance, String action) {
+        this.userId = userId;
+        this.amount = amount;
+        this.balance = balance;
+        this.action = action;
+    }
+
+    public void setId(Long id)
     {
         this.id = id;
     }

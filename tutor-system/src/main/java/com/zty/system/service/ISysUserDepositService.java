@@ -43,6 +43,8 @@ public interface ISysUserDepositService
      */
     public int updateSysUserDeposit(SysUserDeposit sysUserDeposit);
 
+    public int updateSysUserDepositPwdByUserId(SysUserDeposit sysUserDeposit);
+
     /**
      * 批量删除用户押金信息
      * 

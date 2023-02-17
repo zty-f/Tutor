@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import { encrypt } from '@/utils/jsencrypt'
 
 // 查询用户押金信息列表
 export function listDeposit(query) {
@@ -19,6 +20,7 @@ export function getDeposit(id) {
 
 // 新增用户押金信息
 export function addDeposit(data) {
+  data.password = encrypt(data.password);
   return request({
     url: '/system/deposit',
     method: 'post',
@@ -60,19 +62,21 @@ export function getDetail(id) {
   })
 }
 
-// 新增用户押金操作信息
-export function addDetail(data) {
+// 存入用户押金操作信息
+export function storeDeposit(data) {
+  data.password = encrypt(data.password);
   return request({
-    url: '/system/detail',
+    url: '/system/detail/store',
     method: 'post',
     data: data
   })
 }
 
-// 修改用户押金操作信息
-export function updateDetail(data) {
+// 取出用户押金操作信息
+export function fetchDeposit(data) {
+  data.password = encrypt(data.password);
   return request({
-    url: '/system/detail',
+    url: '/system/detail/fetch',
     method: 'put',
     data: data
   })
@@ -126,5 +130,21 @@ export function delOrder(id) {
   return request({
     url: '/system/order/' + id,
     method: 'delete'
+  })
+}
+
+
+// 交易密码重置
+export function updateDelPwd(oldPassword, newPassword) {
+  oldPassword = encrypt(oldPassword)
+  newPassword = encrypt(newPassword)
+  const data = {
+    oldPassword,
+    newPassword
+  }
+  return request({
+    url: '/system/deposit/updatePwd',
+    method: 'put',
+    params: data
   })
 }

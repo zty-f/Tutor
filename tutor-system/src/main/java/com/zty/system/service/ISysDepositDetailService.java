@@ -2,6 +2,7 @@ package com.zty.system.service;
 
 import java.util.List;
 import com.zty.system.domain.SysDepositDetail;
+import com.zty.system.domain.SysUserDeposit;
 
 /**
  * 用户押金操作信息Service接口
@@ -28,20 +29,20 @@ public interface ISysDepositDetailService
     public List<SysDepositDetail> selectSysDepositDetailList(SysDepositDetail sysDepositDetail);
 
     /**
-     * 新增用户押金操作信息
+     * 存入用户押金操作信息
      * 
-     * @param sysDepositDetail 用户押金操作信息
+     * @param sysUserDeposit 用户押金操作信息
      * @return 结果
      */
-    public int insertSysDepositDetail(SysDepositDetail sysDepositDetail);
+    public int storeDeposit(SysUserDeposit sysUserDeposit);
 
     /**
-     * 修改用户押金操作信息
+     * 取出用户押金操作信息
      * 
-     * @param sysDepositDetail 用户押金操作信息
+     * @param sysUserDeposit 用户押金操作信息
      * @return 结果
      */
-    public int updateSysDepositDetail(SysDepositDetail sysDepositDetail);
+    public int fetchDeposit(SysUserDeposit sysUserDeposit);
 
     /**
      * 批量删除用户押金操作信息

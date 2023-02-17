@@ -2,6 +2,10 @@ package com.zty.core.controller.common;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.zty.common.utils.SecurityUtils;
+import com.zty.common.utils.sign.RsaUtils;
+import com.zty.system.domain.SysUserDeposit;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,7 +41,6 @@ public class SysDepositDetailController extends BaseController
     /**
      * 查询用户押金操作信息列表
      */
-    @PreAuthorize("@ss.hasPermi('system:detail:list')")
     @GetMapping("/list")
     public TableDataInfo list(SysDepositDetail sysDepositDetail)
     {
@@ -49,7 +52,6 @@ public class SysDepositDetailController extends BaseController
     /**
      * 导出用户押金操作信息列表
      */
-    @PreAuthorize("@ss.hasPermi('system:detail:export')")
     @Log(title = "用户押金操作信息", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, SysDepositDetail sysDepositDetail)
@@ -62,7 +64,6 @@ public class SysDepositDetailController extends BaseController
     /**
      * 获取用户押金操作信息详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:detail:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -70,31 +71,30 @@ public class SysDepositDetailController extends BaseController
     }
 
     /**
-     * 新增用户押金操作信息
+     * 存入用户押金操作信息
      */
-    @PreAuthorize("@ss.hasPermi('system:detail:add')")
-    @Log(title = "用户押金操作信息", businessType = BusinessType.INSERT)
-    @PostMapping
-    public AjaxResult add(@RequestBody SysDepositDetail sysDepositDetail)
-    {
-        return toAjax(sysDepositDetailService.insertSysDepositDetail(sysDepositDetail));
+    @Log(title = "用户押金操作信息", businessType = BusinessType.OTHER)
+    @PostMapping("/store")
+    public AjaxResult store(@RequestBody SysUserDeposit sysUserDeposit) throws Exception {
+        sysUserDeposit.setUserId(SecurityUtils.getUserId());
+        sysUserDeposit.setPassword(RsaUtils.decryptByPrivateKey(sysUserDeposit.getPassword()));
+        return toAjax(sysDepositDetailService.storeDeposit(sysUserDeposit));
     }
 
     /**
-     * 修改用户押金操作信息
+     * 取出用户押金操作信息
      */
-    @PreAuthorize("@ss.hasPermi('system:detail:edit')")
-    @Log(title = "用户押金操作信息", businessType = BusinessType.UPDATE)
-    @PutMapping
-    public AjaxResult edit(@RequestBody SysDepositDetail sysDepositDetail)
-    {
-        return toAjax(sysDepositDetailService.updateSysDepositDetail(sysDepositDetail));
+    @Log(title = "用户押金操作信息", businessType = BusinessType.OTHER)
+    @PutMapping("/fetch")
+    public AjaxResult fetch(@RequestBody SysUserDeposit sysUserDeposit) throws Exception {
+        sysUserDeposit.setUserId(SecurityUtils.getUserId());
+        sysUserDeposit.setPassword(RsaUtils.decryptByPrivateKey(sysUserDeposit.getPassword()));
+        return toAjax(sysDepositDetailService.fetchDeposit(sysUserDeposit));
     }
 
     /**
      * 删除用户押金操作信息
      */
-    @PreAuthorize("@ss.hasPermi('system:detail:remove')")
     @Log(title = "用户押金操作信息", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)

@@ -37,7 +37,6 @@ public class SysUserOrderController extends BaseController
     /**
      * 查询用户下单信息列表
      */
-    @PreAuthorize("@ss.hasPermi('system:order:list')")
     @GetMapping("/list")
     public TableDataInfo list(SysUserOrder sysUserOrder)
     {
@@ -49,7 +48,6 @@ public class SysUserOrderController extends BaseController
     /**
      * 导出用户下单信息列表
      */
-    @PreAuthorize("@ss.hasPermi('system:order:export')")
     @Log(title = "用户下单信息", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, SysUserOrder sysUserOrder)
@@ -62,7 +60,6 @@ public class SysUserOrderController extends BaseController
     /**
      * 获取用户下单信息详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:order:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -72,7 +69,6 @@ public class SysUserOrderController extends BaseController
     /**
      * 新增用户下单信息
      */
-    @PreAuthorize("@ss.hasPermi('system:order:add')")
     @Log(title = "用户下单信息", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody SysUserOrder sysUserOrder)
@@ -83,7 +79,6 @@ public class SysUserOrderController extends BaseController
     /**
      * 修改用户下单信息
      */
-    @PreAuthorize("@ss.hasPermi('system:order:edit')")
     @Log(title = "用户下单信息", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody SysUserOrder sysUserOrder)
@@ -94,7 +89,6 @@ public class SysUserOrderController extends BaseController
     /**
      * 删除用户下单信息
      */
-    @PreAuthorize("@ss.hasPermi('system:order:remove')")
     @Log(title = "用户下单信息", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)

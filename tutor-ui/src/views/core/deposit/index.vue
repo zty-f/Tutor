@@ -9,14 +9,6 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="押金余额" prop="balance">
-        <el-input
-          v-model="queryParams.balance"
-          placeholder="请输入押金余额"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="余额状态" prop="status">
         <el-select v-model="queryParams.status" placeholder="请选择余额状态" clearable>
           <el-option
@@ -27,6 +19,14 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="操作时间" prop="updateTime">
+        <el-date-picker clearable
+                        v-model="queryParams.updateTime"
+                        type="date"
+                        value-format="yyyy-MM-dd"
+                        placeholder="请选择创建时间">
+        </el-date-picker>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -36,34 +36,12 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['system:deposit:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['system:deposit:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
           type="danger"
           plain
           icon="el-icon-delete"
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:deposit:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -73,7 +51,6 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['system:deposit:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -81,12 +58,16 @@
 
     <el-table v-loading="loading" :data="depositList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="用户押金信息表ID" align="center" prop="id" />
       <el-table-column label="用户ID" align="center" prop="userId" />
       <el-table-column label="押金余额" align="center" prop="balance" />
       <el-table-column label="余额状态" align="center" prop="status">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.sys_deposit_status" :value="scope.row.status"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作时间" align="center" prop="updateTime">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -96,14 +77,12 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:deposit:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:deposit:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -117,15 +96,9 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改用户押金信息对话框 -->
+    <!-- 修改用户押金信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="用户ID" prop="userId">
-          <el-input v-model="form.userId" placeholder="请输入用户ID" />
-        </el-form-item>
-        <el-form-item label="押金余额" prop="balance">
-          <el-input v-model="form.balance" placeholder="请输入押金余额" />
-        </el-form-item>
         <el-form-item label="余额状态">
           <el-radio-group v-model="form.status">
             <el-radio
@@ -237,16 +210,10 @@ export default {
       this.single = selection.length!==1
       this.multiple = !selection.length
     },
-    /** 新增按钮操作 */
-    handleAdd() {
-      this.reset();
-      this.open = true;
-      this.title = "添加用户押金信息";
-    },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const id = row.id || this.ids
+      const id = row.userId;
       getDeposit(id).then(response => {
         this.form = response.data;
         this.open = true;
@@ -260,12 +227,6 @@ export default {
           if (this.form.id != null) {
             updateDeposit(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
-          } else {
-            addDeposit(this.form).then(response => {
-              this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
             });

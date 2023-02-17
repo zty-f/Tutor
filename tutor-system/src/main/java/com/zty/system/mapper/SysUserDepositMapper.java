@@ -19,6 +19,10 @@ public interface SysUserDepositMapper
      */
     public SysUserDeposit selectSysUserDepositById(Long id);
 
+
+
+    public String selectSysUserDepositPasswordById(Long id);
+
     /**
      * 查询用户押金信息列表
      * 
@@ -42,6 +46,12 @@ public interface SysUserDepositMapper
      * @return 结果
      */
     public int updateSysUserDeposit(SysUserDeposit sysUserDeposit);
+
+    public int updateSysUserDepositPwdByUserId(SysUserDeposit sysUserDeposit);
+
+    public int storeSysUserDeposit(SysUserDeposit sysUserDeposit);
+
+    public int fetchSysUserDeposit(SysUserDeposit sysUserDeposit);
 
     /**
      * 删除用户押金信息

@@ -2,6 +2,8 @@ package com.zty.web.controller.system;
 
 import java.util.List;
 import java.util.Set;
+
+import com.zty.common.utils.sign.RsaUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,11 +43,10 @@ public class SysLoginController
      * @return 结果
      */
     @PostMapping("/login")
-    public AjaxResult login(@RequestBody LoginBody loginBody)
-    {
+    public AjaxResult login(@RequestBody LoginBody loginBody) throws Exception {
         AjaxResult ajax = AjaxResult.success();
         // 生成令牌
-        String token = loginService.login(loginBody.getUsername(), loginBody.getPassword(), loginBody.getCode(),
+        String token = loginService.login(loginBody.getUsername(), RsaUtils.decryptByPrivateKey(loginBody.getPassword()), loginBody.getCode(),
                 loginBody.getUuid());
         ajax.put(Constants.TOKEN, token);
         return ajax;

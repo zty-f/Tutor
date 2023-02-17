@@ -1,7 +1,12 @@
 package com.zty.system.service.impl;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import com.zty.common.utils.DateUtils;
+import com.zty.common.utils.SecurityUtils;
+import com.zty.system.domain.SysDepositDetail;
+import com.zty.system.mapper.SysDepositDetailMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.zty.system.mapper.SysUserDepositMapper;
@@ -19,6 +24,9 @@ public class SysUserDepositServiceImpl implements ISysUserDepositService
 {
     @Autowired
     private SysUserDepositMapper sysUserDepositMapper;
+
+    @Autowired
+    private SysDepositDetailMapper depositDetailMapper;
 
     /**
      * 查询用户押金信息
@@ -53,6 +61,12 @@ public class SysUserDepositServiceImpl implements ISysUserDepositService
     @Override
     public int insertSysUserDeposit(SysUserDeposit sysUserDeposit)
     {
+        sysUserDeposit.setUpdateTime(DateUtils.getNowDate());
+        sysUserDeposit.setPassword(SecurityUtils.encryptPassword(sysUserDeposit.getPassword()));
+        // 3. 押金操作详情信息插入
+        SysDepositDetail depositDetail = new SysDepositDetail(sysUserDeposit.getUserId(), sysUserDeposit.getBalance(),sysUserDeposit.getBalance(),"0");
+        depositDetail.setCreateTime(DateUtils.getNowDate());
+        depositDetailMapper.insertSysDepositDetail(depositDetail);
         return sysUserDepositMapper.insertSysUserDeposit(sysUserDeposit);
     }
 
@@ -67,6 +81,19 @@ public class SysUserDepositServiceImpl implements ISysUserDepositService
     {
         sysUserDeposit.setUpdateTime(DateUtils.getNowDate());
         return sysUserDepositMapper.updateSysUserDeposit(sysUserDeposit);
+    }
+
+    /**
+     * 修改用户押金密码
+     *
+     * @param sysUserDeposit 用户押金信息
+     * @return 结果
+     */
+    @Override
+    public int updateSysUserDepositPwdByUserId(SysUserDeposit sysUserDeposit)
+    {
+        sysUserDeposit.setUpdateTime(DateUtils.getNowDate());
+        return sysUserDepositMapper.updateSysUserDepositPwdByUserId(sysUserDeposit);
     }
 
     /**

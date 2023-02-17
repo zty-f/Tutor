@@ -2,6 +2,10 @@ package com.zty.core.controller.common;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.zty.common.utils.SecurityUtils;
+import com.zty.common.utils.sign.RsaUtils;
+import com.zty.system.mapper.SysUserDepositMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,10 +38,12 @@ public class SysUserDepositController extends BaseController
     @Autowired
     private ISysUserDepositService sysUserDepositService;
 
+    @Autowired
+    private SysUserDepositMapper sysUserDepositMapper;
+
     /**
      * 查询用户押金信息列表
      */
-    @PreAuthorize("@ss.hasPermi('system:deposit:list')")
     @GetMapping("/list")
     public TableDataInfo list(SysUserDeposit sysUserDeposit)
     {
@@ -49,7 +55,6 @@ public class SysUserDepositController extends BaseController
     /**
      * 导出用户押金信息列表
      */
-    @PreAuthorize("@ss.hasPermi('system:deposit:export')")
     @Log(title = "用户押金信息", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, SysUserDeposit sysUserDeposit)
@@ -62,7 +67,6 @@ public class SysUserDepositController extends BaseController
     /**
      * 获取用户押金信息详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:deposit:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -72,18 +76,16 @@ public class SysUserDepositController extends BaseController
     /**
      * 新增用户押金信息
      */
-    @PreAuthorize("@ss.hasPermi('system:deposit:add')")
     @Log(title = "用户押金信息", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody SysUserDeposit sysUserDeposit)
-    {
+    public AjaxResult add(@RequestBody SysUserDeposit sysUserDeposit) throws Exception {
+        sysUserDeposit.setPassword(RsaUtils.decryptByPrivateKey(sysUserDeposit.getPassword()));
         return toAjax(sysUserDepositService.insertSysUserDeposit(sysUserDeposit));
     }
 
     /**
      * 修改用户押金信息
      */
-    @PreAuthorize("@ss.hasPermi('system:deposit:edit')")
     @Log(title = "用户押金信息", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody SysUserDeposit sysUserDeposit)
@@ -92,9 +94,23 @@ public class SysUserDepositController extends BaseController
     }
 
     /**
+     * 修改用户交易密码
+     */
+    @Log(title = "用户押金信息", businessType = BusinessType.UPDATE)
+    @PutMapping("/updatePwd")
+    public AjaxResult updatePwd(String oldPassword, String newPassword) throws Exception {
+        oldPassword = RsaUtils.decryptByPrivateKey(oldPassword);
+        newPassword = RsaUtils.decryptByPrivateKey(newPassword);
+        String truePwd = sysUserDepositMapper.selectSysUserDepositPasswordById(SecurityUtils.getUserId());
+        if (!SecurityUtils.matchesPassword(oldPassword, truePwd)){
+            return error("原交易密码错误，请核对后重新输入~");
+        }
+        return toAjax(sysUserDepositService.updateSysUserDepositPwdByUserId(new SysUserDeposit(SecurityUtils.getUserId(),SecurityUtils.encryptPassword(newPassword))));
+    }
+
+    /**
      * 删除用户押金信息
      */
-    @PreAuthorize("@ss.hasPermi('system:deposit:remove')")
     @Log(title = "用户押金信息", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)

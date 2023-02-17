@@ -34,7 +34,19 @@ public class SysUserDeposit extends BaseEntity
     @Excel(name = "余额状态", readConverterExp = "0=代表可用,1=代表冻结")
     private String status;
 
-    public void setId(Long id) 
+    public SysUserDeposit() {
+    }
+
+    public SysUserDeposit(String password) {
+        this.password = password;
+    }
+
+    public SysUserDeposit(Long userId, String password) {
+        this.userId = userId;
+        this.password = password;
+    }
+
+    public void setId(Long id)
     {
         this.id = id;
     }
