@@ -96,4 +96,16 @@
             #{id}
         </foreach>
     </delete>
+
+
+    <update id="updateStudentOrderStatus">
+        update sys_user_order
+        set student_status = #{param2}
+        where id = #{param1}
+    </update>
+
+    <update id="updateParentOrderStatus">
+        update sys_user_order
+        set parent_status = #{param2}
+        where id = #{param1}    </update>
 </mapper>

@@ -58,4 +58,9 @@ public interface ISysUserOrderService
      * @return 结果
      */
     public int deleteSysUserOrderById(Long id);
+
+    /**
+     * 修改用户下单状态信息
+     */
+    public int updateStatus(int id,String status);
 }

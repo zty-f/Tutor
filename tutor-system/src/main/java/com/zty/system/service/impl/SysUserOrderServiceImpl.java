@@ -1,8 +1,10 @@
 package com.zty.system.service.impl;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.zty.common.utils.SecurityUtils;
+import com.zty.system.domain.SysUserDeposit;
 import com.zty.system.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,12 +22,6 @@ public class SysUserOrderServiceImpl implements ISysUserOrderService
 {
     @Autowired
     private SysUserOrderMapper sysUserOrderMapper;
-
-    @Autowired
-    private ParentMapper parentMapper;
-
-    @Autowired
-    private StudentMapper studentMapper;
 
     @Autowired
     private SysUserDepositMapper userDepositMapper;
@@ -60,7 +56,39 @@ public class SysUserOrderServiceImpl implements ISysUserOrderService
         } else if (role == 4) {
             sysUserOrder.setParentId(SecurityUtils.getUserId());
         }
-        return sysUserOrderMapper.selectSysUserOrderList(sysUserOrder);
+        List<SysUserOrder> userOrders = sysUserOrderMapper.selectSysUserOrderList(sysUserOrder);
+        for (SysUserOrder userOrder : userOrders) {
+            int s = Integer.parseInt(userOrder.getStudentStatus()); //订单对应学生方状态
+            int p = Integer.parseInt(userOrder.getParentStatus()); //订单对应学员方状态
+            if (role==3){ // 学生
+                if ((s==0&&p==0)||(s==0&&p==1)){
+                    userOrder.setOpenConfirm(true);
+                }
+                if ((s==0&&p==0)||(s==0&&p==2)||(s==0&&p==1)||(s==1&&p==2)){
+                    userOrder.setOpenCancel(true);
+                }
+                if ((s==1&&p==1)||(s==1&&p==3)){
+                    userOrder.setOpenFinish(true);
+                }
+                if ((s==1&&p==1)||(s==1&&p==4)||(s==1&&p==3)){
+                    userOrder.setOpenLegal(true);
+                }
+            }else if (role==4){ // 家长（学员）
+                if ((s==0&&p==0)||(s==1&&p==0)){
+                    userOrder.setOpenConfirm(true);
+                }
+                if ((s==0&&p==0)||(s==2&&p==0)||(s==1&&p==0)||(s==2&&p==1)){
+                    userOrder.setOpenCancel(true);
+                }
+                if ((s==1&&p==1)||(s==3&&p==1)){
+                    userOrder.setOpenFinish(true);
+                }
+                if ((s==1&&p==1)||(s==4&&p==1)||(s==3&&p==1)){
+                    userOrder.setOpenLegal(true);
+                }
+            }
+        }
+        return userOrders;
     }
 
     /**
@@ -112,5 +140,28 @@ public class SysUserOrderServiceImpl implements ISysUserOrderService
     public int deleteSysUserOrderById(Long id)
     {
         return sysUserOrderMapper.deleteSysUserOrderById(id);
+    }
+
+    /**
+     * 修改用户下单状态信息
+     */
+    @Override
+    public int updateStatus(int id,String status){
+        int role = roleMapper.selectUserRoleIdByUserId(SecurityUtils.getUserId());
+        SysUserOrder sysUserOrder = sysUserOrderMapper.selectSysUserOrderById((long) id);
+        if (status.equals("2") &&
+                (sysUserOrder.getStudentStatus().equals("2") || sysUserOrder.getParentStatus().equals("2"))){
+            sysUserOrderMapper.updateStudentOrderStatus(id,"0");
+            return sysUserOrderMapper.updateParentOrderStatus(id,"0");
+        }
+        if (status.equals("3") &&
+                (sysUserOrder.getStudentStatus().equals("3") || sysUserOrder.getParentStatus().equals("3"))){
+            sysUserOrderMapper.updateStudentOrderStatus(id,"0");
+            return sysUserOrderMapper.updateParentOrderStatus(id,"0");
+        }
+        if (role==3){ // 学生
+            return sysUserOrderMapper.updateStudentOrderStatus(id,status);
+        }
+        return sysUserOrderMapper.updateParentOrderStatus(id,status);
     }
 }

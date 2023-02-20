@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.zty.common.utils.DateUtils;
 import com.zty.common.utils.SecurityUtils;
+import com.zty.common.utils.sign.RsaUtils;
 import com.zty.system.domain.SysUserDeposit;
 import com.zty.system.mapper.*;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -98,8 +99,12 @@ public class SysUserOrderController extends BaseController
         // 判断下单双方用户是否进行在线认证
         if (role==3){
             sysUserOrder.setStudentId(SecurityUtils.getUserId());
+            sysUserOrder.setStatus("0");
         } else if (role == 4) {
             sysUserOrder.setParentId(SecurityUtils.getUserId());
+            sysUserOrder.setStatus("1");
+        }else {
+            sysUserOrder.setStatus("2");
         }
         if (studentMapper.selectExistByUserId(sysUserOrder.getStudentId())<=0){
             throw new RuntimeException("该大学生用户ID不存在，请核对后重新输入");
@@ -164,5 +169,14 @@ public class SysUserOrderController extends BaseController
     public AjaxResult remove(@PathVariable Long[] ids)
     {
         return toAjax(sysUserOrderService.deleteSysUserOrderByIds(ids));
+    }
+
+    /**
+     * 修改用户订单状态
+     */
+    @Log(title = "用户订单信息", businessType = BusinessType.UPDATE)
+    @PutMapping("/updateStatus")
+    public AjaxResult updateStatus(int id, String status) throws Exception {
+        return toAjax(sysUserOrderService.updateStatus(id,status));
     }
 }

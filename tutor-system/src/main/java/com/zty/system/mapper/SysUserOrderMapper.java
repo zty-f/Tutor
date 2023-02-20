@@ -75,4 +75,12 @@ public interface SysUserOrderMapper
      * @return 结果
      */
     public int deleteSysUserOrderByIds(Long[] ids);
+
+    /**
+     * 修改用户下单状态
+     */
+    public int updateStudentOrderStatus(int id,String status);
+
+
+    public int updateParentOrderStatus(int id,String status);
 }

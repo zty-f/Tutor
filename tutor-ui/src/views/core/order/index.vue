@@ -73,6 +73,7 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
+          v-if="isManager"
           type="danger"
           plain
           icon="el-icon-delete"
@@ -109,9 +110,9 @@
       </el-table-column>
       <el-table-column label="订单金额" align="center" prop="amount" />
       <el-table-column label="订单双方约定" align="center" prop="promise" width="150"/>
-      <el-table-column label="订单总状态" align="center" prop="status">
+      <el-table-column label="订单发起方" align="center" prop="status">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.sys_order_status" :value="scope.row.status"/>
+          <dict-tag :options="dict.type.sys_order_start" :value="scope.row.status"/>
         </template>
       </el-table-column>
       <el-table-column label="创建时间" align="center" prop="orderTime">
@@ -122,12 +123,42 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
+            v-if="scope.row.openConfirm"
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleConfirm(scope.row)"
+          >确认</el-button>
+          <el-button
+            v-if="scope.row.openCancel"
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleCancel(scope.row)"
+          >取消</el-button>
+          <el-button
+            v-if="scope.row.openFinish"
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleFinish(scope.row)"
+          >完成</el-button>
+          <el-button
+            v-if="scope.row.openLegal"
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleLegal(scope.row)"
+          >维权</el-button>
+          <el-button
+            v-if="!isManager&&scope.row.openConfirm"
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
           >修改</el-button>
           <el-button
+            v-if="isManager"
             size="mini"
             type="text"
             icon="el-icon-delete"
@@ -170,11 +201,11 @@
 </template>
 
 <script>
-import { listOrder, getOrder, delOrder, addOrder, updateOrder } from "@/api/core/deposit";
+import {listOrder, getOrder, delOrder, addOrder, updateOrder, updateStatus} from "@/api/core/deposit";
 import store from "@/store";
 export default {
   name: "Order",
-  dicts: ['sys_order_status'],
+  dicts: ['sys_order_status','sys_order_start'],
   data() {
     return {
       // 遮罩层
@@ -237,6 +268,7 @@ export default {
       this.loading = true;
       listOrder(this.queryParams).then(response => {
         this.orderList = response.rows;
+        console.log(this.orderList)
         this.total = response.total;
         this.loading = false;
       });
@@ -270,6 +302,34 @@ export default {
         orderTime: null
       };
       this.resetForm("form");
+    },
+    handleConfirm(row){
+      updateStatus(row.id,1).then(res => {
+        this.$modal.msgSuccess("单方确认订单成功");
+        this.getList();
+        this.getRole();
+      });
+    },
+    handleCancel(row){
+      updateStatus(row.id,2).then(res => {
+        this.$modal.msgSuccess("单方取消订单成功");
+        this.getList();
+        this.getRole();
+      });
+    },
+    handleFinish(row){
+      updateStatus(row.id,3).then(res => {
+        this.$modal.msgSuccess("单方完成订单成功");
+        this.getList();
+        this.getRole();
+      });
+    },
+    handleLegal(row){
+      updateStatus(row.id,4).then(res => {
+        this.$modal.msgSuccess("单方维权订单成功");
+        this.getList();
+        this.getRole();
+      });
     },
     /** 搜索按钮操作 */
     handleQuery() {

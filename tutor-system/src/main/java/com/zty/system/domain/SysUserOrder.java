@@ -45,12 +45,20 @@ public class SysUserOrder extends BaseEntity
     @Excel(name = "订单双方约定")
     private String promise;
 
-    /** 订单总状态（0代表初始 1代表确认 2代表取消 3代表完成 4代表违约中） */
-    @Excel(name = "下单状态", readConverterExp = "0=代表初始,1=代表确认,2=代表取消,3=代表完成,4=代表违约中")
+    /** 订单总状态（0代表大学生发起 1代表家长(学员)发起） 2代表管理员发起 */
+    @Excel(name = "订单总状态", readConverterExp = "0=代表大学生发起,1=代表家长(学员)发起,2=代表管理员发起")
     private String status;
 
     /** 下单时间 */
     private Date orderTime;
+
+    private boolean openConfirm;
+
+    private boolean openCancel;
+
+    private boolean openFinish;
+
+    private boolean openLegal;
 
     public void setId(Long id) 
     {
@@ -134,6 +142,38 @@ public class SysUserOrder extends BaseEntity
         return orderTime;
     }
 
+    public boolean isOpenConfirm() {
+        return openConfirm;
+    }
+
+    public void setOpenConfirm(boolean openConfirm) {
+        this.openConfirm = openConfirm;
+    }
+
+    public boolean isOpenCancel() {
+        return openCancel;
+    }
+
+    public void setOpenCancel(boolean openCancel) {
+        this.openCancel = openCancel;
+    }
+
+    public boolean isOpenFinish() {
+        return openFinish;
+    }
+
+    public void setOpenFinish(boolean openFinish) {
+        this.openFinish = openFinish;
+    }
+
+    public boolean isOpenLegal() {
+        return openLegal;
+    }
+
+    public void setOpenLegal(boolean openLegal) {
+        this.openLegal = openLegal;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -146,6 +186,10 @@ public class SysUserOrder extends BaseEntity
             .append("promise", getPromise())
             .append("status", getStatus())
             .append("orderTime", getOrderTime())
+            .append("isOpenConfirm", isOpenConfirm())
+            .append("isOpenCancel", isOpenCancel())
+            .append("isOpenFinish", isOpenFinish())
+            .append("isOpenLegal", isOpenLegal())
             .toString();
     }
 }

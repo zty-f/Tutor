@@ -148,3 +148,16 @@ export function updateDelPwd(oldPassword, newPassword) {
     params: data
   })
 }
+
+// 交易密码重置
+export function updateStatus(id, status) {
+  const data = {
+    id,
+    status
+  }
+  return request({
+    url: '/system/order/updateStatus',
+    method: 'put',
+    params: data
+  })
+}
