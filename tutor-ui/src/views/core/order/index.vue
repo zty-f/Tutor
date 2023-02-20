@@ -315,7 +315,7 @@ export default {
             });
           } else {
             addOrder(this.form).then(response => {
-              this.$modal.msgSuccess("新增成功");
+              this.$modal.msgSuccess("在线下单成功~");
               this.open = false;
               this.getList();
             });

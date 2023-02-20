@@ -6,6 +6,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.zty.common.utils.SecurityUtils;
 import com.zty.common.utils.sign.RsaUtils;
 import com.zty.system.mapper.SysUserDepositMapper;
+import com.zty.system.mapper.SysUserOrderMapper;
+import com.zty.system.mapper.SysUserRoleMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,6 +43,12 @@ public class SysUserDepositController extends BaseController
     @Autowired
     private SysUserDepositMapper sysUserDepositMapper;
 
+    @Autowired
+    private SysUserOrderMapper orderMapper;
+
+    @Autowired
+    private SysUserRoleMapper roleMapper;
+
     /**
      * 查询用户押金信息列表
      */
@@ -70,7 +78,16 @@ public class SysUserDepositController extends BaseController
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
-        return success(sysUserDepositService.selectSysUserDepositById(id));
+        AjaxResult ajax = AjaxResult.success(sysUserDepositService.selectSysUserDepositById(id));
+        int role = roleMapper.selectUserRoleIdByUserId(SecurityUtils.getUserId());
+        if (role == 3){
+            ajax.put("totalOrderAmount",orderMapper.selectStudentOrderAmountById(id));
+        } else if (role == 4) {
+            ajax.put("totalOrderAmount",orderMapper.selectParentOrderAmountById(id));
+        }else{
+            ajax.put("totalOrderAmount",null);
+        }
+        return ajax;
     }
 
     /**

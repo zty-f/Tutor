@@ -56,6 +56,13 @@
         </template>
         {{ deposit.balance }}
       </el-descriptions-item>
+      <el-descriptions-item  content-style="background: #74e74d;">
+        <template slot="label">
+          <i class="el-icon-sold-out"></i>
+          已下单金额总和
+        </template>
+        {{ totalOrderAmount }}
+      </el-descriptions-item>
       <el-descriptions-item>
         <template slot="label">
           <i class="el-icon-time"></i>
@@ -175,6 +182,9 @@
 
     <!-- 存取钱交易窗口 -->
     <el-dialog :title="title" :visible.sync="openAction" width="400px" append-to-body>
+      <div :style="{textAlign:'center',marginBottom:'20px'}">
+        <image-preview :src="src" style="width: 100px;height: 100px;"/>
+      </div>
       <el-form :model="tmp" label-width="80px" >
         <el-form-item label="存取余额">
           <el-input v-model="tmp.balance" placeholder="请输入存取押金余额"/>
@@ -258,6 +268,7 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
+      totalOrderAmount: null,
       // 用户押金操作信息表格数据
       detailList: [],
       // 弹出层标题
@@ -332,6 +343,7 @@ export default {
       let userId = store.getters.userId;
       getDeposit(userId).then(response => {
         this.deposit = response.data===undefined?{}:response.data;
+        this.totalOrderAmount = response.totalOrderAmount;
         if (this.deposit.status==="0"||this.deposit.status==="1"){
           this.isOpenDeal = false;
         }else {
@@ -477,6 +489,6 @@ export default {
 
 <style>
 .my-content {
-  background: #ea5548;
+  background: #74e74d;
 }
 </style>

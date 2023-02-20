@@ -136,9 +136,9 @@
       <el-table-column label="邮箱" align="center" prop="student.email" width="120px"/>
       <el-table-column label="手机号码" align="center" prop="student.phonenumber" width="120px"/>
 
-      <el-table-column label="帐号状态" align="center" prop="student.status">
+      <el-table-column label="认证状态" align="center" prop="authStatus">
         <template slot-scope="scope">
-          <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.student.status"/>
+          <dict-tag :options="dict.type.sys_auth_status" :value="scope.row.authStatus"/>
         </template>
       </el-table-column>
       <el-table-column label="最后登录时间" align="center" prop="student.loginDate" width="180">

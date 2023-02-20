@@ -85,6 +85,7 @@ public class StudentServiceImpl implements IStudentService {
             studentVo.setDeptName(deptMapper.selectDeptById(s.getDeptId()).getDeptName());
             studentVo.setRoleName(roleMapper.selectRolePermissionByUserId(s.getUserId()).get(0).getRoleName());
             studentVo.setPosts(postMapper.selectPostsByUserId(s.getUserId()));
+            studentVo.setAuthStatus(String.valueOf(studentMapper.getAuthStatus(s.getUserId())));
             res.add(studentVo);
         }
         return res;

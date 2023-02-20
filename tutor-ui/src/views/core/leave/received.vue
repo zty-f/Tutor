@@ -56,7 +56,6 @@
 
     <el-table v-loading="loading" :data="leaveList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="45" align="center" />
-      <el-table-column label="留言信息ID" align="center" prop="id" width="100px"/>
       <el-table-column label="留言用户ID" align="center" prop="sendId" width="100px"/>
       <el-table-column label="留言用户账户名" align="center" prop="sendUsername" width="150px"/>
       <el-table-column label="留言内容部分预览" align="center" prop="context" >

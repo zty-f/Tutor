@@ -1,6 +1,8 @@
 package com.zty.system.mapper;
 
 import java.util.List;
+
+import com.rabbitmq.client.LongString;
 import com.zty.system.domain.SysUserDeposit;
 
 /**
@@ -46,6 +48,8 @@ public interface SysUserDepositMapper
      * @return 结果
      */
     public int updateSysUserDeposit(SysUserDeposit sysUserDeposit);
+
+    public int updateSysUserDepositStatus(Long id,String status);
 
     public int updateSysUserDepositPwdByUserId(SysUserDeposit sysUserDeposit);
 

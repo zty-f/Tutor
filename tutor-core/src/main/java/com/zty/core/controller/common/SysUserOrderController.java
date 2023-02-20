@@ -1,11 +1,13 @@
 package com.zty.core.controller.common;
 
+import java.math.BigDecimal;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.zty.common.utils.DateUtils;
 import com.zty.common.utils.SecurityUtils;
-import com.zty.system.mapper.SysUserRoleMapper;
+import com.zty.system.domain.SysUserDeposit;
+import com.zty.system.mapper.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,6 +42,18 @@ public class SysUserOrderController extends BaseController
 
     @Autowired
     private SysUserRoleMapper roleMapper;
+
+    @Autowired
+    private SysUserOrderMapper userOrderMapper;
+
+    @Autowired
+    private SysUserDepositMapper userDepositMapper;
+
+    @Autowired
+    private StudentMapper studentMapper;
+
+    @Autowired
+    private ParentMapper parentMapper;
 
     /**
      * 查询用户下单信息列表
@@ -81,10 +95,49 @@ public class SysUserOrderController extends BaseController
     public AjaxResult add(@RequestBody SysUserOrder sysUserOrder)
     {
         int role = roleMapper.selectUserRoleIdByUserId(SecurityUtils.getUserId());
+        // 判断下单双方用户是否进行在线认证
         if (role==3){
             sysUserOrder.setStudentId(SecurityUtils.getUserId());
         } else if (role == 4) {
             sysUserOrder.setParentId(SecurityUtils.getUserId());
+        }
+        if (studentMapper.selectExistByUserId(sysUserOrder.getStudentId())<=0){
+            throw new RuntimeException("该大学生用户ID不存在，请核对后重新输入");
+        }
+        if (parentMapper.selectExistByUserId(sysUserOrder.getParentId())<=0){
+            throw new RuntimeException("该家长(学员)用户ID不存在，请核对后重新输入");
+        }
+        if (studentMapper.getAuthStatus(sysUserOrder.getStudentId())==0){
+            return error("您或者对方未进行在线认证，请您核对后再进行下单！");
+        }
+        if (parentMapper.getAuthStatus(sysUserOrder.getParentId())==0){
+            return error("您或者对方未进行在线认证，请您核对后再进行下单！");
+        }
+        // 1.获取订单对应用户已经创建的订单金额
+        BigDecimal sAmount = userOrderMapper.selectStudentOrderAmountById(sysUserOrder.getStudentId());
+        BigDecimal pAmount = userOrderMapper.selectParentOrderAmountById(sysUserOrder.getParentId());
+        // 2.获取用户押金-已创建订单金额判断是否足够该订单创建（订单双方所剩押金余额必须>=本次订单金额）
+        SysUserDeposit sDeposit = userDepositMapper.selectSysUserDepositById(sysUserOrder.getStudentId());
+        if (sDeposit==null){
+            return error("您或者对方未开通交易功能，请您核对后再进行下单！");
+        }
+        SysUserDeposit pDeposit = userDepositMapper.selectSysUserDepositById(sysUserOrder.getParentId());
+        if (pDeposit==null){
+            return error("您或者对方未开通交易功能，请您核对后再进行下单！");
+        }
+        BigDecimal sReBalance = sDeposit.getBalance();
+        BigDecimal pReBalance = pDeposit.getBalance();
+        if (sAmount!=null){
+            sReBalance = sReBalance.subtract(sAmount);
+        }
+        if (pAmount!=null){
+            pReBalance = pReBalance.subtract(pAmount);
+        }
+        if (sReBalance.compareTo(sysUserOrder.getAmount())<0){
+            return error("您或者对方押金金额不足，请您核对后再进行下单！提示：订单对应双方的押金金额必须大于等于各自所有下单金额总和。");
+        }
+        if (pReBalance.compareTo(sysUserOrder.getAmount())<0){
+            return error("您或者对方押金金额不足，请您核对后再进行下单！提示：订单对应双方的押金金额必须大于等于各自所有下单金额总和。");
         }
         sysUserOrder.setStudentStatus("0");
         sysUserOrder.setParentStatus("0");

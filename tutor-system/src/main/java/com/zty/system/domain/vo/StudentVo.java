@@ -36,10 +36,20 @@ public class StudentVo {
 
     private int collectNum;
 
+    private String authStatus;
+
     /** 学员信息 */
     private Student student;
 
     public StudentVo() {
+    }
+
+    public String getAuthStatus() {
+        return authStatus;
+    }
+
+    public void setAuthStatus(String authStatus) {
+        this.authStatus = authStatus;
     }
 
     public boolean isLike() {
@@ -120,6 +130,7 @@ public class StudentVo {
                 ", isCollect=" + isCollect +
                 ", likeNum=" + likeNum +
                 ", collectNum=" + collectNum +
+                ", authStatus='" + authStatus + '\'' +
                 ", student=" + student +
                 '}';
     }

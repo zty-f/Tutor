@@ -35,6 +35,8 @@ public class ParentVo {
 
     private int collectNum;
 
+    private String authStatus;
+
     /** 学员信息 */
     private Parent parent;
 
@@ -50,6 +52,14 @@ public class ParentVo {
         this.posts = posts;
         this.roleName = roleName;
         this.parent = parent;
+    }
+
+    public String getAuthStatus() {
+        return authStatus;
+    }
+
+    public void setAuthStatus(String authStatus) {
+        this.authStatus = authStatus;
     }
 
     public boolean isLike() {
@@ -126,6 +136,7 @@ public class ParentVo {
                 ", isCollect=" + isCollect +
                 ", likeNum=" + likeNum +
                 ", collectNum=" + collectNum +
+                ", authStatus='" + authStatus + '\'' +
                 ", parent=" + parent +
                 '}';
     }

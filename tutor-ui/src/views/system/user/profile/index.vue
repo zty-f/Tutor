@@ -12,6 +12,10 @@
             </div>
             <ul class="list-group list-group-striped">
               <li class="list-group-item">
+                <i class="el-icon-s-flag"/>用户ID
+                <div class="pull-right">{{ user.userId }}</div>
+              </li>
+              <li class="list-group-item">
                 <svg-icon icon-class="user" />用户昵称
                 <div class="pull-right">{{ user.nickName }}</div>
               </li>

@@ -67,6 +67,12 @@
         where id = #{id}
     </update>
 
+    <update id="updateSysUserDepositStatus">
+        update sys_user_deposit
+        set status = #{param2}
+        where user_id = #{param1}
+    </update>
+
     <update id="updateSysUserDepositPwdByUserId" parameterType="SysUserDeposit">
         update sys_user_deposit
         <trim prefix="SET" suffixOverrides=",">

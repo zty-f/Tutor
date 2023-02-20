@@ -37,6 +37,16 @@
         where id = #{id}
     </select>
 
+    <select id="selectStudentOrderAmountById" parameterType="Long" resultType="java.math.BigDecimal">
+        select sum(amount) from sys_user_order group by student_id
+        having student_id = #{id}
+    </select>
+
+    <select id="selectParentOrderAmountById" parameterType="Long" resultType="java.math.BigDecimal">
+        select sum(amount) from sys_user_order group by parent_id
+        having parent_id = #{id}
+    </select>
+
     <insert id="insertSysUserOrder" parameterType="SysUserOrder" useGeneratedKeys="true" keyProperty="id">
         insert into sys_user_order
         <trim prefix="(" suffix=")" suffixOverrides=",">

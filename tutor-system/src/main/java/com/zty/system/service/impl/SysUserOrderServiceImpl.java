@@ -2,11 +2,10 @@ package com.zty.system.service.impl;
 
 import java.util.List;
 
-import com.zty.system.mapper.ParentMapper;
-import com.zty.system.mapper.StudentMapper;
+import com.zty.common.utils.SecurityUtils;
+import com.zty.system.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.zty.system.mapper.SysUserOrderMapper;
 import com.zty.system.domain.SysUserOrder;
 import com.zty.system.service.ISysUserOrderService;
 
@@ -27,6 +26,12 @@ public class SysUserOrderServiceImpl implements ISysUserOrderService
 
     @Autowired
     private StudentMapper studentMapper;
+
+    @Autowired
+    private SysUserDepositMapper userDepositMapper;
+
+    @Autowired
+    private SysUserRoleMapper roleMapper;
 
     /**
      * 查询用户下单信息
@@ -49,6 +54,12 @@ public class SysUserOrderServiceImpl implements ISysUserOrderService
     @Override
     public List<SysUserOrder> selectSysUserOrderList(SysUserOrder sysUserOrder)
     {
+        int role = roleMapper.selectUserRoleIdByUserId(SecurityUtils.getUserId());
+        if (role==3){
+            sysUserOrder.setStudentId(SecurityUtils.getUserId());
+        } else if (role == 4) {
+            sysUserOrder.setParentId(SecurityUtils.getUserId());
+        }
         return sysUserOrderMapper.selectSysUserOrderList(sysUserOrder);
     }
 
@@ -61,12 +72,9 @@ public class SysUserOrderServiceImpl implements ISysUserOrderService
     @Override
     public int insertSysUserOrder(SysUserOrder sysUserOrder)
     {
-        if (studentMapper.selectExistByUserId(sysUserOrder.getStudentId())<=0){
-            throw new RuntimeException("该大学生用户ID不存在，请核对后重新输入");
-        }
-        if (parentMapper.selectExistByUserId(sysUserOrder.getParentId())<=0){
-            throw new RuntimeException("该家长(学员)用户ID不存在，请核对后重新输入");
-        }
+        // 设置用户押金状态为冻结，只能存入
+        userDepositMapper.updateSysUserDepositStatus(sysUserOrder.getStudentId(), "1");
+        userDepositMapper.updateSysUserDepositStatus(sysUserOrder.getParentId(), "1");
         return sysUserOrderMapper.insertSysUserOrder(sysUserOrder);
     }
 

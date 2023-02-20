@@ -1,5 +1,6 @@
 package com.zty.system.mapper;
 
+import java.math.BigDecimal;
 import java.util.List;
 import com.zty.system.domain.SysUserOrder;
 
@@ -18,6 +19,22 @@ public interface SysUserOrderMapper
      * @return 用户下单信息
      */
     public SysUserOrder selectSysUserOrderById(Long id);
+
+    /**
+     * 查询学生用户下单总金额
+     *
+     * @param id 用户下单信息主键
+     * @return 用户下单信息
+     */
+    public BigDecimal selectStudentOrderAmountById(Long id);
+
+    /**
+     * 查询家长（学员）用户下单总金额
+     *
+     * @param id 用户下单信息主键
+     * @return 用户下单信息
+     */
+    public BigDecimal selectParentOrderAmountById(Long id);
 
     /**
      * 查询用户下单信息列表

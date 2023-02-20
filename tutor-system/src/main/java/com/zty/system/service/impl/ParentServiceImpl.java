@@ -89,6 +89,7 @@ public class ParentServiceImpl implements IParentService
             parentVo.setDeptName(deptMapper.selectDeptById(p.getDeptId()).getDeptName());
             parentVo.setRoleName(roleMapper.selectRolePermissionByUserId(p.getUserId()).get(0).getRoleName());
             parentVo.setPosts(postMapper.selectPostsByUserId(p.getUserId()));
+            parentVo.setAuthStatus(String.valueOf(parentMapper.getAuthStatus(p.getUserId())));
             res.add(parentVo);
         }
         return res;
