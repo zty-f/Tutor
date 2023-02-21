@@ -259,16 +259,31 @@ export default {
     };
   },
   created() {
+    // 实现轮询
+    this.timer = window.setInterval(() => {
+      setTimeout(()=>{
+        this.tGetList();
+      },0);
+      // 每三分钟执行 6000*10 * 3
+    }, 2000);
     this.getList();
     this.getRole();
   },
+  destroyed() {
+    window.clearInterval(this.timer)
+  },
   methods: {
     /** 查询用户下单信息列表 */
+    tGetList() {
+      listOrder(this.queryParams).then(response => {
+        this.orderList = response.rows;
+        this.total = response.total;
+      });
+    },
     getList() {
       this.loading = true;
       listOrder(this.queryParams).then(response => {
         this.orderList = response.rows;
-        console.log(this.orderList)
         this.total = response.total;
         this.loading = false;
       });
