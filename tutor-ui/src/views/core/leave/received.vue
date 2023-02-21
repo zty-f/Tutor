@@ -34,16 +34,6 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
-          type="success"
-          plain
-          icon="el-icon-success"
-          size="mini"
-          :disabled="multiple"
-          @click="handleUpdate"
-        >已读</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
           type="warning"
           plain
           icon="el-icon-download"
@@ -78,6 +68,7 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="100px">
         <template slot-scope="scope">
           <el-button
+            v-if="scope.row.status==='0'"
             size="mini"
             type="text"
             icon="el-icon-success"
