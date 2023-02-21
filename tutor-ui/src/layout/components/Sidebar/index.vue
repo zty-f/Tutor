@@ -20,6 +20,9 @@
                 />
             </el-menu>
         </el-scrollbar>
+      <meting-js server="netease" type="playlist" id="7708362143" fixed="true" mini="true" autoplay="true" loop="all" order="list"
+                 preload="auto" list-folded="true" theme="red" style="z-index: 9999">
+      </meting-js>
     </div>
 </template>
 

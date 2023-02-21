@@ -1,6 +1,6 @@
 <template>
   <div>
-    <svg-icon icon-class="question" @click="goto" />
+    <svg-icon icon-class="link" @click="goto" />
   </div>
 </template>
 
@@ -9,7 +9,7 @@ export default {
   name: 'RuoYiDoc',
   data() {
     return {
-      url: 'http://doc.ruoyi.vip/ruoyi-vue'
+      url: 'https://www.zty-f.fun/'
     }
   },
   methods: {
