@@ -106,6 +106,12 @@
           <el-button
             size="mini"
             type="text"
+            icon="el-icon-more"
+            @click="handleDetail(scope.row)"
+          >详情</el-button>
+          <el-button
+            size="mini"
+            type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['system:notice:remove']"
@@ -166,6 +172,35 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+    <!-- 详情公告对话框 -->
+    <el-dialog title="公告详情" :visible.sync="openDetail" width="780px" append-to-body>
+      <el-form ref="tForm" :model="detail" label-width="100px">
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="公告标题:" prop="noticeTitle">
+              <span style="font-size: large;font-weight: bold">{{detail.noticeTitle}}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="公告类型:" prop="noticeType">
+                <dict-tag :options="dict.type.sys_notice_type" :value="detail.noticeType"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="状态:">
+              <dict-tag :options="dict.type.sys_notice_status" :value="detail.status"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <span style="font-size: large;font-weight: bold;margin-left: 15px">内容如下:</span>
+        <editor v-model="detail.noticeContent" :min-height="192"/>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="cancel">关 闭</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -195,6 +230,7 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      openDetail: false,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -205,6 +241,7 @@ export default {
       },
       // 表单参数
       form: {},
+      detail: {},
       // 表单校验
       rules: {
         noticeTitle: [
@@ -232,6 +269,7 @@ export default {
     // 取消按钮
     cancel() {
       this.open = false;
+      this.openDetail = false;
       this.reset();
     },
     // 表单重置
@@ -244,6 +282,16 @@ export default {
         status: "0"
       };
       this.resetForm("form");
+      this.resetForm("tForm");
+    },
+    /** 详情按钮操作 */
+    handleDetail(row) {
+      this.reset();
+      const noticeId = row.noticeId || this.ids
+      getNotice(noticeId).then(response => {
+        this.detail = response.data;
+        this.openDetail = true;
+      });
     },
     /** 搜索按钮操作 */
     handleQuery() {
