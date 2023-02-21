@@ -1,5 +1,6 @@
 package com.zty.system.service.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 
@@ -70,7 +71,7 @@ public class SysUserOrderServiceImpl implements ISysUserOrderService
                 if ((s==1&&p==1)||(s==1&&p==3)){
                     userOrder.setOpenFinish(true);
                 }
-                if ((s==1&&p==1)||(s==1&&p==4)||(s==1&&p==3)){
+                if ((s==1&&p==1)||(s==1&&p==4)||(s==1&&p==3)||(s==3&&p==4)){
                     userOrder.setOpenLegal(true);
                 }
             }else if (role==4){ // 家长（学员）
@@ -83,7 +84,7 @@ public class SysUserOrderServiceImpl implements ISysUserOrderService
                 if ((s==1&&p==1)||(s==3&&p==1)){
                     userOrder.setOpenFinish(true);
                 }
-                if ((s==1&&p==1)||(s==4&&p==1)||(s==3&&p==1)){
+                if ((s==1&&p==1)||(s==4&&p==1)||(s==3&&p==1)||(s==4&&p==3)){
                     userOrder.setOpenLegal(true);
                 }
             }
@@ -100,9 +101,6 @@ public class SysUserOrderServiceImpl implements ISysUserOrderService
     @Override
     public int insertSysUserOrder(SysUserOrder sysUserOrder)
     {
-        // 设置用户押金状态为冻结，只能存入
-        userDepositMapper.updateSysUserDepositStatus(sysUserOrder.getStudentId(), "1");
-        userDepositMapper.updateSysUserDepositStatus(sysUserOrder.getParentId(), "1");
         return sysUserOrderMapper.insertSysUserOrder(sysUserOrder);
     }
 
@@ -149,13 +147,23 @@ public class SysUserOrderServiceImpl implements ISysUserOrderService
     public int updateStatus(int id,String status){
         int role = roleMapper.selectUserRoleIdByUserId(SecurityUtils.getUserId());
         SysUserOrder sysUserOrder = sysUserOrderMapper.selectSysUserOrderById((long) id);
+        // 双方确认
+        if (status.equals("1") &&
+                (sysUserOrder.getStudentStatus().equals("1") || sysUserOrder.getParentStatus().equals("1"))){
+            // 设置用户押金状态为冻结，只能存入
+            userDepositMapper.updateSysUserDepositStatus(sysUserOrder.getStudentId(), "1");
+            userDepositMapper.updateSysUserDepositStatus(sysUserOrder.getParentId(), "1");
+        }
+        // 双方取消
         if (status.equals("2") &&
                 (sysUserOrder.getStudentStatus().equals("2") || sysUserOrder.getParentStatus().equals("2"))){
             sysUserOrderMapper.updateStudentOrderStatus(id,"0");
             return sysUserOrderMapper.updateParentOrderStatus(id,"0");
         }
+        // 双方完成
         if (status.equals("3") &&
                 (sysUserOrder.getStudentStatus().equals("3") || sysUserOrder.getParentStatus().equals("3"))){
+            unfrozeFunds(sysUserOrder);
             sysUserOrderMapper.updateStudentOrderStatus(id,"0");
             return sysUserOrderMapper.updateParentOrderStatus(id,"0");
         }
@@ -163,5 +171,18 @@ public class SysUserOrderServiceImpl implements ISysUserOrderService
             return sysUserOrderMapper.updateStudentOrderStatus(id,status);
         }
         return sysUserOrderMapper.updateParentOrderStatus(id,status);
+    }
+
+    /*条件符合解冻资金*/
+    public void unfrozeFunds(SysUserOrder sysUserOrder){
+        //判断双方所有订单情况，条件符合（没有确认的订单解冻资金）
+        BigDecimal sAmount = sysUserOrderMapper.selectStudentOrderConfirmAmountById(sysUserOrder.getStudentId());
+        if (sAmount==null||sAmount.compareTo(new BigDecimal(0))==0){
+            userDepositMapper.updateSysUserDepositStatus(sysUserOrder.getStudentId(), "0");
+        }
+        BigDecimal pAmount = sysUserOrderMapper.selectParentOrderConfirmAmountById(sysUserOrder.getParentId());
+        if (pAmount==null||pAmount.compareTo(new BigDecimal(0))==0){
+            userDepositMapper.updateSysUserDepositStatus(sysUserOrder.getParentId(), "0");
+        }
     }
 }

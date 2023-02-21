@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="大学生ID" prop="studentId">
+    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch">
+      <el-form-item label="ID①" prop="studentId" label-width="30px">
         <el-input
           v-model="queryParams.studentId"
           placeholder="请输入大学生用户ID"
@@ -9,7 +9,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="家长ID" prop="parentId">
+      <el-form-item label="ID②" prop="parentId" label-width="30px">
         <el-input
           v-model="queryParams.parentId"
           placeholder="请输入家长（学员）用户ID"
@@ -17,7 +17,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="大学生方状态" prop="studentStatus">
+      <el-form-item label="状态①" prop="studentStatus" label-width="55px">
         <el-select v-model="queryParams.studentStatus" placeholder="请选择大学生方订单状态" clearable>
           <el-option
             v-for="dict in dict.type.sys_order_status"
@@ -27,7 +27,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="家长方状态" prop="parentStatus">
+      <el-form-item label="状态②" prop="parentStatus" label-width="55px">
         <el-select v-model="queryParams.parentStatus" placeholder="请选择家长（学员）方订单状态" clearable>
           <el-option
             v-for="dict in dict.type.sys_order_status"
@@ -37,17 +37,17 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="订单状态" prop="status">
-        <el-select v-model="queryParams.status" placeholder="请选择订单总状态" clearable>
+      <el-form-item label="发起方" prop="status" label-width="60px">
+        <el-select v-model="queryParams.status" placeholder="请选择订单发起方" clearable>
           <el-option
-            v-for="dict in dict.type.sys_order_status"
+            v-for="dict in dict.type.sys_order_start"
             :key="dict.value"
             :label="dict.label"
             :value="dict.value"
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="创建时间" prop="orderTime">
+      <el-form-item label="创建时间" prop="orderTime" label-width="68px">
         <el-date-picker clearable
                         v-model="queryParams.orderTime"
                         type="date"

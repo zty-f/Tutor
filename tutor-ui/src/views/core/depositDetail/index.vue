@@ -35,33 +35,47 @@
 
 
     <el-descriptions :column="2" border :labelStyle="rowCenter" style="width: 600px;margin: auto">
-      <el-descriptions-item content-style="width: 150px">
+      <el-descriptions-item content-style="width: 180px">
         <template slot="label">
           <i class="el-icon-user"></i>
           用户编号
         </template>
         {{ deposit.userId }}
       </el-descriptions-item>
-      <el-descriptions-item content-style="width: 150px">
+      <el-descriptions-item content-style="width: 180px">
         <template slot="label">
           <i class="el-icon-set-up"></i>
           押金状态
         </template>
         <dict-tag :options="dict.type.sys_deposit_status" :value="deposit.status"/>
       </el-descriptions-item>
-      <el-descriptions-item  content-style="background: #ea5548;">
+      <el-descriptions-item  content-style="background: #ec5a69;">
         <template slot="label">
           <i class="el-icon-s-finance"></i>
           押金余额
         </template>
         {{ deposit.balance }}
       </el-descriptions-item>
-      <el-descriptions-item  content-style="background: #74e74d;">
+      <el-descriptions-item  content-style="background: #ecb43c;">
+        <template slot="label">
+          <i class="el-icon-wallet"></i>
+          确认订单金额
+        </template>
+        {{ totalOrderConfirmAmount }}
+      </el-descriptions-item>
+      <el-descriptions-item  content-style="background: #3cecd2;">
         <template slot="label">
           <i class="el-icon-sold-out"></i>
-          已下单金额总和
+          已创建订单金额
         </template>
         {{ totalOrderAmount }}
+      </el-descriptions-item>
+      <el-descriptions-item  content-style="background: #74e74d;">
+        <template slot="label">
+          <i class="el-icon-sell"></i>
+          可创建订单金额
+        </template>
+        {{ deposit.balance - totalOrderAmount }}
       </el-descriptions-item>
       <el-descriptions-item>
         <template slot="label">
@@ -254,7 +268,7 @@ export default {
       src: "/profile/weixin/weixin.png",
       rowCenter:{
         "text-align":"center",
-        "width": "130px",
+        "width": "180px",
       },
       // 遮罩层
       loading: true,
@@ -269,6 +283,7 @@ export default {
       // 总条数
       total: 0,
       totalOrderAmount: null,
+      totalOrderConfirmAmount: null,
       // 用户押金操作信息表格数据
       detailList: [],
       // 弹出层标题
@@ -344,6 +359,7 @@ export default {
       getDeposit(userId).then(response => {
         this.deposit = response.data===undefined?{}:response.data;
         this.totalOrderAmount = response.totalOrderAmount;
+        this.totalOrderConfirmAmount = response.totalOrderConfirmAmount;
         if (this.deposit.status==="0"||this.deposit.status==="1"){
           this.isOpenDeal = false;
         }else {
@@ -489,6 +505,6 @@ export default {
 
 <style>
 .my-content {
-  background: #74e74d;
+  background: #ec5a69;
 }
 </style>

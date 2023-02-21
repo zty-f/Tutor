@@ -139,10 +139,10 @@ public class SysUserOrderController extends BaseController
             pReBalance = pReBalance.subtract(pAmount);
         }
         if (sReBalance.compareTo(sysUserOrder.getAmount())<0){
-            return error("您或者对方押金金额不足，请您核对后再进行下单！提示：订单对应双方的押金金额必须大于等于各自所有下单金额总和。");
+            return error("您或者对方押金金额不足，请您核对后再进行下单！提示：订单对应双方的押金金额必须大于等于各自所有创建订单总金额。");
         }
         if (pReBalance.compareTo(sysUserOrder.getAmount())<0){
-            return error("您或者对方押金金额不足，请您核对后再进行下单！提示：订单对应双方的押金金额必须大于等于各自所有下单金额总和。");
+            return error("您或者对方押金金额不足，请您核对后再进行下单！提示：订单对应双方的押金金额必须大于等于各自所有创建订单总金额。");
         }
         sysUserOrder.setStudentStatus("0");
         sysUserOrder.setParentStatus("0");
@@ -158,6 +158,24 @@ public class SysUserOrderController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody SysUserOrder sysUserOrder)
     {
+        // 1.获取订单对应用户已经创建的订单金额
+        BigDecimal sAmount = userOrderMapper.selectStudentOrderAmountById(sysUserOrder.getStudentId());
+        BigDecimal pAmount = userOrderMapper.selectParentOrderAmountById(sysUserOrder.getParentId());
+        // 2.获取用户押金-已创建订单金额判断是否足够该订单创建（订单双方所剩押金余额必须>=本次订单金额）
+        BigDecimal sReBalance = userDepositMapper.selectSysUserDepositById(sysUserOrder.getStudentId()).getBalance();
+        BigDecimal pReBalance = userDepositMapper.selectSysUserDepositById(sysUserOrder.getParentId()).getBalance();
+        if (sAmount!=null){
+            sReBalance = sReBalance.subtract(sAmount);
+        }
+        if (pAmount!=null){
+            pReBalance = pReBalance.subtract(pAmount);
+        }
+        if (sReBalance.compareTo(sysUserOrder.getAmount())<0){
+            return error("您或者对方押金金额不足，请您核对后再进行下单！提示：订单对应双方的押金金额必须大于等于各自所有创建订单总金额。");
+        }
+        if (pReBalance.compareTo(sysUserOrder.getAmount())<0){
+            return error("您或者对方押金金额不足，请您核对后再进行下单！提示：订单对应双方的押金金额必须大于等于各自所有创建订单总金额。");
+        }
         return toAjax(sysUserOrderService.updateSysUserOrder(sysUserOrder));
     }
 

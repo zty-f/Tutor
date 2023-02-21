@@ -47,6 +47,16 @@
         having parent_id = #{id}
     </select>
 
+    <select id="selectStudentOrderConfirmAmountById" parameterType="Long" resultType="java.math.BigDecimal">
+        select sum(amount) from sys_user_order where student_status='1' and parent_status = '1' group by student_id
+        having student_id = #{id}
+    </select>
+
+    <select id="selectParentOrderConfirmAmountById" parameterType="Long" resultType="java.math.BigDecimal">
+        select sum(amount) from sys_user_order where student_status='1' and parent_status = '1' group by parent_id
+        having parent_id = #{id}
+    </select>
+
     <insert id="insertSysUserOrder" parameterType="SysUserOrder" useGeneratedKeys="true" keyProperty="id">
         insert into sys_user_order
         <trim prefix="(" suffix=")" suffixOverrides=",">

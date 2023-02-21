@@ -82,8 +82,10 @@ public class SysUserDepositController extends BaseController
         int role = roleMapper.selectUserRoleIdByUserId(SecurityUtils.getUserId());
         if (role == 3){
             ajax.put("totalOrderAmount",orderMapper.selectStudentOrderAmountById(id));
+            ajax.put("totalOrderConfirmAmount",orderMapper.selectStudentOrderConfirmAmountById(id));
         } else if (role == 4) {
             ajax.put("totalOrderAmount",orderMapper.selectParentOrderAmountById(id));
+            ajax.put("totalOrderConfirmAmount",orderMapper.selectParentOrderConfirmAmountById(id));
         }else{
             ajax.put("totalOrderAmount",null);
         }

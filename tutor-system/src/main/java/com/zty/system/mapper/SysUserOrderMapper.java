@@ -37,6 +37,22 @@ public interface SysUserOrderMapper
     public BigDecimal selectParentOrderAmountById(Long id);
 
     /**
+     * 查询学生用户确认下单总金额
+     *
+     * @param id 用户下单信息主键
+     * @return 用户下单信息
+     */
+    public BigDecimal selectStudentOrderConfirmAmountById(Long id);
+
+    /**
+     * 查询家长（学员）用户确认下单总金额
+     *
+     * @param id 用户下单信息主键
+     * @return 用户下单信息
+     */
+    public BigDecimal selectParentOrderConfirmAmountById(Long id);
+
+    /**
      * 查询用户下单信息列表
      * 
      * @param sysUserOrder 用户下单信息
