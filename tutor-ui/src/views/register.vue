@@ -29,6 +29,7 @@
           auto-complete="off"
           placeholder="密码"
           @keyup.enter.native="handleRegister"
+          show-password
         >
           <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon" />
         </el-input>
@@ -40,6 +41,7 @@
           auto-complete="off"
           placeholder="确认密码"
           @keyup.enter.native="handleRegister"
+          show-password
         >
           <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon" />
         </el-input>
@@ -98,10 +100,18 @@
           <svg-icon slot="prefix" icon-class="major" class="el-input__icon input-icon" />
         </el-input>
       </el-form-item>
-      <el-form-item  prop="location">
-        <el-input v-model="registerForm.location" placeholder="请输入个人所在地">
-          <svg-icon slot="prefix" icon-class="location" class="el-input__icon input-icon" />
-        </el-input>
+      <span>
+        <svg-icon slot="prefix" icon-class="location"/>请选择所在地：
+      </span>
+      <el-form-item prop="area">
+        <v-distpicker
+          :province="registerForm.province"
+          :city="registerForm.city"
+          :area="registerForm.area"
+          @province="onChangeProvince"
+          @city="onChangeCity"
+          @area="onChangeArea"
+        ></v-distpicker>
       </el-form-item>
       <el-form-item prop="teachWay" label="">
         <el-select v-model="registerForm.teachWay" placeholder="请选择授课方式">
@@ -176,6 +186,7 @@
           auto-complete="off"
           placeholder="密码"
           @keyup.enter.native="handleRegister"
+          show-password
         >
           <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon" />
         </el-input>
@@ -187,6 +198,7 @@
           auto-complete="off"
           placeholder="确认密码"
           @keyup.enter.native="handleRegister"
+          show-password
         >
           <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon" />
         </el-input>
@@ -235,10 +247,18 @@
           <svg-icon slot="prefix" icon-class="sex" class="el-input__icon input-icon" />
         </el-select>
       </el-form-item>
-      <el-form-item  prop="location">
-        <el-input v-model="registerForm.location" placeholder="请输入所在地">
-          <svg-icon slot="prefix" icon-class="location" class="el-input__icon input-icon" />
-        </el-input>
+      <span>
+        <svg-icon slot="prefix" icon-class="location"/>请选择所在地：
+      </span>
+      <el-form-item prop="area">
+        <v-distpicker
+          :province="registerForm.province"
+          :city="registerForm.city"
+          :area="registerForm.area"
+          @province="onChangeProvince"
+          @city="onChangeCity"
+          @area="onChangeArea"
+        ></v-distpicker>
       </el-form-item>
       <el-form-item prop="salaryExpect" label="">
         <el-select v-model="registerForm.salaryExpect" placeholder="请选择教学报酬">
@@ -322,6 +342,9 @@ export default {
         phonenumber: "",
         deptId: "",
         postIds: [],
+        province: "",
+        city: "",
+        area: "",
       },
       registerRules: {
         email: [
@@ -376,7 +399,10 @@ export default {
           { required: true, trigger: "blur", message: "请再次输入您的密码" },
           { required: true, validator: equalToPassword, trigger: "blur" }
         ],
-        code: [{ required: true, trigger: "change", message: "请输入验证码" }]
+        code: [{ required: true, trigger: "change", message: "请输入验证码" }],
+        area: [
+          { required: true, message: "所在省、市、区都必须选择清楚~", trigger: ["blur","change"] }
+        ],
       },
       loading: false,
       captchaEnabled: true
@@ -386,6 +412,15 @@ export default {
     this.getCode();
   },
   methods: {
+    onChangeProvince(a){
+      this.registerForm.province = a.value;
+    },
+    onChangeCity(a){
+      this.registerForm.city = a.value;
+    },
+    onChangeArea(a){
+      this.registerForm.area = a.value;
+    },
     clearForm(){
       this.$refs.registerForm.clearValidate();
     },
@@ -402,6 +437,7 @@ export default {
       this.$refs.registerForm.validate(valid => {
         if (valid) {
           this.loading = true;
+          this.registerForm.location = this.registerForm.province+"-"+this.registerForm.city+"-"+this.registerForm.area;
           register(this.registerForm).then(res => {
             const username = this.registerForm.username;
             this.$alert("<font color='red'>恭喜你，您的账号 " + username + " 注册成功！</font>", '系统提示', {

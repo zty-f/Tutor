@@ -65,16 +65,6 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['core:parent:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
           type="success"
           plain
           icon="el-icon-edit"
@@ -385,8 +375,15 @@
           <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"></el-input>
         </el-form-item>
         <el-divider content-position="center">学员家教信息</el-divider>
-        <el-form-item label="所在地点" prop="location">
-          <el-input v-model="sysParent.location" placeholder="请输入所在地" />
+        <el-form-item label="所在地点" prop="area">
+          <v-distpicker
+            :province="form.province"
+            :city="form.city"
+            :area="form.area"
+            @province="onChangeProvince"
+            @city="onChangeCity"
+            @area="onChangeArea"
+          ></v-distpicker>
         </el-form-item>
         <el-form-item label="教学报酬">
           <el-select v-model="sysParent.salaryReward" placeholder="请选择教学报酬">
@@ -490,6 +487,9 @@ export default {
         postIds: [
           { required: true, message: "科目不能为空", trigger: "blur" }
         ],
+        area: [
+          { required: true, message: "所在省、市、区都必须选择清楚~", trigger: ["blur","change"] }
+        ],
       },
       query:{}
     };
@@ -512,6 +512,15 @@ export default {
       listPost(this.query).then(response => {
         this.postOptions = response.rows;
       });
+    },
+    onChangeProvince(a){
+      this.form.province = a.value;
+    },
+    onChangeCity(a){
+      this.form.city = a.value;
+    },
+    onChangeArea(a){
+      this.form.area = a.value;
     },
     toLeave(form){
       this.leaveMsg.receivedId = form.userId;
@@ -594,7 +603,10 @@ export default {
         createTime: null,
         updateBy: null,
         updateTime: null,
-        remark: null
+        remark: null,
+        province: null,
+        city: null,
+        area: null,
       };
       this.sysParent = {};
       this.leaveMsg = {};
@@ -647,6 +659,10 @@ export default {
         this.form = response.data;
         this.form.deptId = this.form.deptId.toString(); //解决不能显示字段问题，后端传值为Long类型
         this.sysParent = response.data.sysParent==null?{}:response.data.sysParent;
+        let loc = this.sysParent.location.split('-');
+        this.form.province = loc[0];
+        this.form.city = loc[1];
+        this.form.area = loc[2];
         this.$set(this.form, "postIds", row.postIds);
         this.open = true;
         this.title = "修改学员信息";
@@ -656,18 +672,21 @@ export default {
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
+          this.sysParent.location = this.form.province+"-"+this.form.city+"-"+this.form.area;
           this.form.sysParent = this.sysParent;
           if (this.form.userId != null) {
             updateParent(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
+              this.reset();
             });
           } else {
             addParent(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
+              this.reset();
             });
           }
         }

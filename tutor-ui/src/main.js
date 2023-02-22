@@ -38,6 +38,7 @@ import VueMeta from 'vue-meta'
 // 字典数据组件
 import DictData from '@/components/DictData'
 import VueTypedJs from 'vue-typed-js'
+import VDistpicker from 'v-distpicker'
 
 Vue.use(VueTypedJs)
 
@@ -54,6 +55,7 @@ Vue.prototype.handleTree = handleTree
 
 // 全局组件挂载
 Vue.component('DictTag', DictTag)
+Vue.component('VDistpicker', VDistpicker)
 Vue.component('Pagination', Pagination)
 Vue.component('RightToolbar', RightToolbar)
 Vue.component('Editor', Editor)

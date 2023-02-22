@@ -144,9 +144,15 @@
           <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"></el-input>
         </el-form-item>
         <el-divider content-position="center">学生家教信息</el-divider>
-
-        <el-form-item label="所在地点" prop="location">
-          <el-input v-model="sysStudent.location" placeholder="请输入所在地" />
+        <el-form-item label="所在地点" prop="area">
+          <v-distpicker
+            :province="form.province"
+            :city="form.city"
+            :area="form.area"
+            @province="onChangeProvince"
+            @city="onChangeCity"
+            @area="onChangeArea"
+          ></v-distpicker>
         </el-form-item>
         <el-form-item label="就读学校" prop="university">
           <el-input v-model="sysStudent.university" placeholder="请输入就读学校" />
@@ -222,6 +228,9 @@ export default {
         nickName: [
           { required: true, message: "用户昵称不能为空", trigger: "blur" }
         ],
+        area: [
+          { required: true, message: "所在省、市、区都必须选择清楚~", trigger: ["blur","change"] }
+        ],
       },
       authRules: {
         phonenumber: [
@@ -256,6 +265,15 @@ export default {
     this.getAuth();
   },
   methods: {
+    onChangeProvince(a){
+      this.form.province = a.value;
+    },
+    onChangeCity(a){
+      this.form.city = a.value;
+    },
+    onChangeArea(a){
+      this.form.area = a.value;
+    },
     // 表单重置
     reset() {
       this.form = {
@@ -277,7 +295,10 @@ export default {
         createTime: null,
         updateBy: null,
         updateTime: null,
-        remark: null
+        remark: null,
+        province: null,
+        city: null,
+        area: null,
       };
       this.authForm = {
         email: null,
@@ -313,6 +334,10 @@ export default {
         this.form.deptId = this.form.deptId.toString(); //解决不能显示字段问题，后端传值为Long类型
         this.$set(this.form, "postIds", this.postId);
         this.sysStudent = response.data.sysStudent==null?{}:response.data.sysStudent;
+        let loc = this.sysStudent.location.split('-');
+        this.form.province = loc[0];
+        this.form.city = loc[1];
+        this.form.area = loc[2];
         this.open = true;
       });
     },
@@ -355,16 +380,13 @@ export default {
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
+          this.sysStudent.location = this.form.province+"-"+this.form.city+"-"+this.form.area;
           this.form.sysStudent = this.sysStudent;
           if (this.form.userId != null) {
             updateStudent(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
-            });
-          } else {
-            addStudent(this.form).then(response => {
-              this.$modal.msgSuccess("新增成功");
-              this.open = false;
+              this.reset();
             });
           }
           setTimeout(() => {
