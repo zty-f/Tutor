@@ -22,6 +22,8 @@ public interface ParentMapper
      */
     public Parent selectParentByUserId(Long userId);
 
+    public String selectParentLocationByUserId(Long userId);
+
     /**
      * 查询学员信息是否存在
      *

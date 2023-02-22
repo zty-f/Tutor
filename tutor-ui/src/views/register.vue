@@ -414,6 +414,8 @@ export default {
   methods: {
     onChangeProvince(a){
       this.registerForm.province = a.value;
+      this.registerForm.city = null;
+      this.registerForm.area = null;
     },
     onChangeCity(a){
       this.registerForm.city = a.value;

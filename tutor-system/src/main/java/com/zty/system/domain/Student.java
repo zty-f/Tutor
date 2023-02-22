@@ -74,8 +74,19 @@ public class Student extends BaseEntity
     @Excel(name = "最后登录时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss", type = Excel.Type.EXPORT)
     private Date loginDate;
 
+    /** 所在地 */
+    private String location;
+
     /** 学生家教信息信息 */
     private SysStudent sysStudent;
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
 
     public Long[] getPostIds() {
         return postIds;
@@ -240,6 +251,7 @@ public class Student extends BaseEntity
                 ", delFlag='" + delFlag + '\'' +
                 ", loginIp='" + loginIp + '\'' +
                 ", loginDate=" + loginDate +
+                ", location='" + location + '\'' +
                 ", sysStudent=" + sysStudent +
                 '}';
     }

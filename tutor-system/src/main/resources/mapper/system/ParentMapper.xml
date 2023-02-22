@@ -73,6 +73,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where a.user_id = #{userId}
     </select>
 
+    <select id="selectParentLocationByUserId" parameterType="Long" resultType="String">
+        select location from sys_parent
+        where user_id = #{userId}
+    </select>
+
     <select id="selectExistByUserId" parameterType="Long" resultType="Integer">
         select count(1) from sys_parent
         where user_id = #{userId}

@@ -21,6 +21,9 @@ public interface StudentMapper
      */
     public Student selectStudentByUserId(Long userId);
 
+
+    public String selectStudentLocationByUserId(Long userId);
+
     /**
      * 查询学生信息是否存在
      *

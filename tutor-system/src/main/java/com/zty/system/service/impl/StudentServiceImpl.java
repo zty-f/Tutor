@@ -80,10 +80,21 @@ public class StudentServiceImpl implements IStudentService {
         }else if(student.getPostIds()!=null){
             filterPostIds = Arrays.asList(student.getPostIds());
         }
+        StringBuffer t = new StringBuffer();
+        String[] split = student.getLocation().split("-");
+        for (int i=0;i<3;i++) {
+           if ((!split[i].equals("null")&&!split[i].equals("undefined"))&&i!=2){
+               t.append(split[i]).append("-");
+           }else if (!split[i].equals("null")&&!split[i].equals("undefined")){
+                t.append(split[i]);
+           }
+        }
+        String queryLocation = t.toString();
         for (Student s : students) {
             if (selectDeptId!=null&&s.getDeptId()<selectDeptId)continue;
             List<Long> postIds = postMapper.selectPostListByUserId(s.getUserId());
             if (!isContainsPostIds(filterPostIds,postIds))continue;
+            if (!studentMapper.selectStudentLocationByUserId(s.getUserId()).startsWith(queryLocation))continue;
             s.setPostIds(postIds.toArray(new Long[0]));
             StudentVo studentVo = new StudentVo(s);
             studentVo.setDeptName(deptMapper.selectDeptById(s.getDeptId()).getDeptName());

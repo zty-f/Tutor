@@ -56,6 +56,16 @@
                         placeholder="请选择最后登录时间">
         </el-date-picker>
       </el-form-item>
+      <el-form-item label="所在地点">
+        <v-distpicker
+          :province="loc.province"
+          :city="loc.city"
+          :area="loc.area"
+          @province="onChangeProvince1"
+          @city="onChangeCity1"
+          @area="onChangeArea1"
+        ></v-distpicker>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -505,9 +515,11 @@ export default {
         sex: null,
         deptId: null,
         postIds: null,
+        location: null,
       },
       // 表单参数
       form: {},
+      loc: {},
       leaveMsg: {},
       // 表单校验
       rules: {
@@ -538,6 +550,7 @@ export default {
     /** 查询学生信息列表 */
     getList() {
       this.loading = true;
+      this.queryParams.location = this.loc.province+"-"+this.loc.city+"-"+this.loc.area;
       listStudent(this.queryParams).then(response => {
         this.studentList = response.rows;
         this.total = response.total;
@@ -551,12 +564,25 @@ export default {
     },
     onChangeProvince(a){
       this.form.province = a.value;
+      this.form.city = null;
+      this.form.area = null;
     },
     onChangeCity(a){
       this.form.city = a.value;
     },
     onChangeArea(a){
       this.form.area = a.value;
+    },
+    onChangeProvince1(a){
+      this.loc.province = a.value;
+      this.loc.city = null;
+      this.loc.area = null;
+    },
+    onChangeCity1(a){
+      this.loc.city = a.value;
+    },
+    onChangeArea1(a){
+      this.loc.area = a.value;
     },
     // 取消按钮
     cancel() {
@@ -657,6 +683,7 @@ export default {
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm("queryForm");
+      this.loc = {};
       this.handleQuery();
     },
     // 多选框选中数据
@@ -706,6 +733,7 @@ export default {
     },
     /** 提交按钮 */
     submitForm() {
+      console.log(this.form.province+"-"+this.form.city+"-"+this.form.area)
       this.$refs["form"].validate(valid => {
         if (valid) {
           this.sysStudent.location = this.form.province+"-"+this.form.city+"-"+this.form.area;

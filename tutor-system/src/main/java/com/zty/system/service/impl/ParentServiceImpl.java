@@ -83,10 +83,21 @@ public class ParentServiceImpl implements IParentService
         }else if (parent.getPostIds()!=null){
             filterPostIds = Arrays.asList(parent.getPostIds());
         }
+        StringBuffer t = new StringBuffer();
+        String[] split = parent.getLocation().split("-");
+        for (int i=0;i<3;i++) {
+            if ((!split[i].equals("null")&&!split[i].equals("undefined"))&&i!=2){
+                t.append(split[i]).append("-");
+            }else if (!split[i].equals("null")&&!split[i].equals("undefined")){
+                t.append(split[i]);
+            }
+        }
+        String queryLocation = t.toString();
         for (Parent p : parents) {
             if (selectDeptId!=null&&p.getDeptId()>selectDeptId)continue;
             List<Long> postIds = postMapper.selectPostListByUserId(p.getUserId());
             if (!isContainsPostIds(filterPostIds,postIds))continue;
+            if (!parentMapper.selectParentLocationByUserId(p.getUserId()).startsWith(queryLocation))continue;
             p.setPostIds(postIds.toArray(new Long[0]));
             ParentVo parentVo = new ParentVo(p);
             parentVo.setDeptName(deptMapper.selectDeptById(p.getDeptId()).getDeptName());
