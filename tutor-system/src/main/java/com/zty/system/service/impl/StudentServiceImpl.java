@@ -25,6 +25,10 @@ import java.util.List;
  */
 @Service
 public class StudentServiceImpl implements IStudentService {
+
+    @Autowired
+    private SysUserMapper userMapper;
+
     @Autowired
     private StudentMapper studentMapper;
 
@@ -128,7 +132,8 @@ public class StudentServiceImpl implements IStudentService {
     public int insertStudent(Student student) {
         student.setCreateTime(DateUtils.getNowDate());
         int rows = studentMapper.insertStudent(student);
-        userRoleMapper.addUserRoleByUserId(student.getUserId(), 3);
+        Long userId = userMapper.selectUserByUserName(student.getUserName()).getUserId();
+        userRoleMapper.addUserRoleByUserId(userId, 3);
         insertSysStudent(student);
         return rows;
     }

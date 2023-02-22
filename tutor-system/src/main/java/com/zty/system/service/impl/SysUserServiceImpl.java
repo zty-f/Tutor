@@ -592,9 +592,11 @@ public class SysUserServiceImpl implements ISysUserService
     @Override
     public int insertSysUser(SysUser sysUser)
     {
+        sysUser.setPassword(SecurityUtils.encryptPassword(sysUser.getPassword()));
         sysUser.setCreateTime(DateUtils.getNowDate());
-        userRoleMapper.addUserRoleByUserId(sysUser.getUserId(), 2);
-        return userMapper.insertSysUser(sysUser);
+        userMapper.insertSysUser(sysUser);
+        Long userId = userMapper.selectUserByUserName(sysUser.getUserName()).getUserId();
+        return userRoleMapper.addUserRoleByUserId(userId, 2);
     }
 
     /**

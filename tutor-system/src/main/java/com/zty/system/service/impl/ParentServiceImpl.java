@@ -29,6 +29,9 @@ import java.util.List;
 public class ParentServiceImpl implements IParentService
 {
     @Autowired
+    private SysUserMapper userMapper;
+
+    @Autowired
     private ParentMapper parentMapper;
 
     @Autowired
@@ -133,8 +136,9 @@ public class ParentServiceImpl implements IParentService
     {
         parent.setCreateTime(DateUtils.getNowDate());
         int rows = parentMapper.insertParent(parent);
+        Long userId = userMapper.selectUserByUserName(parent.getUserName()).getUserId();
         insertSysParent(parent);
-        userRoleMapper.addUserRoleByUserId(parent.getUserId(), 4);
+        userRoleMapper.addUserRoleByUserId(userId, 4);
         return rows;
     }
 
