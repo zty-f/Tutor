@@ -203,4 +203,52 @@ public interface ISysUserService
      * @return 结果
      */
     public String importUser(List<SysUser> userList, Boolean isUpdateSupport, String operName);
+
+    /**
+     * 查询管理员信息
+     *
+     * @param userId 管理员信息主键
+     * @return 管理员信息
+     */
+    public SysUser selectSysUserByUserId(Long userId);
+
+    /**
+     * 查询管理员信息列表
+     *
+     * @param sysUser 管理员信息
+     * @return 管理员信息集合
+     */
+    public List<SysUser> selectSysUserList(SysUser sysUser);
+
+    /**
+     * 新增管理员信息
+     *
+     * @param sysUser 管理员信息
+     * @return 结果
+     */
+    public int insertSysUser(SysUser sysUser);
+
+    /**
+     * 修改管理员信息
+     *
+     * @param sysUser 管理员信息
+     * @return 结果
+     */
+    public int updateSysUser(SysUser sysUser);
+
+    /**
+     * 批量删除管理员信息
+     *
+     * @param userIds 需要删除的管理员信息主键集合
+     * @return 结果
+     */
+    public int deleteSysUserByUserIds(Long[] userIds);
+
+    /**
+     * 删除管理员信息信息
+     *
+     * @param userId 管理员信息主键
+     * @return 结果
+     */
+    public int deleteSysUserByUserId(Long userId);
 }

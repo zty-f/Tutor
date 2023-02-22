@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Validator;
 
+import com.zty.common.utils.DateUtils;
 import com.zty.system.mapper.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -554,5 +555,82 @@ public class SysUserServiceImpl implements ISysUserService
             successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，数据如下：");
         }
         return successMsg.toString();
+    }
+
+    /**
+     * 查询管理员信息
+     *
+     * @param userId 管理员信息主键
+     * @return 管理员信息
+     */
+    @Override
+    public SysUser selectSysUserByUserId(Long userId)
+    {
+        SysUser sysUser = userMapper.selectSysUserByUserId(userId);
+        sysUser.setPassword("原密码隐藏，重新设置即可~");
+        return sysUser;
+    }
+
+    /**
+     * 查询管理员信息列表
+     *
+     * @param sysUser 管理员信息
+     * @return 管理员信息
+     */
+    @Override
+    public List<SysUser> selectSysUserList(SysUser sysUser)
+    {
+        return userMapper.selectSysUserList(sysUser);
+    }
+
+    /**
+     * 新增管理员信息
+     *
+     * @param sysUser 管理员信息
+     * @return 结果
+     */
+    @Override
+    public int insertSysUser(SysUser sysUser)
+    {
+        sysUser.setCreateTime(DateUtils.getNowDate());
+        return userMapper.insertSysUser(sysUser);
+    }
+
+    /**
+     * 修改管理员信息
+     *
+     * @param sysUser 管理员信息
+     * @return 结果
+     */
+    @Override
+    public int updateSysUser(SysUser sysUser)
+    {
+        sysUser.setUpdateTime(DateUtils.getNowDate());
+        sysUser.setPassword(SecurityUtils.encryptPassword(sysUser.getPassword()));
+        return userMapper.updateSysUser(sysUser);
+    }
+
+    /**
+     * 批量删除管理员信息
+     *
+     * @param userIds 需要删除的管理员信息主键
+     * @return 结果
+     */
+    @Override
+    public int deleteSysUserByUserIds(Long[] userIds)
+    {
+        return userMapper.deleteSysUserByUserIds(userIds);
+    }
+
+    /**
+     * 删除管理员信息信息
+     *
+     * @param userId 管理员信息主键
+     * @return 结果
+     */
+    @Override
+    public int deleteSysUserByUserId(Long userId)
+    {
+        return userMapper.deleteSysUserByUserId(userId);
     }
 }

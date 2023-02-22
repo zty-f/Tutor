@@ -341,6 +341,7 @@ export default {
     },
     handleLegal(row){
       updateStatus(row.id,4).then(res => {
+        this.$modal.alertSuccess("请将维权证明材料发送至管理员邮箱进行维权，并附上详细的订单信息！");
         this.$modal.msgSuccess("单方维权订单成功");
         this.getList();
         this.getRole();
