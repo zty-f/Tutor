@@ -134,6 +134,7 @@ public class ParentServiceImpl implements IParentService
         parent.setCreateTime(DateUtils.getNowDate());
         int rows = parentMapper.insertParent(parent);
         insertSysParent(parent);
+        userRoleMapper.addUserRoleByUserId(parent.getUserId(), 4);
         return rows;
     }
 

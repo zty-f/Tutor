@@ -128,6 +128,7 @@ public class StudentServiceImpl implements IStudentService {
     public int insertStudent(Student student) {
         student.setCreateTime(DateUtils.getNowDate());
         int rows = studentMapper.insertStudent(student);
+        userRoleMapper.addUserRoleByUserId(student.getUserId(), 3);
         insertSysStudent(student);
         return rows;
     }

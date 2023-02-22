@@ -593,6 +593,7 @@ public class SysUserServiceImpl implements ISysUserService
     public int insertSysUser(SysUser sysUser)
     {
         sysUser.setCreateTime(DateUtils.getNowDate());
+        userRoleMapper.addUserRoleByUserId(sysUser.getUserId(), 2);
         return userMapper.insertSysUser(sysUser);
     }
 
