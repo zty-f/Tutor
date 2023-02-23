@@ -84,4 +84,9 @@ public class SysJobLogServiceImpl implements ISysJobLogService
     {
         jobLogMapper.cleanJobLog();
     }
+
+    @Override
+    public void periodClearOperLogs() {
+        jobLogMapper.periodClearOperLogs();
+    }
 }

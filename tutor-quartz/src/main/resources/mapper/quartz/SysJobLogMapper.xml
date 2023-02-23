@@ -90,4 +90,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  		)
 	</insert>
 
+	<delete id="periodClearOperLogs">
+		delete from sys_oper_log order by oper_time limit 100;
+	</delete>
 </mapper> 

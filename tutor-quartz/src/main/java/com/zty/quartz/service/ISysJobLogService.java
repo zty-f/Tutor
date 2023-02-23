@@ -53,4 +53,9 @@ public interface ISysJobLogService
      * 清空任务日志
      */
     public void cleanJobLog();
+
+    /**
+     * 定时清除任务日志
+     */
+    public void periodClearOperLogs();
 }
