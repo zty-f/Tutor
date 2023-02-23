@@ -35,6 +35,9 @@ public class ParentServiceImpl implements IParentService
     private ParentMapper parentMapper;
 
     @Autowired
+    private StudentMapper studentMapper;
+
+    @Autowired
     private SysDeptMapper deptMapper;
 
     @Autowired
@@ -93,6 +96,10 @@ public class ParentServiceImpl implements IParentService
             }
         }
         String queryLocation = t.toString();
+        if (queryLocation.equals("")){
+            String s = studentMapper.selectStudentLocationByUserId(SecurityUtils.getUserId());
+            queryLocation = s!=null?s:"";
+        }
         for (Parent p : parents) {
             if (selectDeptId!=null&&p.getDeptId()>selectDeptId)continue;
             List<Long> postIds = postMapper.selectPostListByUserId(p.getUserId());

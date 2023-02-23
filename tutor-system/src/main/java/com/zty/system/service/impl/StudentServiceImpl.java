@@ -33,6 +33,9 @@ public class StudentServiceImpl implements IStudentService {
     private StudentMapper studentMapper;
 
     @Autowired
+    private ParentMapper parentMapper;
+
+    @Autowired
     private SysDeptMapper deptMapper;
 
     @Autowired
@@ -90,6 +93,10 @@ public class StudentServiceImpl implements IStudentService {
            }
         }
         String queryLocation = t.toString();
+        if (queryLocation.equals("")){
+            String s = parentMapper.selectParentLocationByUserId(SecurityUtils.getUserId());
+            queryLocation = s!=null?s:"";
+        }
         for (Student s : students) {
             if (selectDeptId!=null&&s.getDeptId()<selectDeptId)continue;
             List<Long> postIds = postMapper.selectPostListByUserId(s.getUserId());
