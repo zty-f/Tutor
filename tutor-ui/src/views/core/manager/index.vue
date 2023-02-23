@@ -125,7 +125,7 @@
         </template>
       </el-table-column>
       <el-table-column label="备注" align="center" prop="remark" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" v-if="isManager" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -207,6 +207,7 @@
 
 <script>
 import { listManager, getManager, delManager, addManager, updateManager } from "@/api/core/manager";
+import store from "@/store";
 
 export default {
   name: "Manager",
@@ -231,6 +232,7 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      isManager: false,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -269,6 +271,10 @@ export default {
     /** 查询管理员信息列表 */
     getList() {
       this.loading = true;
+      let role = store.getters.roles[0];
+      if (role!=="student"&&role!=="parent"){
+        this.isManager = true;
+      }
       listManager(this.queryParams).then(response => {
         this.managerList = response.rows;
         this.total = response.total;
