@@ -36,6 +36,10 @@
                 <div class="pull-right">{{ roleGroup }}</div>
               </li>
               <li class="list-group-item">
+                <svg-icon icon-class="location" />所在地
+                <div class="pull-right">{{ location }}</div>
+              </li>
+              <li class="list-group-item">
                 <svg-icon icon-class="date" />创建日期
                 <div class="pull-right">{{ user.createTime }}</div>
               </li>
@@ -215,6 +219,7 @@ export default {
       postGroup: {},
       postOptions: [],
       postId: [],
+      location: "",
       // 表单参数
       form: {},
       authForm: {},
@@ -319,6 +324,7 @@ export default {
         this.postGroup = response.postGroup;
         this.postOptions = response.posts;
         this.postId = response.postIds;
+        this.location = response.location;
       });
     },
     getAuth(){

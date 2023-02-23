@@ -1,5 +1,7 @@
 package com.zty.web.controller.system;
 
+import com.zty.system.mapper.ParentMapper;
+import com.zty.system.mapper.StudentMapper;
 import com.zty.system.service.ISysPostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,6 +45,12 @@ public class SysProfileController extends BaseController
     @Autowired
     private ISysPostService postService;
 
+    @Autowired
+    private StudentMapper studentMapper;
+
+    @Autowired
+    private ParentMapper parentMapper;
+
     /**
      * 个人信息
      */
@@ -56,6 +64,11 @@ public class SysProfileController extends BaseController
         ajax.put("postGroup", userService.selectUserPostGroup(loginUser.getUsername()));
         ajax.put("posts", postService.selectPostAll());
         ajax.put("postIds", postService.selectPostListByUserId(loginUser.getUserId()));
+        if (user.getRoles().get(0).getRoleId()==3){
+            ajax.put("location", studentMapper.selectStudentLocationByUserId(loginUser.getUserId()));
+        }else if (user.getRoles().get(0).getRoleId()==4){
+            ajax.put("location", parentMapper.selectParentLocationByUserId(loginUser.getUserId()));
+        }
         return ajax;
     }
 
