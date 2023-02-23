@@ -95,7 +95,7 @@
       </div>
     </el-dialog>
 
-    <el-dialog title="修改个人信息" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog title="修改个人信息" :visible.sync="open" width="550px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="所属职级" prop="deptId">
           <el-select v-model="form.deptId" placeholder="请选择个人职级">
@@ -199,6 +199,7 @@ import { getUserProfile } from "@/api/system/user";
 import {addStudent, getAuthStatus, getStudent, updateStudent} from "@/api/core/student";
 import store from "@/store";
 import {onlineAuth} from "@/api/core/common";
+import Vue from "vue";
 
 export default {
   name: "Profile",
@@ -229,7 +230,7 @@ export default {
           { required: true, message: "用户昵称不能为空", trigger: "blur" }
         ],
         area: [
-          { required: true, message: "所在省、市、区都必须选择清楚~", trigger: ["blur","change"] }
+          { required: true, message: "所在省、市、区都必须一次性选择清楚再确认，否则需要关闭该窗口重新修改~", trigger: ["blur","change"] }
         ],
       },
       authRules: {
@@ -267,8 +268,7 @@ export default {
   methods: {
     onChangeProvince(a){
       this.form.province = a.value;
-      this.form.city = null;
-      this.form.area = null;
+      Vue.delete(this.form,'area');
     },
     onChangeCity(a){
       this.form.city = a.value;
