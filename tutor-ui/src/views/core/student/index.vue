@@ -37,8 +37,8 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="学生岗位" prop="postIds">
-        <el-select v-model="queryParams.postIds" multiple placeholder="请选择岗位">
+      <el-form-item label="学生科目" prop="postIds">
+        <el-select v-model="queryParams.postIds" multiple placeholder="请选择科目">
           <el-option
             v-for="item in postOptions"
             :key="item.postId"
@@ -124,7 +124,7 @@
       </el-table-column>
       <el-table-column label="角色" align="center" prop="roleName" />
       <el-table-column label="职级" align="center" prop="deptName" />
-      <el-table-column label="岗位" align="center" width="100px">
+      <el-table-column label="科目" align="center" width="100px">
         <template slot-scope="scope">
           <el-card class="box-card" shadow="hover">
             <div v-for="post in scope.row.posts" :key="post" class="text item">
@@ -225,7 +225,7 @@
         <el-descriptions-item>
           <template slot="label">
             <svg-icon slot="prefix" icon-class="post" class="el-input__icon input-icon" />
-            胜任岗位
+            胜任科目
           </template>
           <el-tag
             v-for="post in tPosts"
@@ -350,8 +350,8 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="胜任岗位" prop="postIds">
-          <el-select v-model="form.postIds" multiple placeholder="请选择岗位">
+        <el-form-item label="胜任科目" prop="postIds">
+          <el-select v-model="form.postIds" multiple placeholder="请选择科目">
             <el-option
               v-for="item in postOptions"
               :key="item.postId"
@@ -534,7 +534,7 @@ export default {
           { required: true, message: "用户昵称不能为空", trigger: "blur" }
         ],
         postIds: [
-          { required: true, message: "岗位不能为空", trigger: "blur" }
+          { required: true, message: "科目不能为空", trigger: "blur" }
         ],
         area: [
           { required: true, message: "所在省、市、区都必须一次性选择清楚再确认，否则需要关闭该窗口重新修改~", trigger: ["blur","change"] }

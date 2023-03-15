@@ -111,8 +111,8 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="胜任岗位" prop="postIds">
-          <el-select v-model="form.postIds" multiple placeholder="请选择岗位">
+        <el-form-item label="胜任科目" prop="postIds">
+          <el-select v-model="form.postIds" multiple placeholder="请选择科目">
             <el-option
               v-for="item in postOptions"
               :key="item.postId"

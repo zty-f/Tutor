@@ -58,7 +58,7 @@
         </el-select>
       </el-form-item>
       <el-form-item prop="postIds">
-        <el-select v-model="registerForm.postIds" multiple placeholder="请选择岗位" style="width: 360px">
+        <el-select v-model="registerForm.postIds" multiple placeholder="请选择科目" style="width: 360px">
           <el-option
             v-for="item in dict.type.sys_post_list"
             :key="item.value"
@@ -328,7 +328,7 @@ export default {
       }
     };
     return {
-      // 岗位选项
+      // 科目选项
       postOptions: [],
       codeUrl: "",
       registerForm: {

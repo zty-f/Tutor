@@ -215,7 +215,7 @@
         <el-descriptions-item>
           <template slot="label">
             <svg-icon slot="prefix" icon-class="post" class="el-input__icon input-icon" />
-            胜任岗位
+            胜任科目
           </template>
           <el-tag
             v-for="post in tPosts"

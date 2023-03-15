@@ -268,8 +268,8 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="岗位">
-              <el-select v-model="form.postIds" multiple placeholder="请选择岗位">
+            <el-form-item label="科目">
+              <el-select v-model="form.postIds" multiple placeholder="请选择科目">
                 <el-option
                   v-for="item in postOptions"
                   :key="item.postId"
@@ -378,7 +378,7 @@ export default {
       initPassword: undefined,
       // 日期范围
       dateRange: [],
-      // 岗位选项
+      // 科目选项
       postOptions: [],
       // 角色选项
       roleOptions: [],
