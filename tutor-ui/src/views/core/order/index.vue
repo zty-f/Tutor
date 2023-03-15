@@ -179,10 +179,10 @@
     <!-- 添加或修改用户下单信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="150px">
-        <el-form-item label="大学生ID" prop="studentId" v-if="isManager||isParent">
+        <el-form-item label="大学生ID" prop="studentId" v-if="(isManager||isParent)&&!isUpdate">
           <el-input v-model="form.studentId" placeholder="请输入大学生用户ID" />
         </el-form-item>
-        <el-form-item label="家长(学员)ID" prop="parentId" v-if="isManager||isStudent">
+        <el-form-item label="家长(学员)ID" prop="parentId" v-if="(isManager||isStudent)&&!isUpdate">
           <el-input v-model="form.parentId" placeholder="请输入家长(学员)用户ID" />
         </el-form-item>
         <el-form-item label="订单金额" prop="amount">
@@ -226,6 +226,7 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      isUpdate: false,
       isManager: false,
       isStudent: false,
       isParent: false,
@@ -376,6 +377,7 @@ export default {
       getOrder(id).then(response => {
         this.form = response.data;
         this.open = true;
+        this.isUpdate = true;
         this.title = "修改用户下单信息";
       });
     },
